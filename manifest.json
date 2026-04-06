@@ -1,0 +1,16 @@
+{
+  "short_name": "ONS",
+  "name": "ONS Odontotecnica",
+  "icons": [
+    {
+      "src": "logo-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "standalone",
+  "theme_color": "#093d5c",
+  "background_color": "#ffffff"
+}
