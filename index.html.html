@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONS Odontotecnica - Sistema Profissional</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --azul-ons: #093d5c;
+            --dourado-ons: #efb505;
+            --cinza-fundo: #f0f4f8;
+            --cinza-borda: #dde3e9;
+            --texto-escuro: #2c3e50;
+            --sucesso: #28a745;
+            --perigo: #dc3545;
+            --sombra: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        body {
+            background: var(--cinza-fundo);
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        .header {
+            background: var(--azul-ons);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--sombra);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .logo-ons {
+            background: var(--dourado-ons);
+            color: var(--azul-ons);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.4rem;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .logo-ons small {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .header-info h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .header-info p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .header-telefone {
+            background: rgba(239, 181, 5, 0.15);
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: 1px solid rgba(239, 181, 5, 0.3);
+        }
+
+        .header-telefone i {
+            color: var(--dourado-ons);
+            margin-right: 8px;
+        }
+
+        /* MENU PRINCIPAL */
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .menu-btn {
+            background: white;
+            border: none;
+            padding: 15px 5px;
+            border-radius: 12px;
+            font-weight: 700;
+            color: var(--texto-escuro);
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--sombra);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            border-bottom: 3px solid transparent;
+        }
+
+        .menu-btn i {
+            font-size: 1.5rem;
+            color: var(--azul-ons);
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-3px);
+            border-bottom-color: var(--dourado-ons);
+        }
+
+        .menu-btn.active {
+            background: var(--azul-ons);
+            color: white;
+        }
+
+        .menu-btn.active i {
+            color: var(--dourado-ons);
+        }
+
+        /* SEÇÕES */
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--sombra);
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .titulo-secao {
+            color: var(--azul-ons);
+            border-bottom: 3px solid var(--dourado-ons);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        /* CARDS DASHBOARD */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card-dash {
+            background: linear-gradient(145deg, white, #f8fafd);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid var(--dourado-ons);
+            box-shadow: var(--sombra);
+        }
+
+        .card-dash h3 {
+            font-size: 2.2rem;
+            color: var(--azul-ons);
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        .card-dash p {
+            color: #5a6b7a;
+            font-weight: 500;
+        }
+
+        /* FORMULÁRIOS */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-weight: 700;
+            color: var(--azul-ons);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        label i {
+            color: var(--dourado-ons);
+        }
+
+        input, select, textarea {
+            padding: 14px 18px;
+            border: 2px solid var(--cinza-borda);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--azul-ons);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(9, 61, 92, 0.1);
+        }
+
+        /* SEÇÃO DE EQUIPAMENTOS DO CLIENTE */
+        .equipamentos-cliente {
+            background: #f8fafd;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 2px dashed var(--cinza-borda);
+        }
+
+        .equipamento-item {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--cinza-borda);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .equipamento-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--cinza-borda);
+        }
+
+        .equipamento-header h4 {
+            color: var(--azul-ons);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-remover {
+            background: none;
+            border: none;
+            color: var(--perigo);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .btn-remover:hover {
+            background: #fee;
+        }
+
+        .equipamento-campos {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .btn-adicionar {
+            background: var(--azul-ons);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            width: 100%;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+
+        .btn-adicionar:hover {
+            background: #0a4a6e;
+        }
+
+        /* LISTA DE EQUIPAMENTOS PRÉ-CADASTRADOS */
+        .equipamentos-pre-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .equip-item-pre {
+            background: #f8fafd;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            font-weight: 500;
+        }
+
+        .equip-item-pre:hover {
+            background: white;
+            border-color: var(--dourado-ons);
+            transform: translateY(-2px);
+            box-shadow: var(--sombra);
+        }
+
+        .equip-item-pre i {
+            color: var(--azul-ons);
+            font-size: 1.2rem;
+        }
+
+        /* SEÇÃO DE PEÇAS (NOVA OS) */
+        .pecas-section {
+            background: #f8fafd;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .pecas-header {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 1fr 1fr 0.5fr;
+            gap: 10px;
+            padding: 10px;
+            font-weight: 700;
+            color: var(--azul-ons);
+            margin-bottom: 5px;
+        }
+
+        .linha-peca {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 1fr 1fr 0.5fr;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--cinza-borda);
+        }
+
+        .total-peca {
+            font-weight: 700;
+            color: var(--azul-ons);
+            text-align: right;
+        }
+
+        /* RESUMO DA OS */
+        .resumo-os {
+            background: var(--azul-ons);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .resumo-item {
+            text-align: center;
+        }
+
+        .resumo-item .valor {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dourado-ons);
+            margin-top: 5px;
+        }
+
+        /* CHECKBOX OPCIONAIS */
+        .opcoes-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .opcao-item {
+            background: #f8fafd;
+            padding: 12px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .opcao-item input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--azul-ons);
+        }
+
+        /* BOTÕES */
+        .botoes {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 16px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            min-width: 180px;
+            font-size: 1rem;
+        }
+
+        .btn-primario {
+            background: var(--azul-ons);
+            color: white;
+        }
+
+        .btn-primario:hover {
+            background: #0a4a6e;
+            transform: translateY(-3px);
+            box-shadow: var(--sombra);
+        }
+
+        .btn-dourado {
+            background: var(--dourado-ons);
+            color: var(--azul-ons);
+        }
+
+        .btn-dourado:hover {
+            background: #d4a104;
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            background: white;
+            border: 2px solid var(--azul-ons);
+            color: var(--azul-ons);
+        }
+
+        .btn-outline:hover {
+            background: var(--azul-ons);
+            color: white;
+        }
+
+        .btn-perigo {
+            background: var(--perigo);
+            color: white;
+        }
+
+        .btn-perigo:hover {
+            background: #c82333;
+        }
+
+        /* LISTAS DE HISTÓRICO */
+        .lista-container {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 1px solid var(--cinza-borda);
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .item-lista {
+            padding: 20px;
+            border-bottom: 1px solid var(--cinza-borda);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .item-lista:hover {
+            background: #f8fafd;
+        }
+
+        .item-lista-info h4 {
+            color: var(--azul-ons);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .item-lista-info p {
+            color: #5a6b7a;
+            font-size: 0.95rem;
+        }
+
+        .item-lista-acoes {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-acao {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-acao.ver {
+            background: var(--azul-ons);
+            color: white;
+        }
+
+        .btn-acao.editar {
+            background: var(--dourado-ons);
+            color: var(--azul-ons);
+        }
+
+        .btn-acao.excluir {
+            background: var(--perigo);
+            color: white;
+        }
+
+        /* RELATÓRIO PARA IMPRESSÃO */
+        .relatorio-print {
+            background: white;
+            padding: 30px;
+            font-family: 'Times New Roman', Times, serif;
+        }
+
+        .relatorio-header {
+            text-align: center;
+            border-bottom: 3px solid var(--azul-ons);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .relatorio-header h1 {
+            color: var(--azul-ons);
+            font-size: 2rem;
+        }
+
+        .relatorio-header h3 {
+            color: var(--dourado-ons);
+            font-size: 1.3rem;
+            margin: 10px 0;
+        }
+
+        .relatorio-dados {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .relatorio-tabela {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .relatorio-tabela th {
+            background: var(--azul-ons);
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .relatorio-tabela td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .relatorio-total {
+            background: var(--azul-ons);
+            color: white;
+            padding: 20px;
+            text-align: right;
+            font-size: 1.5rem;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .continuacao {
+            text-align: center;
+            font-style: italic;
+            color: var(--azul-ons);
+            margin: 20px 0;
+            padding: 10px;
+            border-top: 1px dashed var(--dourado-ons);
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .relatorio-print, .relatorio-print * {
+                visibility: visible;
+            }
+            .relatorio-print {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 20px;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        /* NOTIFICAÇÃO */
+        .notificacao {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 18px 30px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            box-shadow: var(--sombra);
+            z-index: 9999;
+            animation: slideIn 0.3s;
+        }
+
+        .notificacao.sucesso {
+            background: var(--sucesso);
+        }
+
+        .notificacao.erro {
+            background: var(--perigo);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* UTILITÁRIOS */
+        .mt-20 { margin-top: 20px; }
+        .mb-20 { margin-bottom: 20px; }
+        .text-center { text-align: center; }
+        .w-100 { width: 100%; }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-ons">
+                    ONS
+                    <small>ODONTOTECNICA</small>
+                </div>
+                <div class="header-info">
+                    <h1>Sistema Técnico de Manutenção</h1>
+                    <p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p>
+                </div>
+            </div>
+            <div class="header-telefone no-print">
+                <i class="fas fa-phone-alt"></i> 35 9 2000-4813
+            </div>
+        </div>
+
+        <!-- MENU -->
+        <div class="menu no-print">
+            <button class="menu-btn active" data-tela="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
+            <button class="menu-btn" data-tela="clientes"><i class="fas fa-users"></i> Clientes</button>
+            <button class="menu-btn" data-tela="equipamentos"><i class="fas fa-tooth"></i> Equipamentos</button>
+            <button class="menu-btn" data-tela="novaos"><i class="fas fa-clipboard-list"></i> Nova OS</button>
+            <button class="menu-btn" data-tela="historico"><i class="fas fa-history"></i> Histórico</button>
+            <button class="menu-btn" data-tela="relatorios"><i class="fas fa-file-pdf"></i> Relatórios</button>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="section active">
+            <h2 class="titulo-secao"><i class="fas fa-chart-pie"></i> Dashboard</h2>
+            <div class="cards-grid">
+                <div class="card-dash">
+                    <h3 id="total-clientes">0</h3>
+                    <p>Clientes Ativos</p>
+                </div>
+                <div class="card-dash">
+                    <h3 id="total-equipamentos">0</h3>
+                    <p>Equipamentos</p>
+                </div>
+                <div class="card-dash">
+                    <h3 id="total-os">0</h3>
+                    <p>Ordens de Serviço</p>
+                </div>
+                <div class="card-dash">
+                    <h3 id="total-receita">R$ 0</h3>
+                    <p>Receita Total</p>
+                </div>
+            </div>
+
+            <h3 class="titulo-secao mt-20">Últimas Ordens de Serviço</h3>
+            <div class="lista-container" id="lista-recentes"></div>
+        </div>
+
+        <!-- CLIENTES -->
+        <div id="clientes" class="section">
+            <h2 class="titulo-secao"><i class="fas fa-user-plus"></i> Cadastro de Clientes</h2>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Nome Completo *</label>
+                    <input type="text" id="cliente-nome" placeholder="Digite o nome completo">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Telefone *</label>
+                    <input type="text" id="cliente-telefone" placeholder="(35) 9 2000-4813">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> E-mail</label>
+                    <input type="email" id="cliente-email" placeholder="cliente@email.com">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Endereço</label>
+                    <input type="text" id="cliente-endereco" placeholder="Rua, número, bairro, cidade">
+                </div>
+            </div>
+
+            <!-- EQUIPAMENTOS DO CLIENTE -->
+            <div class="equipamentos-cliente">
+                <h3 style="color: var(--azul-ons); margin-bottom: 20px;">
+                    <i class="fas fa-tooth"></i> Equipamentos do Cliente
+                </h3>
+                <div id="equipamentos-lista"></div>
+                <button class="btn-adicionar" onclick="adicionarEquipamentoCliente()">
+                    <i class="fas fa-plus-circle"></i> Adicionar Novo Equipamento
+                </button>
+            </div>
+
+            <div class="botoes">
+                <button class="btn btn-primario" onclick="salvarCliente()">
+                    <i class="fas fa-save"></i> Salvar Cliente
+                </button>
+                <button class="btn btn-outline" onclick="limparFormCliente()">
+                    <i class="fas fa-eraser"></i> Limpar
+                </button>
+            </div>
+
+            <h3 class="titulo-secao mt-20">Clientes Cadastrados</h3>
+            <div class="lista-container" id="lista-clientes"></div>
+        </div>
+
+        <!-- EQUIPAMENTOS -->
+        <div id="equipamentos" class="section">
+            <h2 class="titulo-secao"><i class="fas fa-tooth"></i> Equipamentos Odontológicos</h2>
+            
+            <div style="margin-bottom: 30px;">
+                <h3 style="color: var(--azul-ons); margin-bottom: 15px;">Lista de Equipamentos</h3>
+                <p style="color: #5a6b7a; margin-bottom: 20px;">Clique em um equipamento para iniciar uma OS ou use o formulário abaixo para cadastrar manualmente.</p>
+                <div class="equipamentos-pre-grid" id="lista-equipamentos-pre"></div>
+            </div>
+
+            <div style="margin-top: 40px;">
+                <h3 style="color: var(--azul-ons); margin-bottom: 20px;">Cadastro Rápido de Equipamento</h3>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-tag"></i> Nome do Equipamento</label>
+                        <input type="text" id="equip-manual" placeholder="Ex: Refletor Odontológico, Compressor, etc.">
+                    </div>
+                </div>
+                <div class="botoes">
+                    <button class="btn btn-primario" onclick="usarEquipamentoManual()">
+                        <i class="fas fa-play"></i> Iniciar OS com este Equipamento
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- NOVA OS -->
+        <div id="novaos" class="section">
+            <h2 class="titulo-secao"><i class="fas fa-clipboard-list"></i> Ordem de Serviço</h2>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Cliente</label>
+                    <select id="os-cliente" onchange="carregarEquipamentosClienteOS()">
+                        <option value="">Selecione um cliente</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-tooth"></i> Equipamento</label>
+                    <select id="os-equipamento">
+                        <option value="">Selecione o equipamento</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label><i class="fas fa-pencil-alt"></i> Ou digite manualmente</label>
+                    <input type="text" id="os-equip-manual" placeholder="Digite o nome do equipamento (para casos não listados)" oninput="document.getElementById('os-equipamento').value = ''">
+                </div>
+            </div>
+
+            <!-- TIPO DE MANUTENÇÃO -->
+            <h3 class="titulo-secao mt-20">Tipo de Manutenção</h3>
+            <div class="opcoes-grid">
+                <label class="opcao-item">
+                    <input type="checkbox" id="os-preventiva"> Preventiva
+                </label>
+                <label class="opcao-item">
+                    <input type="checkbox" id="os-corretiva"> Corretiva
+                </label>
+            </div>
+
+            <!-- DEFEITOS E SOLUÇÕES (MANUAL) -->
+            <h3 class="titulo-secao mt-20">Diagnóstico</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label><i class="fas fa-exclamation-triangle"></i> Defeitos Identificados</label>
+                    <textarea id="os-defeitos" rows="4" placeholder="Descreva os defeitos encontrados..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-tools"></i> Soluções Aplicadas</label>
+                    <textarea id="os-solucoes" rows="4" placeholder="Descreva as soluções realizadas..."></textarea>
+                </div>
+            </div>
+
+            <!-- PEÇAS UTILIZADAS -->
+            <h3 class="titulo-secao mt-20">Peças Utilizadas</h3>
+            <div class="pecas-section">
+                <div class="pecas-header">
+                    <span>Peça/Componente</span>
+                    <span>Quantidade</span>
+                    <span>Valor Unit.</span>
+                    <span>Total</span>
+                    <span></span>
+                </div>
+                <div id="pecas-lista"></div>
+                <button class="btn-adicionar" onclick="adicionarPeca()">
+                    <i class="fas fa-plus-circle"></i> Adicionar Peça
+                </button>
+            </div>
+
+            <!-- HORA TÉCNICA -->
+            <h3 class="titulo-secao mt-20">Mão de Obra</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label><i class="fas fa-clock"></i> Horas Trabalhadas</label>
+                    <input type="number" id="os-horas" value="1" min="0.5" step="0.5" oninput="calcularTotalOS()">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-dollar-sign"></i> Valor da Hora (R$)</label>
+                    <input type="number" id="os-valor-hora" value="85" min="0" step="5" oninput="calcularTotalOS()">
+                </div>
+            </div>
+
+            <!-- RESUMO -->
+            <div class="resumo-os">
+                <div class="resumo-item">
+                    <div>Total Peças</div>
+                    <div class="valor" id="resumo-pecas">R$ 0,00</div>
+                </div>
+                <div class="resumo-item">
+                    <div>Total Mão de Obra</div>
+                    <div class="valor" id="resumo-maoobra">R$ 0,00</div>
+                </div>
+                <div class="resumo-item">
+                    <div>VALOR TOTAL</div>
+                    <div class="valor" id="resumo-total">R$ 0,00</div>
+                </div>
+            </div>
+
+            <div class="botoes">
+                <button class="btn btn-primario" onclick="salvarOS()">
+                    <i class="fas fa-save"></i> Salvar OS
+                </button>
+                <button class="btn btn-dourado" onclick="visualizarOS()">
+                    <i class="fas fa-eye"></i> Visualizar
+                </button>
+                <button class="btn btn-outline" onclick="limparOS()">
+                    <i class="fas fa-eraser"></i> Limpar
+                </button>
+            </div>
+        </div>
+
+        <!-- HISTÓRICO -->
+        <div id="historico" class="section">
+            <h2 class="titulo-secao"><i class="fas fa-history"></i> Histórico de OS</h2>
+            
+            <div class="lista-container" id="lista-historico"></div>
+        </div>
+
+        <!-- RELATÓRIOS -->
+        <div id="relatorios" class="section">
+            <h2 class="titulo-secao"><i class="fas fa-file-pdf"></i> Relatórios</h2>
+            
+            <div class="botoes mb-20">
+                <button class="btn btn-primario" onclick="listarTodasOS()">
+                    <i class="fas fa-list"></i> Listar Todas as OS
+                </button>
+            </div>
+
+            <div class="lista-container" id="lista-todas-os"></div>
+
+            <!-- ÁREA DE VISUALIZAÇÃO DO RELATÓRIO -->
+            <div id="relatorio-visualizacao" class="relatorio-print mt-20" style="display: none;">
+                <!-- Conteúdo do relatório será inserido aqui -->
+            </div>
+
+            <div class="botoes mt-20" id="botoes-relatorio" style="display: none;">
+                <button class="btn btn-dourado" onclick="imprimirRelatorio()">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+                <button class="btn btn-primario" onclick="editarOS()">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="btn btn-outline" onclick="fecharRelatorio()">
+                    <i class="fas fa-times"></i> Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICAÇÃO -->
+    <div id="notificacao" class="notificacao hidden"></div>
+
+    <script>
+        // ==================== BANCO DE DADOS ====================
+        let clientes = JSON.parse(localStorage.getItem('ons_clientes')) || [];
+        let manutencoes = JSON.parse(localStorage.getItem('ons_manutencoes')) || [];
+        let clienteEditando = null;
+        let osEditando = null;
+
+        // Lista de equipamentos odontológicos (incluindo REFLETOR)
+        const equipamentosLista = [
+            'Equipo Odontológico',
+            'Compressor Odontológico',
+            'Autoclave',
+            'Aparelho de Raio-X',
+            'Fotopolimerizador',
+            'Ultrassom / Scaler',
+            'Cadeira Odontológica',
+            'Mocho do Dentista',
+            'Sugador / Bomba de Vácuo',
+            'Amalgamador',
+            'Lâmpada do Equipo',
+            'Microscópio Odontológico',
+            'Laser Terapêutico',
+            'Seladora de Embalagens',
+            'Destiladora de Água',
+            'REFLETOR Odontológico'  // ADICIONADO
+        ];
+
+        // ==================== INICIALIZAÇÃO ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Sistema ONS iniciado');
+            
+            // Configurar menu
+            document.querySelectorAll('.menu-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.tela).classList.add('active');
+                    
+                    // Atualizar conforme a tela
+                    if (this.dataset.tela === 'dashboard') atualizarDashboard();
+                    if (this.dataset.tela === 'clientes') carregarListaClientes();
+                    if (this.dataset.tela === 'equipamentos') mostrarEquipamentosPre();
+                    if (this.dataset.tela === 'historico') carregarHistorico();
+                    if (this.dataset.tela === 'relatorios') listarTodasOS();
+                });
+            });
+
+            // Carregar dados iniciais
+            carregarClientesSelect();
+            atualizarDashboard();
+            
+            // Adicionar primeira linha de peça
+            adicionarPeca();
+            
+            // Mostrar equipamentos pré-cadastrados
+            mostrarEquipamentosPre();
+
+            // Garantir que a lista de equipamentos do cliente comece com um item
+            if (document.getElementById('equipamentos-lista').children.length === 0) {
+                adicionarEquipamentoCliente();
+            }
+        });
+
+        // ==================== FUNÇÕES DE CLIENTES ====================
+        function adicionarEquipamentoCliente(tipoSelecionado = '') {
+            const container = document.getElementById('equipamentos-lista');
+            
+            const div = document.createElement('div');
+            div.className = 'equipamento-item';
+            div.innerHTML = `
+                <div class="equipamento-header">
+                    <h4><i class="fas fa-tooth"></i> Equipamento</h4>
+                    <button class="btn-remover" onclick="removerEquipamentoCliente(this)"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="equipamento-campos">
+                    <select class="equip-tipo">
+                        <option value="">Selecione o tipo</option>
+                        ${equipamentosLista.map(e => `<option value="${e}" ${e === tipoSelecionado ? 'selected' : ''}>${e}</option>`).join('')}
+                    </select>
+                    <input type="text" class="equip-modelo" placeholder="Modelo">
+                    <input type="text" class="equip-fabricante" placeholder="Fabricante">
+                    <input type="text" class="equip-serie" placeholder="Nº Série">
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function removerEquipamentoCliente(botao) {
+            if (document.querySelectorAll('.equipamento-item').length > 1) {
+                botao.closest('.equipamento-item').remove();
+            } else {
+                mostrarNotificacao('Cliente deve ter pelo menos um equipamento', 'erro');
+            }
+        }
+
+        function salvarCliente() {
+            const nome = document.getElementById('cliente-nome').value.trim();
+            const telefone = document.getElementById('cliente-telefone').value.trim();
+
+            if (!nome || !telefone) {
+                mostrarNotificacao('Nome e telefone são obrigatórios', 'erro');
+                return;
+            }
+
+            // Coletar equipamentos
+            const equipamentos = [];
+            document.querySelectorAll('.equipamento-item').forEach(item => {
+                const tipo = item.querySelector('.equip-tipo').value;
+                if (tipo) {
+                    equipamentos.push({
+                        tipo: tipo,
+                        modelo: item.querySelector('.equip-modelo').value,
+                        fabricante: item.querySelector('.equip-fabricante').value,
+                        serie: item.querySelector('.equip-serie').value
+                    });
+                }
+            });
+
+            if (equipamentos.length === 0) {
+                mostrarNotificacao('Adicione pelo menos um equipamento', 'erro');
+                return;
+            }
+
+            const cliente = {
+                id: clienteEditando || Date.now(),
+                nome: nome,
+                telefone: telefone,
+                email: document.getElementById('cliente-email').value,
+                endereco: document.getElementById('cliente-endereco').value,
+                equipamentos: equipamentos,
+                data: new Date().toISOString()
+            };
+
+            if (clienteEditando) {
+                const index = clientes.findIndex(c => c.id === clienteEditando);
+                if (index !== -1) {
+                    clientes[index] = cliente;
+                    mostrarNotificacao('Cliente atualizado!', 'sucesso');
+                }
+            } else {
+                clientes.push(cliente);
+                mostrarNotificacao('Cliente salvo!', 'sucesso');
+            }
+
+            localStorage.setItem('ons_clientes', JSON.stringify(clientes));
+            
+            limparFormCliente();
+            carregarListaClientes();
+            carregarClientesSelect();
+            atualizarDashboard();
+        }
+
+        function limparFormCliente() {
+            document.getElementById('cliente-nome').value = '';
+            document.getElementById('cliente-telefone').value = '';
+            document.getElementById('cliente-email').value = '';
+            document.getElementById('cliente-endereco').value = '';
+            document.getElementById('equipamentos-lista').innerHTML = '';
+            adicionarEquipamentoCliente();
+            clienteEditando = null;
+        }
+
+        function carregarListaClientes() {
+            const lista = document.getElementById('lista-clientes');
+            lista.innerHTML = '';
+
+            if (clientes.length === 0) {
+                lista.innerHTML = '<div class="item-lista">Nenhum cliente cadastrado</div>';
+                return;
+            }
+
+            clientes.forEach(cliente => {
+                const div = document.createElement('div');
+                div.className = 'item-lista';
+                div.innerHTML = `
+                    <div class="item-lista-info">
+                        <h4>${cliente.nome}</h4>
+                        <p><i class="fas fa-phone"></i> ${cliente.telefone} | ${cliente.equipamentos?.length || 0} equipamento(s)</p>
+                    </div>
+                    <div class="item-lista-acoes">
+                        <button class="btn-acao ver" onclick="usarClienteOS(${cliente.id})"><i class="fas fa-play"></i></button>
+                        <button class="btn-acao editar" onclick="editarCliente(${cliente.id})"><i class="fas fa-edit"></i></button>
+                        <button class="btn-acao excluir" onclick="excluirCliente(${cliente.id})"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                lista.appendChild(div);
+            });
+        }
+
+        function editarCliente(id) {
+            const cliente = clientes.find(c => c.id === id);
+            if (!cliente) return;
+
+            document.getElementById('cliente-nome').value = cliente.nome;
+            document.getElementById('cliente-telefone').value = cliente.telefone;
+            document.getElementById('cliente-email').value = cliente.email || '';
+            document.getElementById('cliente-endereco').value = cliente.endereco || '';
+
+            document.getElementById('equipamentos-lista').innerHTML = '';
+            if (cliente.equipamentos && cliente.equipamentos.length > 0) {
+                cliente.equipamentos.forEach(equip => {
+                    adicionarEquipamentoCliente(equip.tipo);
+                    setTimeout(() => {
+                        const items = document.querySelectorAll('.equipamento-item');
+                        const ultimo = items[items.length - 1];
+                        ultimo.querySelector('.equip-modelo').value = equip.modelo || '';
+                        ultimo.querySelector('.equip-fabricante').value = equip.fabricante || '';
+                        ultimo.querySelector('.equip-serie').value = equip.serie || '';
+                    }, 50);
+                });
+            } else {
+                adicionarEquipamentoCliente();
+            }
+
+            clienteEditando = id;
+            document.querySelector('[data-tela="clientes"]').click();
+        }
+
+        function excluirCliente(id) {
+            if (confirm('Excluir este cliente?')) {
+                clientes = clientes.filter(c => c.id !== id);
+                localStorage.setItem('ons_clientes', JSON.stringify(clientes));
+                carregarListaClientes();
+                carregarClientesSelect();
+                atualizarDashboard();
+                mostrarNotificacao('Cliente excluído', 'sucesso');
+            }
+        }
+
+        // ==================== FUNÇÕES DE EQUIPAMENTOS ====================
+        function mostrarEquipamentosPre() {
+            const container = document.getElementById('lista-equipamentos-pre');
+            container.innerHTML = '';
+            
+            equipamentosLista.forEach(equip => {
+                const div = document.createElement('div');
+                div.className = 'equip-item-pre';
+                div.onclick = () => iniciarOSComEquipamento(equip);
+                div.innerHTML = `<i class="fas fa-tooth"></i> ${equip}`;
+                container.appendChild(div);
+            });
+        }
+
+        function usarEquipamentoManual() {
+            const equip = document.getElementById('equip-manual').value.trim();
+            if (equip) {
+                iniciarOSComEquipamento(equip);
+            } else {
+                mostrarNotificacao('Digite o nome do equipamento', 'erro');
+            }
+        }
+
+        function iniciarOSComEquipamento(equip) {
+            // Ir para Nova OS
+            document.querySelector('[data-tela="novaos"]').click();
+            
+            // Preencher o campo manual
+            document.getElementById('os-equip-manual').value = equip;
+            document.getElementById('os-equipamento').value = '';
+            
+            mostrarNotificacao(`Equipamento: ${equip}`, 'sucesso');
+        }
+
+        // ==================== FUNÇÕES DA OS ====================
+        function carregarClientesSelect() {
+            const select = document.getElementById('os-cliente');
+            select.innerHTML = '<option value="">Selecione um cliente</option>';
+            
+            clientes.forEach(cliente => {
+                const option = document.createElement('option');
+                option.value = cliente.id;
+                option.textContent = cliente.nome;
+                select.appendChild(option);
+            });
+        }
+
+        function carregarEquipamentosClienteOS() {
+            const clienteId = document.getElementById('os-cliente').value;
+            const selectEquip = document.getElementById('os-equipamento');
+            
+            selectEquip.innerHTML = '<option value="">Selecione o equipamento</option>';
+            
+            if (clienteId) {
+                const cliente = clientes.find(c => c.id == clienteId);
+                if (cliente && cliente.equipamentos) {
+                    cliente.equipamentos.forEach(equip => {
+                        const option = document.createElement('option');
+                        option.value = equip.tipo;
+                        option.textContent = `${equip.tipo} - ${equip.modelo || ''}`;
+                        selectEquip.appendChild(option);
+                    });
+                }
+            }
+        }
+
+        function adicionarPeca() {
+            const container = document.getElementById('pecas-lista');
+            
+            const div = document.createElement('div');
+            div.className = 'linha-peca';
+            div.innerHTML = `
+                <input type="text" class="peca-nome" placeholder="Nome da peça" oninput="calcularTotalOS()">
+                <input type="number" class="peca-qtd" value="1" min="1" oninput="calcularTotalOS()">
+                <input type="number" class="peca-valor" value="0" min="0" step="0.1" oninput="calcularTotalOS()">
+                <span class="total-peca">R$ 0,00</span>
+                <button class="btn-remover" onclick="removerPeca(this)"><i class="fas fa-trash"></i></button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removerPeca(botao) {
+            if (document.querySelectorAll('.linha-peca').length > 1) {
+                botao.closest('.linha-peca').remove();
+                calcularTotalOS();
+            }
+        }
+
+        function calcularTotalOS() {
+            let totalPecas = 0;
+            
+            document.querySelectorAll('.linha-peca').forEach(linha => {
+                const nome = linha.querySelector('.peca-nome').value;
+                const qtd = parseFloat(linha.querySelector('.peca-qtd').value) || 0;
+                const valor = parseFloat(linha.querySelector('.peca-valor').value) || 0;
+                const total = qtd * valor;
+                
+                if (nome && qtd > 0) {
+                    totalPecas += total;
+                }
+                
+                linha.querySelector('.total-peca').textContent = `R$ ${total.toFixed(2)}`;
+            });
+
+            const horas = parseFloat(document.getElementById('os-horas').value) || 0;
+            const valorHora = parseFloat(document.getElementById('os-valor-hora').value) || 0;
+            const totalMaoObra = horas * valorHora;
+            const totalGeral = totalPecas + totalMaoObra;
+            
+            document.getElementById('resumo-pecas').textContent = `R$ ${totalPecas.toFixed(2)}`;
+            document.getElementById('resumo-maoobra').textContent = `R$ ${totalMaoObra.toFixed(2)}`;
+            document.getElementById('resumo-total').textContent = `R$ ${totalGeral.toFixed(2)}`;
+            
+            return { totalPecas, totalMaoObra, totalGeral };
+        }
+
+        function salvarOS() {
+            const clienteId = document.getElementById('os-cliente').value;
+            const equipamento = document.getElementById('os-equipamento').value || document.getElementById('os-equip-manual').value.trim();
+
+            if (!clienteId || !equipamento) {
+                mostrarNotificacao('Selecione cliente e equipamento', 'erro');
+                return;
+            }
+
+            // Coletar peças
+            const pecas = [];
+            document.querySelectorAll('.linha-peca').forEach(linha => {
+                const nome = linha.querySelector('.peca-nome').value;
+                const qtd = parseFloat(linha.querySelector('.peca-qtd').value) || 0;
+                const valor = parseFloat(linha.querySelector('.peca-valor').value) || 0;
+                
+                if (nome && qtd > 0 && valor > 0) {
+                    pecas.push({ nome, qtd, valor, total: qtd * valor });
+                }
+            });
+
+            const totais = calcularTotalOS();
+
+            const os = {
+                id: osEditando || Date.now(),
+                clienteId: parseInt(clienteId),
+                equipamento: equipamento,
+                preventiva: document.getElementById('os-preventiva').checked,
+                corretiva: document.getElementById('os-corretiva').checked,
+                defeitos: document.getElementById('os-defeitos').value,
+                solucoes: document.getElementById('os-solucoes').value,
+                pecas: pecas,
+                horas: parseFloat(document.getElementById('os-horas').value) || 0,
+                valorHora: parseFloat(document.getElementById('os-valor-hora').value) || 0,
+                totalPecas: totais.totalPecas,
+                totalMaoObra: totais.totalMaoObra,
+                totalGeral: totais.totalGeral,
+                data: new Date().toISOString()
+            };
+
+            if (osEditando) {
+                const index = manutencoes.findIndex(m => m.id === osEditando);
+                if (index !== -1) {
+                    manutencoes[index] = os;
+                    mostrarNotificacao('OS atualizada!', 'sucesso');
+                }
+            } else {
+                manutencoes.push(os);
+                mostrarNotificacao('OS salva com sucesso!', 'sucesso');
+            }
+
+            localStorage.setItem('ons_manutencoes', JSON.stringify(manutencoes));
+
+            limparOS();
+            atualizarDashboard();
+        }
+
+        function limparOS() {
+            document.getElementById('os-cliente').value = '';
+            document.getElementById('os-equipamento').innerHTML = '<option value="">Selecione o equipamento</option>';
+            document.getElementById('os-equip-manual').value = '';
+            document.getElementById('os-preventiva').checked = false;
+            document.getElementById('os-corretiva').checked = false;
+            document.getElementById('os-defeitos').value = '';
+            document.getElementById('os-solucoes').value = '';
+            document.getElementById('os-horas').value = '1';
+            document.getElementById('os-valor-hora').value = '85';
+            
+            document.getElementById('pecas-lista').innerHTML = '';
+            adicionarPeca();
+            
+            calcularTotalOS();
+            osEditando = null;
+        }
+
+        function usarClienteOS(id) {
+            document.getElementById('os-cliente').value = id;
+            carregarEquipamentosClienteOS();
+            document.querySelector('[data-tela="novaos"]').click();
+        }
+
+        function visualizarOS() {
+            const clienteId = document.getElementById('os-cliente').value;
+            if (!clienteId) {
+                mostrarNotificacao('Complete os dados da OS', 'erro');
+                return;
+            }
+
+            const totais = calcularTotalOS();
+            
+            const pecas = [];
+            document.querySelectorAll('.linha-peca').forEach(linha => {
+                const nome = linha.querySelector('.peca-nome').value;
+                const qtd = parseFloat(linha.querySelector('.peca-qtd').value) || 0;
+                const valor = parseFloat(linha.querySelector('.peca-valor').value) || 0;
+                if (nome && qtd > 0) {
+                    pecas.push({ nome, qtd, valor, total: qtd * valor });
+                }
+            });
+
+            const osPreview = {
+                clienteId: parseInt(clienteId),
+                equipamento: document.getElementById('os-equipamento').value || document.getElementById('os-equip-manual').value,
+                preventiva: document.getElementById('os-preventiva').checked,
+                corretiva: document.getElementById('os-corretiva').checked,
+                defeitos: document.getElementById('os-defeitos').value,
+                solucoes: document.getElementById('os-solucoes').value,
+                pecas: pecas,
+                horas: parseFloat(document.getElementById('os-horas').value) || 0,
+                valorHora: parseFloat(document.getElementById('os-valor-hora').value) || 0,
+                totalPecas: totais.totalPecas,
+                totalMaoObra: totais.totalMaoObra,
+                totalGeral: totais.totalGeral,
+                data: new Date().toISOString()
+            };
+
+            mostrarRelatorioOS(osPreview);
+            document.querySelector('[data-tela="relatorios"]').click();
+        }
+
+        // ==================== DASHBOARD ====================
+        function atualizarDashboard() {
+            document.getElementById('total-clientes').textContent = clientes.length;
+            
+            const totalEquip = clientes.reduce((acc, c) => acc + (c.equipamentos?.length || 0), 0);
+            document.getElementById('total-equipamentos').textContent = totalEquip;
+            
+            document.getElementById('total-os').textContent = manutencoes.length;
+            
+            const receita = manutencoes.reduce((acc, os) => acc + (os.totalGeral || 0), 0);
+            document.getElementById('total-receita').textContent = `R$ ${receita.toFixed(2)}`;
+
+            // Últimas OS (ordem decrescente)
+            const lista = document.getElementById('lista-recentes');
+            const recentes = [...manutencoes].sort((a, b) => new Date(b.data) - new Date(a.data)).slice(0, 5);
+            
+            if (recentes.length === 0) {
+                lista.innerHTML = '<div class="item-lista">Nenhuma OS registrada</div>';
+            } else {
+                lista.innerHTML = '';
+                recentes.forEach(os => {
+                    const cliente = clientes.find(c => c.id === os.clienteId) || { nome: 'Cliente' };
+                    const div = document.createElement('div');
+                    div.className = 'item-lista';
+                    div.innerHTML = `
+                        <div class="item-lista-info">
+                            <h4>${cliente.nome} - ${os.equipamento}</h4>
+                            <p>${new Date(os.data).toLocaleDateString()} - R$ ${os.totalGeral?.toFixed(2)}</p>
+                        </div>
+                        <button class="btn-acao ver" onclick="verOS(${os.id})"><i class="fas fa-eye"></i></button>
+                    `;
+                    lista.appendChild(div);
+                });
+            }
+        }
+
+        // ==================== HISTÓRICO ====================
+        function carregarHistorico() {
+            const lista = document.getElementById('lista-historico');
+            lista.innerHTML = '';
+
+            if (manutencoes.length === 0) {
+                lista.innerHTML = '<div class="item-lista">Nenhuma OS registrada</div>';
+                return;
+            }
+
+            // Ordem decrescente por data
+            const ordenadas = [...manutencoes].sort((a, b) => new Date(b.data) - new Date(a.data));
+
+            ordenadas.forEach(os => {
+                const cliente = clientes.find(c => c.id === os.clienteId) || { nome: 'Cliente' };
+                const div = document.createElement('div');
+                div.className = 'item-lista';
+                div.innerHTML = `
+                    <div class="item-lista-info">
+                        <h4>${cliente.nome} - ${os.equipamento}</h4>
+                        <p>
+                            <i class="fas fa-calendar"></i> ${new Date(os.data).toLocaleDateString()} | 
+                            <i class="fas fa-tag"></i> R$ ${os.totalGeral?.toFixed(2)}
+                        </p>
+                    </div>
+                    <div class="item-lista-acoes">
+                        <button class="btn-acao ver" onclick="verOS(${os.id})"><i class="fas fa-eye"></i></button>
+                        <button class="btn-acao editar" onclick="editarOS(${os.id})"><i class="fas fa-edit"></i></button>
+                    </div>
+                `;
+                lista.appendChild(div);
+            });
+        }
+
+        function verOS(id) {
+            const os = manutencoes.find(m => m.id === id);
+            if (os) {
+                mostrarRelatorioOS(os);
+                document.querySelector('[data-tela="relatorios"]').click();
+            }
+        }
+
+        function editarOS(id) {
+            const os = manutencoes.find(m => m.id === id);
+            if (!os) return;
+
+            // Preencher formulário com dados da OS
+            document.getElementById('os-cliente').value = os.clienteId;
+            carregarEquipamentosClienteOS();
+            
+            setTimeout(() => {
+                document.getElementById('os-equipamento').value = os.equipamento;
+            }, 100);
+            
+            document.getElementById('os-equip-manual').value = '';
+            document.getElementById('os-preventiva').checked = os.preventiva || false;
+            document.getElementById('os-corretiva').checked = os.corretiva || false;
+            document.getElementById('os-defeitos').value = os.defeitos || '';
+            document.getElementById('os-solucoes').value = os.solucoes || '';
+            document.getElementById('os-horas').value = os.horas || 1;
+            document.getElementById('os-valor-hora').value = os.valorHora || 85;
+
+            // Limpar e recriar peças
+            document.getElementById('pecas-lista').innerHTML = '';
+            if (os.pecas && os.pecas.length > 0) {
+                os.pecas.forEach(p => {
+                    adicionarPeca();
+                    setTimeout(() => {
+                        const linhas = document.querySelectorAll('.linha-peca');
+                        const ultima = linhas[linhas.length - 1];
+                        ultima.querySelector('.peca-nome').value = p.nome;
+                        ultima.querySelector('.peca-qtd').value = p.qtd;
+                        ultima.querySelector('.peca-valor').value = p.valor;
+                    }, 50);
+                });
+            } else {
+                adicionarPeca();
+            }
+
+            osEditando = id;
+            document.querySelector('[data-tela="novaos"]').click();
+            mostrarNotificacao('Editando OS', 'sucesso');
+        }
+
+        // ==================== RELATÓRIOS ====================
+        function listarTodasOS() {
+            const lista = document.getElementById('lista-todas-os');
+            lista.innerHTML = '';
+
+            if (manutencoes.length === 0) {
+                lista.innerHTML = '<div class="item-lista">Nenhuma OS encontrada</div>';
+                return;
+            }
+
+            const ordenadas = [...manutencoes].sort((a, b) => new Date(b.data) - new Date(a.data));
+
+            ordenadas.forEach(os => {
+                const cliente = clientes.find(c => c.id === os.clienteId) || { nome: 'Cliente' };
+                const div = document.createElement('div');
+                div.className = 'item-lista';
+                div.innerHTML = `
+                    <div class="item-lista-info">
+                        <h4>${cliente.nome} - ${os.equipamento}</h4>
+                        <p>${new Date(os.data).toLocaleDateString()} - R$ ${os.totalGeral?.toFixed(2)}</p>
+                    </div>
+                    <button class="btn-acao ver" onclick="mostrarRelatorioOS(${JSON.stringify(os).replace(/"/g, '&quot;')})">
+                        <i class="fas fa-eye"></i> Visualizar
+                    </button>
+                `;
+                lista.appendChild(div);
+            });
+        }
+
+        function mostrarRelatorioOS(os) {
+            const cliente = clientes.find(c => c.id === os.clienteId) || { 
+                nome: 'Cliente não encontrado', 
+                telefone: '', 
+                email: '',
+                endereco: ''
+            };
+
+            const dataObj = new Date(os.data);
+            const dataFormatada = dataObj.toLocaleDateString('pt-BR');
+            const horaFormatada = dataObj.toLocaleTimeString('pt-BR');
+
+            let relatorioHTML = `
+                <div class="relatorio-header">
+                    <h1>ONS ODONTOTECNICA</h1>
+                    <h3>ORDEM DE SERVIÇO TÉCNICA</h3>
+                    <p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p>
+                    <p>Telefone: 35 9 2000-4813</p>
+                </div>
+
+                <div style="text-align: right; margin-bottom: 20px;">
+                    <strong>Data:</strong> ${dataFormatada} - ${horaFormatada}<br>
+                    <strong>OS Nº:</strong> ${os.id}
+                </div>
+
+                <div class="relatorio-dados">
+                    <div>
+                        <h4 style="color: #093d5c;">DADOS DO CLIENTE</h4>
+                        <p><strong>Cliente:</strong> ${cliente.nome}</p>
+                        <p><strong>Telefone:</strong> ${cliente.telefone}</p>
+                        <p><strong>Email:</strong> ${cliente.email || 'Não informado'}</p>
+                        <p><strong>Endereço:</strong> ${cliente.endereco || 'Não informado'}</p>
+                    </div>
+                    <div>
+                        <h4 style="color: #093d5c;">DADOS DO EQUIPAMENTO</h4>
+                        <p><strong>Equipamento:</strong> ${os.equipamento}</p>
+                        <p><strong>Tipo de Manutenção:</strong> ${os.preventiva ? 'Preventiva ' : ''}${os.corretiva ? 'Corretiva' : ''}</p>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #093d5c;">DIAGNÓSTICO TÉCNICO</h4>
+                    <p><strong>Defeitos Identificados:</strong></p>
+                    <p style="background: #f5f5f5; padding: 15px; border-radius: 5px;">${os.defeitos || 'Não informado'}</p>
+                    
+                    <p><strong>Soluções Aplicadas:</strong></p>
+                    <p style="background: #f5f5f5; padding: 15px; border-radius: 5px;">${os.solucoes || 'Não informado'}</p>
+                </div>
+            `;
+
+            // Tabela de peças
+            if (os.pecas && os.pecas.length > 0) {
+                relatorioHTML += `
+                    <h4 style="color: #093d5c;">PEÇAS UTILIZADAS</h4>
+                    <table class="relatorio-tabela">
+                        <thead>
+                            <tr>
+                                <th>Peça/Componente</th>
+                                <th>Quantidade</th>
+                                <th>Valor Unitário</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                os.pecas.forEach(p => {
+                    relatorioHTML += `
+                        <tr>
+                            <td>${p.nome}</td>
+                            <td>${p.qtd}</td>
+                            <td>R$ ${p.valor.toFixed(2)}</td>
+                            <td>R$ ${(p.qtd * p.valor).toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+
+                relatorioHTML += `
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            // Resumo financeiro
+            relatorioHTML += `
+                <div style="margin: 20px 0;">
+                    <h4 style="color: #093d5c;">RESUMO FINANCEIRO</h4>
+                    <p><strong>Total de Peças:</strong> R$ ${os.totalPecas?.toFixed(2) || '0.00'}</p>
+                    <p><strong>Mão de Obra (${os.horas}h):</strong> R$ ${os.totalMaoObra?.toFixed(2) || '0.00'}</p>
+                </div>
+
+                <div class="relatorio-total">
+                    <strong>VALOR TOTAL: R$ ${os.totalGeral?.toFixed(2) || '0.00'}</strong>
+                </div>
+
+                <div style="margin-top: 40px; text-align: center; font-size: 0.9rem; color: #666;">
+                    <p>ONS ODONTOTECNICA - Soluções em Equipamentos Odontológicos</p>
+                    <p>35 9 2000-4813</p>
+                    <p>Documento gerado em ${new Date().toLocaleString()}</p>
+                </div>
+            `;
+
+            // Verificar se precisa de página de continuação
+            if (relatorioHTML.length > 3000) {
+                relatorioHTML += `
+                    <div class="continuacao">--- CONTINUAÇÃO NA PRÓXIMA PÁGINA ---</div>
+                `;
+            }
+
+            const visualizacao = document.getElementById('relatorio-visualizacao');
+            visualizacao.innerHTML = relatorioHTML;
+            visualizacao.style.display = 'block';
+            
+            document.getElementById('botoes-relatorio').style.display = 'flex';
+            
+            // Salvar OS atual para edição/impressão
+            window.osAtual = os;
+        }
+
+        function imprimirRelatorio() {
+            window.print();
+        }
+
+        function fecharRelatorio() {
+            document.getElementById('relatorio-visualizacao').style.display = 'none';
+            document.getElementById('botoes-relatorio').style.display = 'none';
+        }
+
+        // ==================== NOTIFICAÇÕES ====================
+        function mostrarNotificacao(mensagem, tipo = 'sucesso') {
+            const notif = document.getElementById('notificacao');
+            notif.textContent = mensagem;
+            notif.className = `notificacao ${tipo}`;
+            notif.classList.remove('hidden');
+            
+            setTimeout(() => {
+                notif.classList.add('hidden');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
