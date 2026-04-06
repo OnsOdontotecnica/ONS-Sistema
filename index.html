@@ -58,6 +58,15 @@
             text-align: center;
         }
 
+        /* Logo com tamanho padrão e botão de alterar */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
         .logo-ons {
             background: var(--dourado-ons);
             color: var(--azul-ons);
@@ -67,14 +76,64 @@
             font-size: 1.3rem;
             text-align: center;
             line-height: 1.2;
-            display: inline-block;
-            width: fit-content;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 120px;
+            height: 60px;
+            transition: all 0.3s ease;
+        }
+
+        /* Logo imagem (quando o usuário fizer upload) */
+        .logo-imagem {
+            height: 50px;
+            width: auto;
+            max-width: 180px;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .logo-ons i {
+            font-size: 1.5rem;
         }
 
         .logo-ons small {
             display: block;
             font-size: 0.65rem;
             font-weight: 500;
+        }
+
+        .btn-alterar-logo {
+            background: rgba(239, 181, 5, 0.2);
+            border: 1px solid var(--dourado-ons);
+            color: var(--dourado-ons);
+            padding: 8px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-alterar-logo:hover {
+            background: var(--dourado-ons);
+            color: var(--azul-ons);
+        }
+
+        .logo-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .logo-input-wrapper input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
         }
 
         .header-info h1 {
@@ -365,7 +424,7 @@
         }
 
         .pecas-header {
-            display: none; /* Esconder no mobile, mostrar via flex no desktop */
+            display: none;
         }
 
         .linha-peca {
@@ -585,6 +644,10 @@
                 gap: 25px;
             }
 
+            .logo-container {
+                justify-content: flex-start;
+            }
+
             .header-telefone {
                 margin: 0;
             }
@@ -679,7 +742,7 @@
         }
 
         input, select, textarea {
-            font-size: 16px; /* Evita zoom no iOS */
+            font-size: 16px;
         }
 
         @media print {
@@ -710,12 +773,24 @@
 </head>
 <body>
     <div class="container">
-        <!-- HEADER -->
+        <!-- HEADER COM BOTÃO PARA ALTERAR LOGO -->
         <div class="header">
             <div class="logo-area">
-                <div class="logo-ons">
-                    ONS
-                    <small>ODONTOTECNICA</small>
+                <div class="logo-container">
+                    <div class="logo-ons" id="logoDisplay">
+                        <i class="fas fa-tooth"></i>
+                        ONS
+                        <small>ODONTOTECNICA</small>
+                    </div>
+                    <div class="logo-input-wrapper">
+                        <button class="btn-alterar-logo" onclick="document.getElementById('logoUpload').click()">
+                            <i class="fas fa-image"></i> Alterar Logo
+                        </button>
+                        <input type="file" id="logoUpload" accept="image/png, image/jpeg, image/jpg, image/svg+xml" style="display: none;">
+                        <button class="btn-alterar-logo" onclick="restaurarLogoPadrao()" style="margin-left: 5px;">
+                            <i class="fas fa-undo-alt"></i> Padrão
+                        </button>
+                    </div>
                 </div>
                 <div class="header-info">
                     <h1>Sistema Técnico de Manutenção</h1>
@@ -727,7 +802,7 @@
             </div>
         </div>
 
-        <!-- MENU -->
+        <!-- MENU (restante igual) -->
         <div class="menu no-print">
             <button class="menu-btn active" data-tela="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
             <button class="menu-btn" data-tela="clientes"><i class="fas fa-users"></i> Clientes</button>
@@ -741,24 +816,11 @@
         <div id="dashboard" class="section active">
             <h2 class="titulo-secao"><i class="fas fa-chart-pie"></i> Dashboard</h2>
             <div class="cards-grid">
-                <div class="card-dash">
-                    <h3 id="total-clientes">0</h3>
-                    <p>Clientes Ativos</p>
-                </div>
-                <div class="card-dash">
-                    <h3 id="total-equipamentos">0</h3>
-                    <p>Equipamentos</p>
-                </div>
-                <div class="card-dash">
-                    <h3 id="total-os">0</h3>
-                    <p>Ordens de Serviço</p>
-                </div>
-                <div class="card-dash">
-                    <h3 id="total-receita">R$ 0</h3>
-                    <p>Receita Total</p>
-                </div>
+                <div class="card-dash"><h3 id="total-clientes">0</h3><p>Clientes Ativos</p></div>
+                <div class="card-dash"><h3 id="total-equipamentos">0</h3><p>Equipamentos</p></div>
+                <div class="card-dash"><h3 id="total-os">0</h3><p>Ordens de Serviço</p></div>
+                <div class="card-dash"><h3 id="total-receita">R$ 0</h3><p>Receita Total</p></div>
             </div>
-
             <h3 class="titulo-secao mt-20">Últimas Ordens de Serviço</h3>
             <div class="lista-container" id="lista-recentes"></div>
         </div>
@@ -766,175 +828,74 @@
         <!-- CLIENTES -->
         <div id="clientes" class="section">
             <h2 class="titulo-secao"><i class="fas fa-user-plus"></i> Cadastro de Clientes</h2>
-            
             <div class="form-grid">
-                <div class="form-group">
-                    <label><i class="fas fa-user"></i> Nome Completo *</label>
-                    <input type="text" id="cliente-nome" placeholder="Digite o nome completo">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-phone"></i> Telefone *</label>
-                    <input type="text" id="cliente-telefone" placeholder="(35) 9 2000-4813">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-envelope"></i> E-mail</label>
-                    <input type="email" id="cliente-email" placeholder="cliente@email.com">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-map-marker-alt"></i> Endereço</label>
-                    <input type="text" id="cliente-endereco" placeholder="Rua, número, bairro, cidade">
-                </div>
+                <div class="form-group"><label><i class="fas fa-user"></i> Nome Completo *</label><input type="text" id="cliente-nome" placeholder="Digite o nome completo"></div>
+                <div class="form-group"><label><i class="fas fa-phone"></i> Telefone *</label><input type="text" id="cliente-telefone" placeholder="(35) 9 2000-4813"></div>
+                <div class="form-group"><label><i class="fas fa-envelope"></i> E-mail</label><input type="email" id="cliente-email" placeholder="cliente@email.com"></div>
+                <div class="form-group"><label><i class="fas fa-map-marker-alt"></i> Endereço</label><input type="text" id="cliente-endereco" placeholder="Rua, número, bairro, cidade"></div>
             </div>
-
-            <div class="equipamentos-cliente">
-                <h3 style="color: var(--azul-ons); margin-bottom: 16px;">
-                    <i class="fas fa-tooth"></i> Equipamentos do Cliente
-                </h3>
-                <div id="equipamentos-lista"></div>
-                <button class="btn-adicionar" onclick="adicionarEquipamentoCliente()">
-                    <i class="fas fa-plus-circle"></i> Adicionar Novo Equipamento
-                </button>
-            </div>
-
-            <div class="botoes">
-                <button class="btn btn-primario" onclick="salvarCliente()">
-                    <i class="fas fa-save"></i> Salvar Cliente
-                </button>
-                <button class="btn btn-outline" onclick="limparFormCliente()">
-                    <i class="fas fa-eraser"></i> Limpar
-                </button>
-            </div>
-
-            <h3 class="titulo-secao mt-20">Clientes Cadastrados</h3>
-            <div class="lista-container" id="lista-clientes"></div>
+            <div class="equipamentos-cliente"><h3 style="color: var(--azul-ons); margin-bottom: 16px;"><i class="fas fa-tooth"></i> Equipamentos do Cliente</h3><div id="equipamentos-lista"></div><button class="btn-adicionar" onclick="adicionarEquipamentoCliente()"><i class="fas fa-plus-circle"></i> Adicionar Novo Equipamento</button></div>
+            <div class="botoes"><button class="btn btn-primario" onclick="salvarCliente()"><i class="fas fa-save"></i> Salvar Cliente</button><button class="btn btn-outline" onclick="limparFormCliente()"><i class="fas fa-eraser"></i> Limpar</button></div>
+            <h3 class="titulo-secao mt-20">Clientes Cadastrados</h3><div class="lista-container" id="lista-clientes"></div>
         </div>
 
         <!-- EQUIPAMENTOS -->
-        <div id="equipamentos" class="section">
-            <h2 class="titulo-secao"><i class="fas fa-tooth"></i> Equipamentos Odontológicos</h2>
-            <div style="margin-bottom: 24px;">
-                <h3 style="color: var(--azul-ons); margin-bottom: 12px;">Lista de Equipamentos</h3>
-                <p style="color: #5a6b7a; margin-bottom: 16px;">Clique em um equipamento para iniciar uma OS</p>
-                <div class="equipamentos-pre-grid" id="lista-equipamentos-pre"></div>
-            </div>
-            <div>
-                <h3 style="color: var(--azul-ons); margin-bottom: 16px;">Cadastro Rápido</h3>
-                <div class="form-grid">
-                    <div class="form-group full-width">
-                        <label><i class="fas fa-tag"></i> Nome do Equipamento</label>
-                        <input type="text" id="equip-manual" placeholder="Ex: Refletor Odontológico, Compressor...">
-                    </div>
-                </div>
-                <div class="botoes">
-                    <button class="btn btn-primario" onclick="usarEquipamentoManual()">
-                        <i class="fas fa-play"></i> Iniciar OS
-                    </button>
-                </div>
-            </div>
-        </div>
+        <div id="equipamentos" class="section"><h2 class="titulo-secao"><i class="fas fa-tooth"></i> Equipamentos Odontológicos</h2><div style="margin-bottom: 24px;"><h3 style="color: var(--azul-ons); margin-bottom: 12px;">Lista de Equipamentos</h3><p style="color: #5a6b7a; margin-bottom: 16px;">Clique em um equipamento para iniciar uma OS</p><div class="equipamentos-pre-grid" id="lista-equipamentos-pre"></div></div><div><h3 style="color: var(--azul-ons); margin-bottom: 16px;">Cadastro Rápido</h3><div class="form-grid"><div class="form-group full-width"><label><i class="fas fa-tag"></i> Nome do Equipamento</label><input type="text" id="equip-manual" placeholder="Ex: Refletor Odontológico, Compressor..."></div></div><div class="botoes"><button class="btn btn-primario" onclick="usarEquipamentoManual()"><i class="fas fa-play"></i> Iniciar OS</button></div></div></div>
 
         <!-- NOVA OS -->
-        <div id="novaos" class="section">
-            <h2 class="titulo-secao"><i class="fas fa-clipboard-list"></i> Ordem de Serviço</h2>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label><i class="fas fa-user"></i> Cliente</label>
-                    <select id="os-cliente" onchange="carregarEquipamentosClienteOS()">
-                        <option value="">Selecione um cliente</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-tooth"></i> Equipamento</label>
-                    <select id="os-equipamento">
-                        <option value="">Selecione o equipamento</option>
-                    </select>
-                </div>
-                <div class="form-group full-width">
-                    <label><i class="fas fa-pencil-alt"></i> Ou digite manualmente</label>
-                    <input type="text" id="os-equip-manual" placeholder="Digite o nome do equipamento">
-                </div>
-            </div>
-
-            <h3 class="titulo-secao mt-20">Tipo de Manutenção</h3>
-            <div class="opcoes-grid">
-                <label class="opcao-item"><input type="checkbox" id="os-preventiva"> Preventiva</label>
-                <label class="opcao-item"><input type="checkbox" id="os-corretiva"> Corretiva</label>
-            </div>
-
-            <h3 class="titulo-secao mt-20">Diagnóstico</h3>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label><i class="fas fa-exclamation-triangle"></i> Defeitos</label>
-                    <textarea id="os-defeitos" rows="3" placeholder="Descreva os defeitos..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-tools"></i> Soluções</label>
-                    <textarea id="os-solucoes" rows="3" placeholder="Descreva as soluções..."></textarea>
-                </div>
-            </div>
-
-            <h3 class="titulo-secao mt-20">Peças Utilizadas</h3>
-            <div class="pecas-section">
-                <div class="pecas-header">
-                    <span>Peça</span><span>Qtd</span><span>Valor Unit.</span><span>Total</span><span></span>
-                </div>
-                <div id="pecas-lista"></div>
-                <button class="btn-adicionar" onclick="adicionarPeca()">
-                    <i class="fas fa-plus-circle"></i> Adicionar Peça
-                </button>
-            </div>
-
-            <h3 class="titulo-secao mt-20">Mão de Obra</h3>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label><i class="fas fa-clock"></i> Horas</label>
-                    <input type="number" id="os-horas" value="1" min="0.5" step="0.5" oninput="calcularTotalOS()">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-dollar-sign"></i> Valor Hora (R$)</label>
-                    <input type="number" id="os-valor-hora" value="85" step="5" oninput="calcularTotalOS()">
-                </div>
-            </div>
-
-            <div class="resumo-os">
-                <div class="resumo-item"><div>Total Peças</div><div class="valor" id="resumo-pecas">R$ 0,00</div></div>
-                <div class="resumo-item"><div>Mão de Obra</div><div class="valor" id="resumo-maoobra">R$ 0,00</div></div>
-                <div class="resumo-item"><div>VALOR TOTAL</div><div class="valor" id="resumo-total">R$ 0,00</div></div>
-            </div>
-
-            <div class="botoes">
-                <button class="btn btn-primario" onclick="salvarOS()"><i class="fas fa-save"></i> Salvar OS</button>
-                <button class="btn btn-dourado" onclick="visualizarOS()"><i class="fas fa-eye"></i> Visualizar</button>
-                <button class="btn btn-outline" onclick="limparOS()"><i class="fas fa-eraser"></i> Limpar</button>
-            </div>
-        </div>
+        <div id="novaos" class="section"><h2 class="titulo-secao"><i class="fas fa-clipboard-list"></i> Ordem de Serviço</h2><div class="form-grid"><div class="form-group"><label><i class="fas fa-user"></i> Cliente</label><select id="os-cliente" onchange="carregarEquipamentosClienteOS()"><option value="">Selecione um cliente</option></select></div><div class="form-group"><label><i class="fas fa-tooth"></i> Equipamento</label><select id="os-equipamento"><option value="">Selecione o equipamento</option></select></div><div class="form-group full-width"><label><i class="fas fa-pencil-alt"></i> Ou digite manualmente</label><input type="text" id="os-equip-manual" placeholder="Digite o nome do equipamento"></div></div><h3 class="titulo-secao mt-20">Tipo de Manutenção</h3><div class="opcoes-grid"><label class="opcao-item"><input type="checkbox" id="os-preventiva"> Preventiva</label><label class="opcao-item"><input type="checkbox" id="os-corretiva"> Corretiva</label></div><h3 class="titulo-secao mt-20">Diagnóstico</h3><div class="form-grid"><div class="form-group"><label><i class="fas fa-exclamation-triangle"></i> Defeitos</label><textarea id="os-defeitos" rows="3" placeholder="Descreva os defeitos..."></textarea></div><div class="form-group"><label><i class="fas fa-tools"></i> Soluções</label><textarea id="os-solucoes" rows="3" placeholder="Descreva as soluções..."></textarea></div></div><h3 class="titulo-secao mt-20">Peças Utilizadas</h3><div class="pecas-section"><div class="pecas-header"><span>Peça</span><span>Qtd</span><span>Valor Unit.</span><span>Total</span><span></span></div><div id="pecas-lista"></div><button class="btn-adicionar" onclick="adicionarPeca()"><i class="fas fa-plus-circle"></i> Adicionar Peça</button></div><h3 class="titulo-secao mt-20">Mão de Obra</h3><div class="form-grid"><div class="form-group"><label><i class="fas fa-clock"></i> Horas</label><input type="number" id="os-horas" value="1" min="0.5" step="0.5" oninput="calcularTotalOS()"></div><div class="form-group"><label><i class="fas fa-dollar-sign"></i> Valor Hora (R$)</label><input type="number" id="os-valor-hora" value="85" step="5" oninput="calcularTotalOS()"></div></div><div class="resumo-os"><div class="resumo-item"><div>Total Peças</div><div class="valor" id="resumo-pecas">R$ 0,00</div></div><div class="resumo-item"><div>Mão de Obra</div><div class="valor" id="resumo-maoobra">R$ 0,00</div></div><div class="resumo-item"><div>VALOR TOTAL</div><div class="valor" id="resumo-total">R$ 0,00</div></div></div><div class="botoes"><button class="btn btn-primario" onclick="salvarOS()"><i class="fas fa-save"></i> Salvar OS</button><button class="btn btn-dourado" onclick="visualizarOS()"><i class="fas fa-eye"></i> Visualizar</button><button class="btn btn-outline" onclick="limparOS()"><i class="fas fa-eraser"></i> Limpar</button></div></div>
 
         <!-- HISTÓRICO -->
-        <div id="historico" class="section">
-            <h2 class="titulo-secao"><i class="fas fa-history"></i> Histórico de OS</h2>
-            <div class="lista-container" id="lista-historico"></div>
-        </div>
+        <div id="historico" class="section"><h2 class="titulo-secao"><i class="fas fa-history"></i> Histórico de OS</h2><div class="lista-container" id="lista-historico"></div></div>
 
         <!-- RELATÓRIOS -->
-        <div id="relatorios" class="section">
-            <h2 class="titulo-secao"><i class="fas fa-file-pdf"></i> Relatórios</h2>
-            <div class="botoes mb-20">
-                <button class="btn btn-primario" onclick="listarTodasOS()"><i class="fas fa-list"></i> Listar Todas as OS</button>
-            </div>
-            <div class="lista-container" id="lista-todas-os"></div>
-            <div id="relatorio-visualizacao" class="relatorio-print mt-20" style="display: none;"></div>
-            <div class="botoes mt-20" id="botoes-relatorio" style="display: none;">
-                <button class="btn btn-dourado" onclick="imprimirRelatorio()"><i class="fas fa-print"></i> Imprimir</button>
-                <button class="btn btn-primario" onclick="editarOSAtual()"><i class="fas fa-edit"></i> Editar</button>
-                <button class="btn btn-outline" onclick="fecharRelatorio()"><i class="fas fa-times"></i> Fechar</button>
-            </div>
-        </div>
+        <div id="relatorios" class="section"><h2 class="titulo-secao"><i class="fas fa-file-pdf"></i> Relatórios</h2><div class="botoes mb-20"><button class="btn btn-primario" onclick="listarTodasOS()"><i class="fas fa-list"></i> Listar Todas as OS</button></div><div class="lista-container" id="lista-todas-os"></div><div id="relatorio-visualizacao" class="relatorio-print mt-20" style="display: none;"></div><div class="botoes mt-20" id="botoes-relatorio" style="display: none;"><button class="btn btn-dourado" onclick="imprimirRelatorio()"><i class="fas fa-print"></i> Imprimir</button><button class="btn btn-primario" onclick="editarOSAtual()"><i class="fas fa-edit"></i> Editar</button><button class="btn btn-outline" onclick="fecharRelatorio()"><i class="fas fa-times"></i> Fechar</button></div></div>
     </div>
 
     <div id="notificacao" class="notificacao hidden"></div>
 
     <script>
-        // Dados e funções idênticas ao original (mantidas)
+        // Funções para gerenciar a logo
+        function carregarLogoSalva() {
+            const logoSalva = localStorage.getItem('ons_logo');
+            if (logoSalva) {
+                const logoDiv = document.getElementById('logoDisplay');
+                logoDiv.innerHTML = `<img src="${logoSalva}" class="logo-imagem" alt="Logo ONS">`;
+                logoDiv.style.background = 'transparent';
+                logoDiv.style.padding = '5px';
+            }
+        }
+
+        function restaurarLogoPadrao() {
+            const logoDiv = document.getElementById('logoDisplay');
+            logoDiv.innerHTML = `<i class="fas fa-tooth"></i> ONS <small>ODONTOTECNICA</small>`;
+            logoDiv.style.background = 'var(--dourado-ons)';
+            logoDiv.style.padding = '10px 20px';
+            localStorage.removeItem('ons_logo');
+            mostrarNotificacao('Logo restaurada para o padrão!', 'sucesso');
+        }
+
+        // Upload e preview da logo
+        document.getElementById('logoUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/svg+xml')) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const imgData = event.target.result;
+                    const logoDiv = document.getElementById('logoDisplay');
+                    logoDiv.innerHTML = `<img src="${imgData}" class="logo-imagem" alt="Logo ONS">`;
+                    logoDiv.style.background = 'transparent';
+                    logoDiv.style.padding = '5px';
+                    localStorage.setItem('ons_logo', imgData);
+                    mostrarNotificacao('Logo alterada com sucesso!', 'sucesso');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                mostrarNotificacao('Selecione uma imagem PNG, JPG ou SVG', 'erro');
+            }
+        });
+
+        // Dados e funções do sistema (preservados)
         let clientes = JSON.parse(localStorage.getItem('ons_clientes')) || [];
         let manutencoes = JSON.parse(localStorage.getItem('ons_manutencoes')) || [];
         let clienteEditando = null;
@@ -942,6 +903,7 @@
         const equipamentosLista = ['Equipo Odontológico','Compressor Odontológico','Autoclave','Aparelho de Raio-X','Fotopolimerizador','Ultrassom / Scaler','Cadeira Odontológica','Mocho do Dentista','Sugador / Bomba de Vácuo','Amalgamador','Lâmpada do Equipo','Microscópio Odontológico','Laser Terapêutico','Seladora de Embalagens','Destiladora de Água','REFLETOR Odontológico'];
 
         document.addEventListener('DOMContentLoaded', () => {
+            carregarLogoSalva();
             document.querySelectorAll('.menu-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
@@ -962,6 +924,7 @@
             if(document.getElementById('equipamentos-lista').children.length === 0) adicionarEquipamentoCliente();
         });
 
+        // Todas as funções do sistema permanecem idênticas (preservadas)
         function adicionarEquipamentoCliente(tipo=''){ const c=document.getElementById('equipamentos-lista'); const d=document.createElement('div'); d.className='equipamento-item'; d.innerHTML=`<div class="equipamento-header"><h4><i class="fas fa-tooth"></i> Equipamento</h4><button class="btn-remover" onclick="removerEquipamentoCliente(this)"><i class="fas fa-times"></i></button></div><div class="equipamento-campos"><select class="equip-tipo"><option value="">Selecione</option>${equipamentosLista.map(e=>`<option value="${e}" ${e===tipo?'selected':''}>${e}</option>`).join('')}</select><input type="text" class="equip-modelo" placeholder="Modelo"><input type="text" class="equip-fabricante" placeholder="Fabricante"><input type="text" class="equip-serie" placeholder="Nº Série"></div>`; c.appendChild(d); }
         function removerEquipamentoCliente(b){ if(document.querySelectorAll('.equipamento-item').length>1) b.closest('.equipamento-item').remove(); else mostrarNotificacao('Cliente deve ter pelo menos um equipamento','erro'); }
         function salvarCliente(){ const nome=document.getElementById('cliente-nome').value.trim(), telefone=document.getElementById('cliente-telefone').value.trim(); if(!nome||!telefone){mostrarNotificacao('Nome e telefone obrigatórios','erro');return;} const equipamentos=[]; document.querySelectorAll('.equipamento-item').forEach(i=>{const tipo=i.querySelector('.equip-tipo').value; if(tipo) equipamentos.push({tipo,modelo:i.querySelector('.equip-modelo').value,fabricante:i.querySelector('.equip-fabricante').value,serie:i.querySelector('.equip-serie').value});}); if(equipamentos.length===0){mostrarNotificacao('Adicione pelo menos um equipamento','erro');return;} const cliente={id:clienteEditando||Date.now(),nome,telefone,email:document.getElementById('cliente-email').value,endereco:document.getElementById('cliente-endereco').value,equipamentos,data:new Date().toISOString()}; if(clienteEditando){const idx=clientes.findIndex(c=>c.id===clienteEditando); if(idx!==-1) clientes[idx]=cliente; mostrarNotificacao('Cliente atualizado!','sucesso');}else{clientes.push(cliente); mostrarNotificacao('Cliente salvo!','sucesso');} localStorage.setItem('ons_clientes',JSON.stringify(clientes)); limparFormCliente(); carregarListaClientes(); carregarClientesSelect(); atualizarDashboard();}
