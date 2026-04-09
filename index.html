@@ -782,7 +782,9 @@
             to { transform: translateY(0); opacity: 1; }
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="container">
@@ -823,6 +825,7 @@
             <button class="menu-btn" data-tela="novaos"><i class="fas fa-clipboard-list"></i> Nova OS</button>
             <button class="menu-btn" data-tela="historico"><i class="fas fa-history"></i> Histórico</button>
             <button class="menu-btn" data-tela="relatorios"><i class="fas fa-file-pdf"></i> Relatórios</button>
+            <button class="menu-btn" data-tela="osclientes"><i class="fas fa-inbox"></i> OS Clientes</button>
         </div>
 
         <!-- DASHBOARD -->
@@ -863,7 +866,19 @@
 
         <!-- RELATÓRIOS -->
         <div id="relatorios" class="section"><h2 class="titulo-secao"><i class="fas fa-file-pdf"></i> Relatórios</h2><div class="botoes mb-20"><button class="btn btn-primario" onclick="listarTodasOS()"><i class="fas fa-list"></i> Listar Todas as OS</button></div><div class="lista-container" id="lista-todas-os"></div><div id="relatorio-visualizacao" class="relatorio-print mt-20" style="display: none;"></div><div class="botoes mt-20" id="botoes-relatorio" style="display: none;"><button class="btn btn-dourado" onclick="imprimirRelatorio()"><i class="fas fa-print"></i> Imprimir</button><button class="btn btn-primario" onclick="editarOSAtual()"><i class="fas fa-edit"></i> Editar</button><button class="btn btn-outline" onclick="fecharRelatorio()"><i class="fas fa-times"></i> Fechar</button></div></div>
-    </div>
+                <!-- OS CLIENTES (Integração Supabase) -->
+        <div id="osclientes" class="section">
+            <h2 class="titulo-secao"><i class="fas fa-inbox"></i> Ordens de Serviço - App Cliente</h2>
+            <div class="cards-grid">
+                <div class="card-dash"><h3 id="total-os-clientes">0</h3><p>Total de OS</p></div>
+                <div class="card-dash"><h3 id="total-os-abertas">0</h3><p>Abertas</p></div>
+                <div class="card-dash"><h3 id="total-os-nao-lidas">0</h3><p>Novas (não lidas)</p></div>
+            </div>
+            <button class="btn btn-outline" onclick="carregarOSClientes()" style="margin-bottom: 16px;">
+                <i class="fas fa-sync-alt"></i> Atualizar
+            </button>
+            <div class="lista-container" id="lista-os-clientes"></div>
+        </div>
 
     <div id="notificacao" class="notificacao hidden"></div>
 
@@ -887,6 +902,140 @@
             localStorage.removeItem('ons_logo');
             mostrarNotificacao('Logo restaurada para o padrão!', 'sucesso');
         }
+                // ========== INTEGRAÇÃO SUPABASE (APP CLIENTE) ==========
+        
+        // ⚠️ COLOQUE SUAS CREDENCIAIS AQUI ⚠️
+        
+      const SUPABASE_URL = 'https://npfbnfubnyndachmdgzy.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5wZmJuZnVibnluZGFjaG1kZ3p5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1MjQ5ODksImV4cCI6MjA5MTEwMDk4OX0.bTKgcUAKt_2A4FcVJSEOZ2rEVNpGxCj8bHpXw0Lh7Vw';
+        
+        let osClientes = [];
+        let osLidas = JSON.parse(localStorage.getItem('ons_os_lidas')) || [];
+        
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        async function carregarOSClientes() {
+            mostrarNotificacao('Carregando OS do App Cliente...', 'sucesso');
+            
+            const { data, error } = await supabaseClient
+                .from('chamados')
+                .select('*')
+                .order('created_at', { ascending: false });
+            
+            if (error) {
+                console.error('Erro Supabase:', error);
+                mostrarNotificacao('Erro ao carregar: ' + error.message, 'erro');
+                return;
+            }
+            
+            osClientes = data || [];
+            atualizarContadoresOSClientes();
+            exibirListaOSClientes();
+        }
+        
+        function atualizarContadoresOSClientes() {
+            const totalEl = document.getElementById('total-os-clientes');
+            const abertasEl = document.getElementById('total-os-abertas');
+            const naoLidasEl = document.getElementById('total-os-nao-lidas');
+            
+            if (totalEl) totalEl.textContent = osClientes.length;
+            if (abertasEl) {
+                const abertas = osClientes.filter(os => os.status === 'Aberto').length;
+                abertasEl.textContent = abertas;
+            }
+            if (naoLidasEl) {
+                const naoLidas = osClientes.filter(os => !osLidas.includes(os.id)).length;
+                naoLidasEl.textContent = naoLidas;
+            }
+        }
+        
+        function exibirListaOSClientes() {
+            const container = document.getElementById('lista-os-clientes');
+            
+            if (!container) return;
+            
+            if (osClientes.length === 0) {
+                container.innerHTML = '<div class="item-lista">Nenhuma OS encontrada no Supabase</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            osClientes.forEach(os => {
+                const isLida = osLidas.includes(os.id);
+                const div = document.createElement('div');
+                div.className = 'item-lista';
+                div.style.borderLeft = `4px solid ${!isLida ? '#efb505' : '#28a745'}`;
+                div.style.backgroundColor = !isLida ? '#fff8e7' : 'white';
+                
+                div.innerHTML = `
+                    <div class="item-lista-info">
+                        <h4>🏥 ${os.clinica} <span style="font-size:0.75rem; background:#093d5c; color:white; padding:2px 8px; border-radius:20px;">${os.status || 'Aberto'}</span></h4>
+                        <p><strong>Equipamento:</strong> ${os.equipamento || 'N/E'}</p>
+                        <p><strong>Prioridade:</strong> ${os.prioridade || 'Normal'}</p>
+                        <p><strong>Laudo:</strong> ${os.incluirLaudo ? '✅ SIM - Levar documento' : '❌ Não'}</p>
+                        <p><strong>Detalhe:</strong> ${os.detalhe || 'Sem detalhes'}</p>
+                        <p><small>📅 ${new Date(os.created_at).toLocaleString()}</small></p>
+                    </div>
+                    <div class="item-lista-acoes">
+                        ${!isLida ? `<button class="btn-acao" style="background:#efb505;" onclick="marcarComoLida(${os.id})"><i class="fas fa-check-double"></i> Marcar Lida</button>` : ''}
+                        <select id="status-select-${os.id}" class="btn-acao" style="background:#093d5c; color:white; border:none; padding:8px 12px;" onchange="atualizarStatusOS(${os.id}, this.value)">
+                            <option value="Aberto" ${os.status === 'Aberto' ? 'selected' : ''}>📋 Aberto</option>
+                            <option value="Em andamento" ${os.status === 'Em andamento' ? 'selected' : ''}>🔧 Em andamento</option>
+                            <option value="Finalizado" ${os.status === 'Finalizado' ? 'selected' : ''}>✅ Finalizado</option>
+                        </select>
+                        <button class="btn-acao ver" onclick="abrirWhatsAppOS(${os.id})"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+        
+        async function marcarComoLida(id) {
+            if (!osLidas.includes(id)) {
+                osLidas.push(id);
+                localStorage.setItem('ons_os_lidas', JSON.stringify(osLidas));
+                mostrarNotificacao('OS marcada como lida', 'sucesso');
+                exibirListaOSClientes();
+                atualizarContadoresOSClientes();
+            }
+        }
+        
+        async function atualizarStatusOS(id, novoStatus) {
+            const { error } = await supabaseClient
+                .from('chamados')
+                .update({ status: novoStatus })
+                .eq('id', id);
+            
+            if (error) {
+                mostrarNotificacao('Erro ao atualizar: ' + error.message, 'erro');
+                return;
+            }
+            
+            const index = osClientes.findIndex(os => os.id === id);
+            if (index !== -1) osClientes[index].status = novoStatus;
+            
+            mostrarNotificacao(`Status alterado para ${novoStatus}`, 'sucesso');
+            exibirListaOSClientes();
+            atualizarContadoresOSClientes();
+        }
+        
+        function abrirWhatsAppOS(id) {
+            const os = osClientes.find(o => o.id === id);
+            if (!os) return;
+            
+            const mensagem = `*NOVA OS - ONS ODONTOTECNICA*%0A%0A` +
+                `🏥 *Clínica:* ${os.clinica}%0A` +
+                `🔧 *Equipamento:* ${os.equipamento || 'N/E'}%0A` +
+                `⚠️ *Prioridade:* ${os.prioridade || 'Normal'}%0A` +
+                `📄 *Laudo:* ${os.incluirLaudo ? 'SIM - Levar documento' : 'Não'}%0A` +
+                `📝 *Detalhe:* ${os.detalhe || 'Sem detalhes'}%0A%0A` +
+                `Status atual: ${os.status}`;
+            
+            window.open(`https://wa.me/5535920004813?text=${mensagem}`, '_blank');
+        }
+        
+        // ========== FIM DA INTEGRAÇÃO SUPABASE ==========
 
         // Upload e preview da logo
         document.getElementById('logoUpload').addEventListener('change', function(e) {
@@ -915,7 +1064,7 @@
         let osEditando = null;
         const equipamentosLista = ['Equipo Odontológico','Compressor Odontológico','Autoclave','Aparelho de Raio-X','Fotopolimerizador','Ultrassom / Scaler','Cadeira Odontológica','Mocho do Dentista','Sugador / Bomba de Vácuo','Amalgamador','Lâmpada do Equipo','Microscópio Odontológico','Laser Terapêutico','Seladora de Embalagens','Destiladora de Água','REFLETOR Odontológico'];
 
-        document.addEventListener('DOMContentLoaded', () => {
+           document.addEventListener('DOMContentLoaded', () => {
             carregarLogoSalva();
             document.querySelectorAll('.menu-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -928,8 +1077,10 @@
                     if (this.dataset.tela === 'equipamentos') mostrarEquipamentosPre();
                     if (this.dataset.tela === 'historico') carregarHistorico();
                     if (this.dataset.tela === 'relatorios') listarTodasOS();
+                    if (this.dataset.tela === 'osclientes') carregarOSClientes();  // ← ADICIONE ESTA LINHA
                 });
             });
+    
             carregarClientesSelect();
             atualizarDashboard();
             adicionarPeca();
