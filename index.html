@@ -1119,5 +1119,13 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
         function editarOSAtual(){if(window.osAtual) editarOS(window.osAtual.id); else mostrarNotificacao('Nenhuma OS selecionada','erro');}
         function mostrarNotificacao(msg,tipo='sucesso'){const n=document.getElementById('notificacao'); n.textContent=msg; n.className=`notificacao ${tipo}`; n.classList.remove('hidden'); setTimeout(()=>n.classList.add('hidden'),3000);}
     </script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js')
+    .then(() => console.log('✅ Service Worker registrado!'))
+    .catch(err => console.log('❌ Erro:', err));
+}
+</script>        
+        
 </body>
 </html>
