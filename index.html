@@ -985,6 +985,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
                             <option value="Finalizado" ${os.status === 'Finalizado' ? 'selected' : ''}>✅ Finalizado</option>
                         </select>
                         <button class="btn-acao ver" onclick="abrirWhatsAppOS(${os.id})"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                                                <button class="btn-acao" style="background:#28a745; color:white;" onclick="abrirModalMensagem('${os.clinica}')"><i class="fas fa-envelope"></i> Mensagem</button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -1033,6 +1034,33 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
                 `Status atual: ${os.status}`;
             
             window.open(`https://wa.me/5535920004813?text=${mensagem}`, '_blank');
+        
+        }
+                // ========== ENVIAR MENSAGEM PARA O CLIENTE ==========
+        function abrirModalMensagem(clinica) {
+            const mensagem = prompt(`Enviar mensagem para ${clinica}:`, "Digite sua mensagem aqui...");
+            
+            if (mensagem && mensagem.trim() !== "") {
+                enviarNotificacao(clinica, "Mensagem do Técnico", mensagem);
+            }
+        }
+        
+        async function enviarNotificacao(clinica, titulo, mensagem) {
+            const { error } = await supabaseClient
+                .from('NOTIFICACOES')
+                .insert([{
+                    clinica: clinica,
+                    titulo: titulo,
+                    mensagem: mensagem,
+                    lida: false
+                }]);
+            
+            if (error) {
+                console.error('Erro:', error);
+                mostrarNotificacao('Erro ao enviar mensagem!', 'erro');
+            } else {
+                mostrarNotificacao(`Mensagem enviada para ${clinica}!`, 'sucesso');
+            }
         }
         
         // ========== FIM DA INTEGRAÇÃO SUPABASE ==========
