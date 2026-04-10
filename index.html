@@ -949,14 +949,6 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
             }
         }
         
-              abertasEl.textContent = abertas;
-            }
-            if (naoLidasEl) {
-                const naoLidas = osClientes.filter(os => !osLidas.includes(os.id)).length;
-                naoLidasEl.textContent = naoLidas;
-            }
-        }
-        
         function exibirListaOSClientes() {
             const container = document.getElementById('lista-os-clientes');
             
