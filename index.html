@@ -926,19 +926,7 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
         // ==================== FUNÇÕES SUPABASE ====================
-        async function carregarOSClientes() {
-            mostrarNotificacao('Carregando OS do App Cliente...', 'info');
-            
-            const { data, error } = await supabaseClient
-                .from('chamados')
-                .select('*')
-                .order('created_at', { ascending: false });
-            
-            if (error) {
-                console.error('Erro Supabase:', error);
-                mostrarNotificacao('Erro ao carregar: ' + error.message, 'erro');
-                return;
-            }
+     
             
             osClientes = data || [];
             atualizarContadoresOSClientes();
@@ -1036,30 +1024,45 @@
             exibirListaOSClientes();
             atualizarContadoresOSClientes();
         }
+        async function carregarOSClientes() {
+    mostrarNotificacao('🔄 Carregando OS do App Cliente...', 'info');
+    
+    try {
+        console.log('📡 Buscando OS no Supabase...');
         
-        async function atualizarStatusOS(id, novoStatus) {
-            // Garantir compatibilidade
-            let statusFinal = novoStatus;
-            if (novoStatus === 'Aberto') statusFinal = 'Em andamento';
-            
-            const { error } = await supabaseClient
-                .from('chamados')
-                .update({ status: statusFinal })
-                .eq('id', id);
-            
-            if (error) {
-                mostrarNotificacao('Erro ao atualizar: ' + error.message, 'erro');
-                return;
-            }
-            
-            const index = osClientes.findIndex(os => os.id === id);
-            if (index !== -1) osClientes[index].status = statusFinal;
-            
-            mostrarNotificacao(`✅ Status alterado para ${statusFinal}`, 'sucesso');
-            exibirListaOSClientes();
-            atualizarContadoresOSClientes();
+        const { data, error } = await supabaseClient
+            .from('chamados')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (error) {
+            console.error('❌ Erro Supabase:', error);
+            mostrarNotificacao('Erro: ' + error.message, 'erro');
+            return;
         }
         
+        console.log('📊 Dados recebidos:', data);
+        console.log('📊 Total de OS:', data?.length || 0);
+        
+        osClientes = data || [];
+        
+        if (osClientes.length === 0) {
+            console.log('⚠️ Nenhuma OS encontrada');
+            mostrarNotificacao('⚠️ Nenhuma OS encontrada no Supabase', 'info');
+        } else {
+            console.log('✅ Primeira OS:', osClientes[0]);
+            mostrarNotificacao(`✅ ${osClientes.length} OS carregadas!`, 'sucesso');
+        }
+        
+        atualizarContadoresOSClientes();
+        exibirListaOSClientes();
+        
+    } catch(err) {
+        console.error('❌ Erro fatal:', err);
+        mostrarNotificacao('Erro de conexão: ' + err.message, 'erro');
+    }
+}
+       
         function abrirWhatsAppOS(id) {
             const os = osClientes.find(o => o.id === id);
             if (!os) return;
