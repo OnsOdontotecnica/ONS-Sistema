@@ -2,21 +2,17 @@
 <html lang="pt-BR">
 <head>
     <link rel="manifest" href="manifest.json">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" sizes="512x512" href="logo-icon.png">
-<link rel="apple-touch-icon" href="logo-icon.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" sizes="512x512" href="logo-icon.png">
+    <link rel="apple-touch-icon" href="logo-icon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>ONS Odontotecnica - Sistema Profissional Mobile</title>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-<title>ONS Odontotecnica - Sistema Profissional Mobile</title>
-
-<link rel="icon" type="image/png" href="logo-icon.png">
-<link rel="apple-touch-icon" href="logo-icon.png">
-<meta name="theme-color" content="#093d5c">
+    <link rel="icon" type="image/png" href="logo-icon.png">
+    <link rel="apple-touch-icon" href="logo-icon.png">
+    <meta name="theme-color" content="#093d5c">
     <style>
         * {
             margin: 0;
@@ -598,6 +594,11 @@
             color: var(--azul-ons);
         }
 
+        .btn-acao.excluir {
+            background: var(--perigo);
+            color: white;
+        }
+
         /* RELATÓRIO */
         .relatorio-print {
             background: white;
@@ -631,6 +632,10 @@
             z-index: 9999;
             animation: slideIn 0.3s;
         }
+
+        .notificacao.sucesso { background: var(--sucesso); }
+        .notificacao.erro { background: var(--perigo); }
+        .notificacao.info { background: var(--azul-ons); }
 
         /* UTILITÁRIOS */
         .mt-20 { margin-top: 20px; }
@@ -783,7 +788,7 @@
         }
     </style>
     
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -817,7 +822,7 @@
             </div>
         </div>
 
-        <!-- MENU (restante igual) -->
+        <!-- MENU -->
         <div class="menu no-print">
             <button class="menu-btn active" data-tela="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
             <button class="menu-btn" data-tela="clientes"><i class="fas fa-users"></i> Clientes</button>
@@ -866,24 +871,32 @@
 
         <!-- RELATÓRIOS -->
         <div id="relatorios" class="section"><h2 class="titulo-secao"><i class="fas fa-file-pdf"></i> Relatórios</h2><div class="botoes mb-20"><button class="btn btn-primario" onclick="listarTodasOS()"><i class="fas fa-list"></i> Listar Todas as OS</button></div><div class="lista-container" id="lista-todas-os"></div><div id="relatorio-visualizacao" class="relatorio-print mt-20" style="display: none;"></div><div class="botoes mt-20" id="botoes-relatorio" style="display: none;"><button class="btn btn-dourado" onclick="imprimirRelatorio()"><i class="fas fa-print"></i> Imprimir</button><button class="btn btn-primario" onclick="editarOSAtual()"><i class="fas fa-edit"></i> Editar</button><button class="btn btn-outline" onclick="fecharRelatorio()"><i class="fas fa-times"></i> Fechar</button></div></div>
-                <!-- OS CLIENTES (Integração Supabase) -->
+        
+        <!-- OS CLIENTES (Integração Supabase) -->
         <div id="osclientes" class="section">
             <h2 class="titulo-secao"><i class="fas fa-inbox"></i> Ordens de Serviço - App Cliente</h2>
             <div class="cards-grid">
                 <div class="card-dash"><h3 id="total-os-clientes">0</h3><p>Total de OS</p></div>
-                <div class="card-dash"><h3 id="total-os-abertas">0</h3><p>Abertas</p></div>
+                <div class="card-dash"><h3 id="total-os-andamento">0</h3><p>Em Andamento</p></div>
                 <div class="card-dash"><h3 id="total-os-nao-lidas">0</h3><p>Novas (não lidas)</p></div>
             </div>
-            <button class="btn btn-outline" onclick="carregarOSClientes()" style="margin-bottom: 16px;">
-                <i class="fas fa-sync-alt"></i> Atualizar
-            </button>
+            <div style="display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;">
+                <button class="btn btn-outline" onclick="carregarOSClientes()">
+                    <i class="fas fa-sync-alt"></i> Atualizar
+                </button>
+                <button class="btn btn-outline" onclick="marcarTodasComoLidas()" style="background: var(--dourado-ons); color: var(--azul-ons);">
+                    <i class="fas fa-check-double"></i> Marcar todas como lidas
+                </button>
+            </div>
             <div class="lista-container" id="lista-os-clientes"></div>
         </div>
 
-    <div id="notificacao" class="notificacao hidden"></div>
+        <div id="notificacao" class="notificacao hidden"></div>
+
+    </div>
 
     <script>
-        // Funções para gerenciar a logo
+        // ==================== FUNÇÕES DE LOGO ====================
         function carregarLogoSalva() {
             const logoSalva = localStorage.getItem('ons_logo');
             if (logoSalva) {
@@ -902,20 +915,19 @@
             localStorage.removeItem('ons_logo');
             mostrarNotificacao('Logo restaurada para o padrão!', 'sucesso');
         }
-                // ========== INTEGRAÇÃO SUPABASE (APP CLIENTE) ==========
-        
-        // ⚠️ COLOQUE SUAS CREDENCIAIS AQUI ⚠️
-        
-      const SUPABASE_URL = 'https://kxmsytbskpbagfmmepoz.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4bXN5dGJza3BiYWdmbW1lcG96Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NDk0MTIsImV4cCI6MjA5MTQyNTQxMn0.9K9db7WIdCPc4yf_fFSKb0kxZ59DnyDz-6_WfFfLuk8';
+
+        // ==================== SUPABASE CONFIG ====================
+        const SUPABASE_URL = 'https://kxmsytbskpbagfmmepoz.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4bXN5dGJza3BiYWdmbW1lcG96Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4NDk0MTIsImV4cCI6MjA5MTQyNTQxMn0.9K9db7WIdCPc4yf_fFSKb0kxZ59DnyDz-6_WfFfLuk8';
         
         let osClientes = [];
         let osLidas = JSON.parse(localStorage.getItem('ons_os_lidas')) || [];
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         
+        // ==================== FUNÇÕES SUPABASE ====================
         async function carregarOSClientes() {
-            mostrarNotificacao('Carregando OS do App Cliente...', 'sucesso');
+            mostrarNotificacao('Carregando OS do App Cliente...', 'info');
             
             const { data, error } = await supabaseClient
                 .from('chamados')
@@ -931,17 +943,18 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
             osClientes = data || [];
             atualizarContadoresOSClientes();
             exibirListaOSClientes();
+            mostrarNotificacao(`✅ ${osClientes.length} OS carregadas`, 'sucesso');
         }
         
         function atualizarContadoresOSClientes() {
             const totalEl = document.getElementById('total-os-clientes');
-            const abertasEl = document.getElementById('total-os-abertas');
+            const andamentoEl = document.getElementById('total-os-andamento');
             const naoLidasEl = document.getElementById('total-os-nao-lidas');
             
             if (totalEl) totalEl.textContent = osClientes.length;
-            if (abertasEl) {
-                const abertas = osClientes.filter(os => os.status === 'Aberto').length;
-                abertasEl.textContent = abertas;
+            if (andamentoEl) {
+                const andamento = osClientes.filter(os => os.status === 'Em andamento' || os.status === 'Aberto').length;
+                andamentoEl.textContent = andamento;
             }
             if (naoLidasEl) {
                 const naoLidas = osClientes.filter(os => !osLidas.includes(os.id)).length;
@@ -962,7 +975,13 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
             container.innerHTML = '';
             
             osClientes.forEach(os => {
+                // Normalizar status: "Aberto" vira "Em andamento"
+                let statusExibicao = os.status;
+                if (statusExibicao === 'Aberto') statusExibicao = 'Em andamento';
+                
                 const isLida = osLidas.includes(os.id);
+                const telefone = os.telefone_cliente || os.telefone || 'N/A';
+                
                 const div = document.createElement('div');
                 div.className = 'item-lista';
                 div.style.borderLeft = `4px solid ${!isLida ? '#efb505' : '#28a745'}`;
@@ -970,22 +989,26 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
                 
                 div.innerHTML = `
                     <div class="item-lista-info">
-                        <h4>🏥 ${os.clinica} <span style="font-size:0.75rem; background:#093d5c; color:white; padding:2px 8px; border-radius:20px;">${os.status || 'Aberto'}</span></h4>
-                        <p><strong>Equipamento:</strong> ${os.equipamento || 'N/E'}</p>
-                        <p><strong>Prioridade:</strong> ${os.prioridade || 'Normal'}</p>
-                        <p><strong>Laudo:</strong> ${os.incluirLaudo ? '✅ SIM - Levar documento' : '❌ Não'}</p>
-                        <p><strong>Detalhe:</strong> ${os.detalhe || 'Sem detalhes'}</p>
+                        <h4>🏥 ${os.clinica || 'N/A'} 
+                            <span style="font-size:0.7rem; background:#093d5c; color:white; padding:2px 8px; border-radius:20px;">${statusExibicao}</span>
+                        </h4>
+                        <p><strong>📞 Telefone:</strong> ${telefone}</p>
+                        <p><strong>🔧 Equipamento:</strong> ${os.equipamento || 'N/E'}</p>
+                        <p><strong>⚠️ Prioridade:</strong> ${os.prioridade || 'Normal'}</p>
+                        <p><strong>📄 Laudo:</strong> ${os.incluirlaudo ? '✅ SIM' : '❌ Não'}</p>
+                        <p><strong>📝 Detalhe:</strong> ${(os.detalhe || os.observacoes || 'Sem detalhes').substring(0, 60)}</p>
                         <p><small>📅 ${new Date(os.created_at).toLocaleString()}</small></p>
+                        ${os.data_agendamento ? `<p><small>📆 Agendamento: ${new Date(os.data_agendamento).toLocaleDateString()}</small></p>` : ''}
                     </div>
                     <div class="item-lista-acoes">
-                        ${!isLida ? `<button class="btn-acao" style="background:#efb505;" onclick="marcarComoLida(${os.id})"><i class="fas fa-check-double"></i> Marcar Lida</button>` : ''}
+                        ${!isLida ? `<button class="btn-acao" style="background:#efb505; color:#093d5c;" onclick="marcarComoLida(${os.id})"><i class="fas fa-check-double"></i> Marcar Lida</button>` : ''}
                         <select id="status-select-${os.id}" class="btn-acao" style="background:#093d5c; color:white; border:none; padding:8px 12px;" onchange="atualizarStatusOS(${os.id}, this.value)">
-                            <option value="Aberto" ${os.status === 'Aberto' ? 'selected' : ''}>📋 Aberto</option>
-                            <option value="Em andamento" ${os.status === 'Em andamento' ? 'selected' : ''}>🔧 Em andamento</option>
+                            <option value="Em andamento" ${(os.status === 'Em andamento' || os.status === 'Aberto') ? 'selected' : ''}>🔧 Em andamento</option>
                             <option value="Finalizado" ${os.status === 'Finalizado' ? 'selected' : ''}>✅ Finalizado</option>
                         </select>
                         <button class="btn-acao ver" onclick="abrirWhatsAppOS(${os.id})"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-                                                <button class="btn-acao" style="background:#28a745; color:white;" onclick="abrirModalMensagem('${os.clinica}')"><i class="fas fa-envelope"></i> Mensagem</button>
+                        <button class="btn-acao" style="background:#28a745; color:white;" onclick="abrirModalMensagem('${os.clinica}')"><i class="fas fa-envelope"></i> Mensagem</button>
+                        <button class="btn-acao excluir" onclick="excluirOSCliente(${os.id}, '${os.clinica}')"><i class="fas fa-trash"></i> Excluir</button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -1002,10 +1025,26 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
             }
         }
         
+        function marcarTodasComoLidas() {
+            osClientes.forEach(os => {
+                if (!osLidas.includes(os.id)) {
+                    osLidas.push(os.id);
+                }
+            });
+            localStorage.setItem('ons_os_lidas', JSON.stringify(osLidas));
+            mostrarNotificacao('Todas as OS foram marcadas como lidas', 'sucesso');
+            exibirListaOSClientes();
+            atualizarContadoresOSClientes();
+        }
+        
         async function atualizarStatusOS(id, novoStatus) {
+            // Garantir compatibilidade
+            let statusFinal = novoStatus;
+            if (novoStatus === 'Aberto') statusFinal = 'Em andamento';
+            
             const { error } = await supabaseClient
                 .from('chamados')
-                .update({ status: novoStatus })
+                .update({ status: statusFinal })
                 .eq('id', id);
             
             if (error) {
@@ -1014,9 +1053,9 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
             }
             
             const index = osClientes.findIndex(os => os.id === id);
-            if (index !== -1) osClientes[index].status = novoStatus;
+            if (index !== -1) osClientes[index].status = statusFinal;
             
-            mostrarNotificacao(`Status alterado para ${novoStatus}`, 'sucesso');
+            mostrarNotificacao(`✅ Status alterado para ${statusFinal}`, 'sucesso');
             exibirListaOSClientes();
             atualizarContadoresOSClientes();
         }
@@ -1025,20 +1064,60 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
             const os = osClientes.find(o => o.id === id);
             if (!os) return;
             
-            const mensagem = `*NOVA OS - ONS ODONTOTECNICA*%0A%0A` +
+            const telefone = os.telefone_cliente || os.telefone;
+            if (!telefone || telefone === 'N/A') {
+                mostrarNotificacao('❌ Cliente não possui telefone cadastrado!', 'erro');
+                return;
+            }
+            
+            let telefoneLimpo = telefone.replace(/\D/g, '');
+            if (telefoneLimpo.length === 10) telefoneLimpo = '55' + telefoneLimpo;
+            if (telefoneLimpo.length === 11 && !telefoneLimpo.startsWith('55')) telefoneLimpo = '55' + telefoneLimpo;
+            
+            const mensagem = `🛠️ *ONS ODONTOTECNICA - ATUALIZAÇÃO DE OS* 🛠️%0A%0A` +
                 `🏥 *Clínica:* ${os.clinica}%0A` +
                 `🔧 *Equipamento:* ${os.equipamento || 'N/E'}%0A` +
                 `⚠️ *Prioridade:* ${os.prioridade || 'Normal'}%0A` +
-                `📄 *Laudo:* ${os.incluirLaudo ? 'SIM - Levar documento' : 'Não'}%0A` +
-                `📝 *Detalhe:* ${os.detalhe || 'Sem detalhes'}%0A%0A` +
-                `Status atual: ${os.status}`;
+                `📄 *Laudo:* ${os.incluirlaudo ? 'SIM - Levar documento' : 'Não'}%0A` +
+                `📝 *Detalhe:* ${(os.detalhe || os.observacoes || 'Sem detalhes').substring(0, 100)}%0A%0A` +
+                `*Status atual:* ${os.status === 'Finalizado' ? '✅ FINALIZADO' : '🔧 EM ANDAMENTO'}%0A%0A` +
+                `---%0AONS OdontoTecnica - Manutenção de Qualidade`;
             
-            window.open(`https://wa.me/5535920004813?text=${mensagem}`, '_blank');
-        
+            window.open(`https://wa.me/${telefoneLimpo}?text=${mensagem}`, '_blank');
         }
-                // ========== ENVIAR MENSAGEM PARA O CLIENTE ==========
+        
+        async function excluirOSCliente(id, clinica) {
+            if(!confirm(`⚠️ ATENÇÃO! Isso excluirá PERMANENTEMENTE a OS #${id} da clínica "${clinica}".\n\nEsta ação não pode ser desfeita e a OS sumirá do App do Cliente.\n\nTem certeza?`)) return;
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('chamados')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) throw error;
+                
+                // Remover da lista local
+                osClientes = osClientes.filter(o => o.id !== id);
+                
+                // Remover dos IDs lidos
+                osLidas = osLidas.filter(l => l !== id);
+                localStorage.setItem('ons_os_lidas', JSON.stringify(osLidas));
+                
+                mostrarNotificacao(`✅ OS #${id} excluída com sucesso!`, 'sucesso');
+                
+                atualizarContadoresOSClientes();
+                exibirListaOSClientes();
+                
+            } catch(err) {
+                console.error("Erro ao excluir:", err);
+                mostrarNotificacao(`❌ Erro ao excluir: ${err.message}`, 'erro');
+            }
+        }
+        
+        // ==================== MENSAGEM PARA O CLIENTE (DIFERENCIAL) ====================
         function abrirModalMensagem(clinica) {
-            const mensagem = prompt(`Enviar mensagem para ${clinica}:`, "Digite sua mensagem aqui...");
+            const mensagem = prompt(`💬 Enviar mensagem para ${clinica}:`, "Digite sua mensagem aqui...");
             
             if (mensagem && mensagem.trim() !== "") {
                 enviarNotificacao(clinica, "Mensagem do Técnico", mensagem);
@@ -1046,25 +1125,48 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
         }
         
         async function enviarNotificacao(clinica, titulo, mensagem) {
-            const { error } = await supabaseClient
-                .from('NOTIFICACOES')
-                .insert([{
-                    clinica: clinica,
-                    titulo: titulo,
-                    mensagem: mensagem,
-                    lida: false
-                }]);
-            
-            if (error) {
-                console.error('Erro:', error);
+            // Verificar se a tabela NOTIFICACOES existe, se não, criar
+            try {
+                const { error } = await supabaseClient
+                    .from('NOTIFICACOES')
+                    .insert([{
+                        clinica: clinica,
+                        titulo: titulo,
+                        mensagem: mensagem,
+                        lida: false,
+                        created_at: new Date().toISOString()
+                    }]);
+                
+                if (error) {
+                    if (error.message.includes('does not exist')) {
+                        mostrarNotificacao('⚠️ Tabela NOTIFICACOES não existe. Crie no Supabase SQL Editor.', 'erro');
+                        console.error('Tabela NOTIFICACOES não existe. Execute o SQL para criar.');
+                    } else {
+                        throw error;
+                    }
+                } else {
+                    mostrarNotificacao(`✅ Mensagem enviada para ${clinica}!`, 'sucesso');
+                }
+            } catch(err) {
+                console.error('Erro:', err);
                 mostrarNotificacao('Erro ao enviar mensagem!', 'erro');
-            } else {
-                mostrarNotificacao(`Mensagem enviada para ${clinica}!`, 'sucesso');
             }
         }
         
-        // ========== FIM DA INTEGRAÇÃO SUPABASE ==========
+        // ==================== SQL PARA CRIAR TABELA NOTIFICACOES ====================
+        // Execute no SQL Editor do Supabase:
+        /*
+        CREATE TABLE IF NOT EXISTS NOTIFICACOES (
+            id SERIAL PRIMARY KEY,
+            clinica TEXT NOT NULL,
+            titulo TEXT NOT NULL,
+            mensagem TEXT NOT NULL,
+            lida BOOLEAN DEFAULT FALSE,
+            created_at TIMESTAMP DEFAULT NOW()
+        );
+        */
 
+        // ==================== FUNÇÕES DO SISTEMA (PRESERVADAS) ====================
         // Upload e preview da logo
         document.getElementById('logoUpload').addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -1092,7 +1194,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
         let osEditando = null;
         const equipamentosLista = ['Equipo Odontológico','Compressor Odontológico','Autoclave','Aparelho de Raio-X','Fotopolimerizador','Ultrassom / Scaler','Cadeira Odontológica','Mocho do Dentista','Sugador / Bomba de Vácuo','Amalgamador','Lâmpada do Equipo','Microscópio Odontológico','Laser Terapêutico','Seladora de Embalagens','Destiladora de Água','REFLETOR Odontológico'];
 
-           document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             carregarLogoSalva();
             document.querySelectorAll('.menu-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -1105,7 +1207,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
                     if (this.dataset.tela === 'equipamentos') mostrarEquipamentosPre();
                     if (this.dataset.tela === 'historico') carregarHistorico();
                     if (this.dataset.tela === 'relatorios') listarTodasOS();
-                    if (this.dataset.tela === 'osclientes') carregarOSClientes();  // ← ADICIONE ESTA LINHA
+                    if (this.dataset.tela === 'osclientes') carregarOSClientes();
                 });
             });
     
@@ -1147,13 +1249,12 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
         function editarOSAtual(){if(window.osAtual) editarOS(window.osAtual.id); else mostrarNotificacao('Nenhuma OS selecionada','erro');}
         function mostrarNotificacao(msg,tipo='sucesso'){const n=document.getElementById('notificacao'); n.textContent=msg; n.className=`notificacao ${tipo}`; n.classList.remove('hidden'); setTimeout(()=>n.classList.add('hidden'),3000);}
     </script>
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js')
-    .then(() => console.log('✅ Service Worker registrado!'))
-    .catch(err => console.log('❌ Erro:', err));
-}
-</script>        
-        
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(() => console.log('✅ Service Worker registrado!'))
+                .catch(err => console.log('❌ Erro:', err));
+        }
+    </script>        
 </body>
 </html>
