@@ -950,58 +950,69 @@
             }
         }
         
-        function exibirListaOSClientes() {
-            const container = document.getElementById('lista-os-clientes');
-            
-            if (!container) return;
-            
-            if (osClientes.length === 0) {
-                container.innerHTML = '<div class="item-lista">Nenhuma OS encontrada no Supabase</div>';
-                return;
-            }
-            
-            container.innerHTML = '';
-            
-            osClientes.forEach(os => {
-                // Normalizar status: "Aberto" vira "Em andamento"
-                let statusExibicao = os.status;
-                if (statusExibicao === 'Aberto') statusExibicao = 'Em andamento';
-                
-                const isLida = osLidas.includes(os.id);
-                const telefone = os.telefone_cliente || os.telefone || 'N/A';
-                
-                const div = document.createElement('div');
-                div.className = 'item-lista';
-                div.style.borderLeft = `4px solid ${!isLida ? '#efb505' : '#28a745'}`;
-                div.style.backgroundColor = !isLida ? '#fff8e7' : 'white';
-                
-                div.innerHTML = `
-                    <div class="item-lista-info">
-                        <h4>🏥 ${os.clinica || 'N/A'} 
-                            <span style="font-size:0.7rem; background:#093d5c; color:white; padding:2px 8px; border-radius:20px;">${statusExibicao}</span>
-                        </h4>
-                        <p><strong>📞 Telefone:</strong> ${telefone}</p>
-                        <p><strong>🔧 Equipamento:</strong> ${os.equipamento || 'N/E'}</p>
-                        <p><strong>⚠️ Prioridade:</strong> ${os.prioridade || 'Normal'}</p>
-                        <p><strong>📄 Laudo:</strong> ${os.incluirlaudo ? '✅ SIM' : '❌ Não'}</p>
-                        <p><strong>📝 Detalhe:</strong> ${(os.detalhe || os.observacoes || 'Sem detalhes').substring(0, 60)}</p>
-                        <p><small>📅 ${new Date(os.created_at).toLocaleString()}</small></p>
-                        ${os.data_agendamento ? `<p><small>📆 Agendamento: ${new Date(os.data_agendamento).toLocaleDateString()}</small></p>` : ''}
-                    </div>
-                    <div class="item-lista-acoes">
-                        ${!isLida ? `<button class="btn-acao" style="background:#efb505; color:#093d5c;" onclick="marcarComoLida(${os.id})"><i class="fas fa-check-double"></i> Marcar Lida</button>` : ''}
-                        <select id="status-select-${os.id}" class="btn-acao" style="background:#093d5c; color:white; border:none; padding:8px 12px;" onchange="atualizarStatusOS(${os.id}, this.value)">
-                            <option value="Em andamento" ${(os.status === 'Em andamento' || os.status === 'Aberto') ? 'selected' : ''}>🔧 Em andamento</option>
-                            <option value="Finalizado" ${os.status === 'Finalizado' ? 'selected' : ''}>✅ Finalizado</option>
-                        </select>
-                        <button class="btn-acao ver" onclick="abrirWhatsAppOS(${os.id})"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-                        <button class="btn-acao" style="background:#28a745; color:white;" onclick="abrirModalMensagem('${os.clinica}')"><i class="fas fa-envelope"></i> Mensagem</button>
-                        <button class="btn-acao excluir" onclick="excluirOSCliente(${os.id}, '${os.clinica}')"><i class="fas fa-trash"></i> Excluir</button>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        }
+   function exibirListaOSClientes() {
+    const container = document.getElementById('lista-os-clientes');
+    
+    console.log('🔍 Renderizando lista...');
+    console.log('Container encontrado:', container);
+    console.log('Quantidade de OS:', osClientes.length);
+    
+    if (!container) {
+        console.error('❌ Container lista-os-clientes não encontrado!');
+        return;
+    }
+    
+    if (osClientes.length === 0) {
+        container.innerHTML = '<div class="item-lista">Nenhuma OS encontrada no Supabase</div>';
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    osClientes.forEach((os, index) => {
+        console.log(`📝 Renderizando OS ${index + 1}:`, os.id, os.clinica);
+        
+        // Normalizar status: "Aberto" vira "Em andamento"
+        let statusExibicao = os.status;
+        if (statusExibicao === 'Aberto') statusExibicao = 'Em andamento';
+        
+        const isLida = osLidas.includes(os.id);
+        const telefone = os.telefone_cliente || os.telefone || 'N/A';
+        
+        const div = document.createElement('div');
+        div.className = 'item-lista';
+        div.style.borderLeft = `4px solid ${!isLida ? '#efb505' : '#28a745'}`;
+        div.style.backgroundColor = !isLida ? '#fff8e7' : 'white';
+        
+        div.innerHTML = `
+            <div class="item-lista-info">
+                <h4>🏥 ${os.clinica || 'N/A'} 
+                    <span style="font-size:0.7rem; background:#093d5c; color:white; padding:2px 8px; border-radius:20px;">${statusExibicao}</span>
+                </h4>
+                <p><strong>📞 Telefone:</strong> ${telefone}</p>
+                <p><strong>🔧 Equipamento:</strong> ${os.equipamento || 'N/E'}</p>
+                <p><strong>⚠️ Prioridade:</strong> ${os.prioridade || 'Normal'}</p>
+                <p><strong>📄 Laudo:</strong> ${os.incluirlaudo ? '✅ SIM' : '❌ Não'}</p>
+                <p><strong>📝 Detalhe:</strong> ${(os.detalhe || os.observacoes || 'Sem detalhes').substring(0, 60)}</p>
+                <p><small>📅 ${new Date(os.created_at).toLocaleString()}</small></p>
+                ${os.data_agendamento ? `<p><small>📆 Agendamento: ${new Date(os.data_agendamento).toLocaleDateString()}</small></p>` : ''}
+            </div>
+            <div class="item-lista-acoes">
+                ${!isLida ? `<button class="btn-acao" style="background:#efb505; color:#093d5c;" onclick="marcarComoLida(${os.id})"><i class="fas fa-check-double"></i> Marcar Lida</button>` : ''}
+                <select id="status-select-${os.id}" class="btn-acao" style="background:#093d5c; color:white; border:none; padding:8px 12px;" onchange="atualizarStatusOS(${os.id}, this.value)">
+                    <option value="Em andamento" ${(os.status === 'Em andamento' || os.status === 'Aberto') ? 'selected' : ''}>🔧 Em andamento</option>
+                    <option value="Finalizado" ${os.status === 'Finalizado' ? 'selected' : ''}>✅ Finalizado</option>
+                </select>
+                <button class="btn-acao ver" onclick="abrirWhatsAppOS(${os.id})"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                <button class="btn-acao" style="background:#28a745; color:white;" onclick="abrirModalMensagem('${os.clinica}')"><i class="fas fa-envelope"></i> Mensagem</button>
+                <button class="btn-acao excluir" onclick="excluirOSCliente(${os.id}, '${os.clinica}')"><i class="fas fa-trash"></i> Excluir</button>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+    
+    console.log('✅ Renderização concluída!');
+}
         
         async function marcarComoLida(id) {
             if (!osLidas.includes(id)) {
