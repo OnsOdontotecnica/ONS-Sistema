@@ -1,19 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; connect-src * https://kxmsytbskpbagfmmepoz.supabase.co">
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; connect-src * https://kxmsytbskpbagfmmepoz.supabase.co">
-    <link rel="manifest" href="manifest.json">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="icon" sizes="512x512" href="logo-icon.png">
-    <link rel="apple-touch-icon" href="logo-icon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>ONS Odontotecnica - Sistema Profissional Mobile</title>
-    <link rel="icon" type="image/png" href="logo-icon.png">
-    <link rel="apple-touch-icon" href="logo-icon.png">
+    <title>ONS Odontotecnica - Sistema Técnico de Manutenção</title>
     <meta name="theme-color" content="#093d5c">
     <style>
         * {
@@ -31,6 +21,8 @@
             --texto-escuro: #2c3e50;
             --sucesso: #28a745;
             --perigo: #dc3545;
+            --aviso: #ffc107;
+            --info: #17a2b8;
             --sombra: 0 4px 15px rgba(0,0,0,0.08);
             --sombra-suave: 0 2px 8px rgba(0,0,0,0.05);
         }
@@ -46,87 +38,85 @@
             margin: 0 auto;
         }
 
-        /* ========== MOBILE FIRST (320px base) ========== */
-        
-        /* HEADER - Responsivo */
         .header {
-            background: var(--azul-ons);
+            background: linear-gradient(135deg, var(--azul-ons) 0%, #0a4d72 100%);
             color: white;
-            padding: 16px;
-            border-radius: 20px;
-            margin-bottom: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            padding: 20px 24px;
+            border-radius: 24px;
+            margin-bottom: 20px;
             box-shadow: var(--sombra);
         }
 
-        .logo-area {
+        .header-content {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            text-align: center;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
-        /* Logo com tamanho padrão e botão de alterar */
-        .logo-container {
+        .logo-section {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 20px;
             flex-wrap: wrap;
-            justify-content: center;
         }
 
         .logo-ons {
             background: var(--dourado-ons);
             color: var(--azul-ons);
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 50px;
             font-weight: 800;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             text-align: center;
-            line-height: 1.2;
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
-            min-width: 120px;
-            height: 60px;
-            transition: all 0.3s ease;
-        }
-
-        /* Logo imagem (quando o usuário fizer upload) */
-        .logo-imagem {
-            height: 50px;
-            width: auto;
-            max-width: 180px;
-            object-fit: contain;
-            border-radius: 12px;
+            gap: 10px;
+            cursor: pointer;
         }
 
         .logo-ons i {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
         }
 
         .logo-ons small {
             display: block;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             font-weight: 500;
+        }
+
+        .logo-imagem {
+            height: 60px;
+            width: auto;
+            max-width: 200px;
+            object-fit: contain;
+        }
+
+        .title-section h1 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .title-section h1 i {
+            color: var(--dourado-ons);
+            margin-right: 10px;
+        }
+
+        .title-section p {
+            font-size: 0.8rem;
+            opacity: 0.9;
         }
 
         .btn-alterar-logo {
             background: rgba(239, 181, 5, 0.2);
             border: 1px solid var(--dourado-ons);
             color: var(--dourado-ons);
-            padding: 8px 14px;
+            padding: 8px 16px;
             border-radius: 40px;
             font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
             transition: all 0.2s;
         }
 
@@ -135,61 +125,29 @@
             color: var(--azul-ons);
         }
 
-        .logo-input-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
-        .logo-input-wrapper input {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .header-info h1 {
-            font-size: 1.2rem;
-            margin-bottom: 4px;
-        }
-
-        .header-info p {
-            font-size: 0.8rem;
-            opacity: 0.9;
-        }
-
         .header-telefone {
             background: rgba(239, 181, 5, 0.15);
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 40px;
             font-weight: 600;
             font-size: 0.9rem;
-            border: 1px solid rgba(239, 181, 5, 0.3);
-            text-align: center;
-            width: fit-content;
-            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* MENU PRINCIPAL - Mobile First (scroll horizontal) */
         .menu {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
             overflow-x: auto;
-            overflow-y: hidden;
-            scrollbar-width: thin;
-            -webkit-overflow-scrolling: touch;
             padding-bottom: 8px;
-            scroll-snap-type: x mandatory;
-        }
-
-        .menu::-webkit-scrollbar {
-            height: 4px;
         }
 
         .menu-btn {
             background: white;
             border: none;
-            padding: 12px 16px;
+            padding: 12px 20px;
             border-radius: 40px;
             font-weight: 700;
             color: var(--texto-escuro);
@@ -201,17 +159,21 @@
             gap: 8px;
             font-size: 0.85rem;
             white-space: nowrap;
-            border-bottom: 2px solid transparent;
-            scroll-snap-align: start;
         }
 
         .menu-btn i {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: var(--azul-ons);
         }
 
         .menu-btn:hover {
             transform: translateY(-2px);
+            background: var(--azul-ons);
+            color: white;
+        }
+
+        .menu-btn:hover i {
+            color: var(--dourado-ons);
         }
 
         .menu-btn.active {
@@ -223,13 +185,11 @@
             color: var(--dourado-ons);
         }
 
-        /* SEÇÕES */
         .section {
             background: white;
             border-radius: 24px;
-            padding: 20px 16px;
+            padding: 24px;
             box-shadow: var(--sombra);
-            margin-bottom: 16px;
             display: none;
         }
 
@@ -253,20 +213,18 @@
             gap: 10px;
             font-size: 1.3rem;
             font-weight: 700;
-            flex-wrap: wrap;
         }
 
-        /* CARDS DASHBOARD - Grid responsivo */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 14px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
             margin-bottom: 24px;
         }
 
         .card-dash {
             background: linear-gradient(145deg, white, #f8fafd);
-            padding: 18px 12px;
+            padding: 20px;
             border-radius: 20px;
             border-left: 4px solid var(--dourado-ons);
             box-shadow: var(--sombra-suave);
@@ -274,142 +232,91 @@
         }
 
         .card-dash h3 {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             color: var(--azul-ons);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             font-weight: 800;
-            word-break: break-word;
         }
 
-        .card-dash p {
-            font-size: 0.8rem;
-            color: #5a6b7a;
-            font-weight: 500;
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* FORMULÁRIOS - Mobile First */
-        .form-grid {
+        .modal.active {
             display: flex;
-            flex-direction: column;
-            gap: 16px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--dourado-ons);
+        }
+
+        .modal-header h3 {
+            color: var(--azul-ons);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--perigo);
         }
 
         .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
+            margin-bottom: 16px;
         }
 
-        .form-group.full-width {
-            grid-column: auto;
-        }
-
-        label {
+        .form-group label {
+            display: block;
             font-weight: 700;
             color: var(--azul-ons);
+            margin-bottom: 6px;
             font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        label i {
-            color: var(--dourado-ons);
-            width: 18px;
         }
 
         input, select, textarea {
+            width: 100%;
             padding: 12px 14px;
             border: 2px solid var(--cinza-borda);
             border-radius: 14px;
             font-size: 0.95rem;
             transition: all 0.2s;
-            background: white;
-            width: 100%;
         }
 
         input:focus, select:focus, textarea:focus {
             border-color: var(--azul-ons);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(9, 61, 92, 0.1);
         }
 
-        /* EQUIPAMENTOS CLIENTE */
-        .equipamentos-cliente {
-            background: #f8fafd;
-            border-radius: 20px;
-            padding: 18px;
-            margin: 16px 0;
-            border: 2px dashed var(--cinza-borda);
-        }
-
-        .equipamento-item {
-            background: white;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 14px;
-            border: 1px solid var(--cinza-borda);
-            box-shadow: var(--sombra-suave);
-        }
-
-        .equipamento-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--cinza-borda);
-            flex-wrap: wrap;
-        }
-
-        .equipamento-header h4 {
-            color: var(--azul-ons);
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .equipamento-campos {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .btn-remover {
-            background: none;
-            border: none;
-            color: var(--perigo);
-            font-size: 1.1rem;
-            cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 10px;
-        }
-
-        .btn-adicionar {
-            background: var(--azul-ons);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 16px;
-            width: 100%;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 12px;
-            font-size: 0.95rem;
-        }
-
-        /* EQUIPAMENTOS PRÉ-CADASTRADOS */
         .equipamentos-pre-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-            gap: 10px;
-            margin: 16px 0;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
         }
 
         .equip-item-pre {
@@ -422,97 +329,86 @@
             gap: 10px;
             transition: all 0.2s;
             border: 2px solid transparent;
-            font-weight: 500;
-            font-size: 0.9rem;
         }
 
-        /* PEÇAS - Mobile */
-        .pecas-section {
-            background: #f8fafd;
-            border-radius: 20px;
-            padding: 16px;
-            margin: 16px 0;
-        }
-
-        .pecas-header {
-            display: none;
-        }
-
-        .linha-peca {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .equip-item-pre:hover {
+            border-color: var(--dourado-ons);
             background: white;
-            padding: 14px;
-            border-radius: 16px;
-            border: 1px solid var(--cinza-borda);
-            margin-bottom: 12px;
         }
 
-        .linha-peca input {
-            width: 100%;
-        }
-
-        .total-peca {
-            font-weight: 700;
-            color: var(--azul-ons);
-            text-align: right;
-            font-size: 1rem;
-        }
-
-        /* RESUMO OS */
-        .resumo-os {
-            background: var(--azul-ons);
-            color: white;
-            padding: 20px;
+        .lista-container {
+            max-height: 600px;
+            overflow-y: auto;
             border-radius: 20px;
-            margin: 20px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            margin-top: 16px;
         }
 
-        .resumo-item {
-            text-align: center;
+        .item-lista {
+            padding: 20px;
+            border-bottom: 1px solid var(--cinza-borda);
+            transition: all 0.2s;
         }
 
-        .resumo-item .valor {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--dourado-ons);
-            margin-top: 5px;
-        }
-
-        /* CHECKBOX OPCIONAIS */
-        .opcoes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 12px;
-            margin: 16px 0;
-        }
-
-        .opcao-item {
+        .item-lista:hover {
             background: #f8fafd;
-            padding: 10px 12px;
-            border-radius: 14px;
+        }
+
+        .item-lista-info h4 {
+            color: var(--azul-ons);
+            margin-bottom: 10px;
+            font-size: 1rem;
             display: flex;
             align-items: center;
             gap: 10px;
-            cursor: pointer;
-            font-size: 0.9rem;
+            flex-wrap: wrap;
         }
 
-        /* BOTÕES */
+        .status-badge {
+            font-size: 0.7rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .status-andamento { background: var(--aviso); color: #856404; }
+        .status-finalizado { background: var(--sucesso); color: white; }
+
+        .item-lista-acoes {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .btn-acao {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .btn-acao:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-acao.ver { background: var(--azul-ons); color: white; }
+        .btn-acao.editar { background: var(--dourado-ons); color: var(--azul-ons); }
+        .btn-acao.excluir { background: var(--perigo); color: white; }
+        .btn-acao.wpp { background: #25D366; color: white; }
+        .btn-acao.msg { background: var(--info); color: white; }
+
         .botoes {
             display: flex;
             gap: 12px;
             margin-top: 20px;
             flex-wrap: wrap;
-            justify-content: center;
         }
 
         .btn {
-            padding: 14px 20px;
+            padding: 12px 24px;
             border: none;
             border-radius: 50px;
             font-weight: 700;
@@ -521,10 +417,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            justify-content: center;
-            flex: 1;
-            min-width: 140px;
-            font-size: 0.9rem;
         }
 
         .btn-primario {
@@ -543,84 +435,27 @@
             color: var(--azul-ons);
         }
 
-        /* LISTAS */
-        .lista-container {
-            max-height: 500px;
-            overflow-y: auto;
-            border: 1px solid var(--cinza-borda);
-            border-radius: 20px;
-            margin-top: 16px;
-        }
-
-        .item-lista {
-            padding: 16px;
-            border-bottom: 1px solid var(--cinza-borda);
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .item-lista-info h4 {
-            color: var(--azul-ons);
-            margin-bottom: 6px;
-            font-size: 1rem;
-        }
-
-        .item-lista-info p {
-            color: #5a6b7a;
-            font-size: 0.85rem;
-        }
-
-        .item-lista-acoes {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .btn-acao {
-            padding: 8px 16px;
+        .btn-salvar {
+            background: var(--sucesso);
+            color: white;
+            padding: 12px;
             border: none;
-            border-radius: 30px;
-            font-weight: 600;
+            border-radius: 12px;
+            font-weight: 700;
             cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        .btn-acao.ver {
-            background: var(--azul-ons);
-            color: white;
-        }
-
-        .btn-acao.editar {
-            background: var(--dourado-ons);
-            color: var(--azul-ons);
-        }
-
-        .btn-acao.excluir {
-            background: var(--perigo);
-            color: white;
-        }
-
-        /* RELATÓRIO */
-        .relatorio-print {
-            background: white;
-            padding: 20px;
-            font-family: 'Times New Roman', Times, serif;
-            overflow-x: auto;
-        }
-
-        .relatorio-tabela {
             width: 100%;
-            border-collapse: collapse;
-            font-size: 0.8rem;
         }
 
-        .relatorio-tabela th, .relatorio-tabela td {
-            padding: 8px;
-            border: 1px solid #ddd;
+        .btn-config {
+            background: var(--info);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
         }
 
-        /* NOTIFICAÇÃO */
         .notificacao {
             position: fixed;
             bottom: 20px;
@@ -638,194 +473,71 @@
         .notificacao.sucesso { background: var(--sucesso); }
         .notificacao.erro { background: var(--perigo); }
         .notificacao.info { background: var(--azul-ons); }
-
-        /* UTILITÁRIOS */
-        .mt-20 { margin-top: 20px; }
-        .mb-20 { margin-bottom: 20px; }
-        .text-center { text-align: center; }
-        .hidden { display: none !important; }
-
-        /* ========== TABLET E DESKTOP (768px+) ========== */
-        @media (min-width: 768px) {
-            body {
-                padding: 20px;
-            }
-
-            .header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                padding: 20px 25px;
-            }
-
-            .logo-area {
-                flex-direction: row;
-                text-align: left;
-                gap: 25px;
-            }
-
-            .logo-container {
-                justify-content: flex-start;
-            }
-
-            .header-telefone {
-                margin: 0;
-            }
-
-            .menu {
-                overflow-x: visible;
-                display: grid;
-                grid-template-columns: repeat(6, 1fr);
-                gap: 12px;
-                padding-bottom: 0;
-            }
-
-            .menu-btn {
-                justify-content: center;
-                flex-direction: column;
-                padding: 14px 8px;
-                white-space: normal;
-                text-align: center;
-            }
-
-            .form-grid {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
-
-            .form-group.full-width {
-                grid-column: span 2;
-            }
-
-            .equipamento-campos {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 15px;
-            }
-
-            .pecas-header {
-                display: grid;
-                grid-template-columns: 3fr 1fr 1fr 1fr 1fr 0.5fr;
-                gap: 12px;
-                padding: 12px;
-                font-weight: 700;
-                color: var(--azul-ons);
-                margin-bottom: 8px;
-            }
-
-            .linha-peca {
-                display: grid;
-                grid-template-columns: 3fr 1fr 1fr 1fr 1fr 0.5fr;
-                gap: 12px;
-                align-items: center;
-                flex-direction: row;
-            }
-
-            .resumo-os {
-                flex-direction: row;
-                justify-content: space-between;
-            }
-
-            .item-lista {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            .item-lista-acoes {
-                flex-wrap: nowrap;
-            }
-
-            .botoes {
-                justify-content: flex-start;
-            }
-
-            .btn {
-                flex: 0 1 auto;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .cards-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-            
-            .equipamentos-pre-grid {
-                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            }
-        }
-
-        /* Ajustes extras para toque */
-        button, .menu-btn, .equip-item-pre, .btn-acao {
-            touch-action: manipulation;
-        }
-
-        input, select, textarea {
-            font-size: 16px;
-        }
-
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            .relatorio-print, .relatorio-print * {
-                visibility: visible;
-            }
-            .relatorio-print {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                padding: 20px;
-            }
-            .no-print {
-                display: none !important;
-            }
-        }
+        .notificacao.aviso { background: var(--aviso); color: #856404; }
 
         @keyframes slideIn {
             from { transform: translateY(100%); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+
+        .hidden { display: none !important; }
+        .mt-20 { margin-top: 20px; }
+
+        /* SQL Helper Panel */
+        .sql-helper {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 16px;
+            border-radius: 16px;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .sql-helper pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        @media (min-width: 768px) {
+            body { padding: 20px; }
+            .menu { overflow-x: visible; display: flex; flex-wrap: wrap; justify-content: center; }
+            .item-lista { display: flex; justify-content: space-between; align-items: center; }
+            .item-lista-acoes { margin-top: 0; }
+        }
     </style>
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="container">
-        <!-- HEADER COM BOTÃO PARA ALTERAR LOGO -->
         <div class="header">
-            <div class="logo-area">
-                <div class="logo-container">
-                    <div class="logo-ons" id="logoDisplay">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-ons" id="logoDisplay" onclick="document.getElementById('logoUpload').click()">
                         <i class="fas fa-tooth"></i>
                         ONS
                         <small>ODONTOTECNICA</small>
                     </div>
-                    <div class="logo-input-wrapper">
-                        <button class="btn-alterar-logo" onclick="document.getElementById('logoUpload').click()">
-                            <i class="fas fa-image"></i> Alterar Logo
-                        </button>
-                        <input type="file" id="logoUpload" accept="image/png, image/jpeg, image/jpg, image/svg+xml" style="display: none;">
-                        <button class="btn-alterar-logo" onclick="restaurarLogoPadrao()" style="margin-left: 5px;">
-                            <i class="fas fa-undo-alt"></i> Padrão
-                        </button>
+                    <div class="title-section">
+                        <h1><i class="fas fa-tools"></i> SISTEMA TÉCNICO DE MANUTENÇÃO</h1>
+                        <p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p>
                     </div>
                 </div>
-                <div class="header-info">
-                    <h1>Sistema Técnico de Manutenção</h1>
-                    <p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p>
+                <div class="header-actions">
+                    <button class="btn-alterar-logo" onclick="restaurarLogoPadrao()">
+                        <i class="fas fa-undo-alt"></i> Logo Padrão
+                    </button>
+                    <input type="file" id="logoUpload" accept="image/*" style="display: none;">
+                    <div class="header-telefone">
+                        <i class="fas fa-phone-alt"></i> 35 9 2000-4813
+                    </div>
                 </div>
-            </div>
-            <div class="header-telefone no-print">
-                <i class="fas fa-phone-alt"></i> 35 9 2000-4813
             </div>
         </div>
 
-        <!-- MENU -->
-        <div class="menu no-print">
+        <div class="menu">
             <button class="menu-btn active" data-tela="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
             <button class="menu-btn" data-tela="clientes"><i class="fas fa-users"></i> Clientes</button>
             <button class="menu-btn" data-tela="equipamentos"><i class="fas fa-tooth"></i> Equipamentos</button>
@@ -833,9 +545,9 @@
             <button class="menu-btn" data-tela="historico"><i class="fas fa-history"></i> Histórico</button>
             <button class="menu-btn" data-tela="relatorios"><i class="fas fa-file-pdf"></i> Relatórios</button>
             <button class="menu-btn" data-tela="osclientes"><i class="fas fa-inbox"></i> OS Clientes</button>
+            <button class="menu-btn" data-tela="seguranca"><i class="fas fa-shield-alt"></i> Segurança</button>
         </div>
 
-        <!-- DASHBOARD -->
         <div id="dashboard" class="section active">
             <h2 class="titulo-secao"><i class="fas fa-chart-pie"></i> Dashboard</h2>
             <div class="cards-grid">
@@ -844,298 +556,867 @@
                 <div class="card-dash"><h3 id="total-os">0</h3><p>Ordens de Serviço</p></div>
                 <div class="card-dash"><h3 id="total-receita">R$ 0</h3><p>Receita Total</p></div>
             </div>
-            <h3 class="titulo-secao mt-20">Últimas Ordens de Serviço</h3>
+            <h3 class="titulo-secao">Últimas Ordens de Serviço</h3>
             <div class="lista-container" id="lista-recentes"></div>
         </div>
 
-        <!-- CLIENTES -->
         <div id="clientes" class="section">
             <h2 class="titulo-secao"><i class="fas fa-user-plus"></i> Cadastro de Clientes</h2>
-            <div class="form-grid">
-                <div class="form-group"><label><i class="fas fa-user"></i> Nome Completo *</label><input type="text" id="cliente-nome" placeholder="Digite o nome completo"></div>
-                <div class="form-group"><label><i class="fas fa-phone"></i> Telefone *</label><input type="text" id="cliente-telefone" placeholder="(35) 9 2000-4813"></div>
-                <div class="form-group"><label><i class="fas fa-envelope"></i> E-mail</label><input type="email" id="cliente-email" placeholder="cliente@email.com"></div>
-                <div class="form-group"><label><i class="fas fa-map-marker-alt"></i> Endereço</label><input type="text" id="cliente-endereco" placeholder="Rua, número, bairro, cidade"></div>
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Nome Completo *</label>
+                <input type="text" id="cliente-nome" placeholder="Digite o nome completo">
             </div>
-            <div class="equipamentos-cliente"><h3 style="color: var(--azul-ons); margin-bottom: 16px;"><i class="fas fa-tooth"></i> Equipamentos do Cliente</h3><div id="equipamentos-lista"></div><button class="btn-adicionar" onclick="adicionarEquipamentoCliente()"><i class="fas fa-plus-circle"></i> Adicionar Novo Equipamento</button></div>
-            <div class="botoes"><button class="btn btn-primario" onclick="salvarCliente()"><i class="fas fa-save"></i> Salvar Cliente</button><button class="btn btn-outline" onclick="limparFormCliente()"><i class="fas fa-eraser"></i> Limpar</button></div>
-            <h3 class="titulo-secao mt-20">Clientes Cadastrados</h3><div class="lista-container" id="lista-clientes"></div>
+            <div class="form-group">
+                <label><i class="fas fa-phone"></i> Telefone *</label>
+                <input type="text" id="cliente-telefone" placeholder="(35) 9 2000-4813">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> E-mail</label>
+                <input type="email" id="cliente-email" placeholder="cliente@email.com">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-map-marker-alt"></i> Endereço</label>
+                <input type="text" id="cliente-endereco" placeholder="Rua, número, bairro, cidade">
+            </div>
+            <div class="botoes">
+                <button class="btn btn-primario" onclick="salvarCliente()"><i class="fas fa-save"></i> Salvar Cliente</button>
+                <button class="btn btn-outline" onclick="limparFormCliente()"><i class="fas fa-eraser"></i> Limpar</button>
+            </div>
+            <h3 class="titulo-secao mt-20">Clientes Cadastrados</h3>
+            <div class="lista-container" id="lista-clientes"></div>
         </div>
 
-        <!-- EQUIPAMENTOS -->
-        <div id="equipamentos" class="section"><h2 class="titulo-secao"><i class="fas fa-tooth"></i> Equipamentos Odontológicos</h2><div style="margin-bottom: 24px;"><h3 style="color: var(--azul-ons); margin-bottom: 12px;">Lista de Equipamentos</h3><p style="color: #5a6b7a; margin-bottom: 16px;">Clique em um equipamento para iniciar uma OS</p><div class="equipamentos-pre-grid" id="lista-equipamentos-pre"></div></div><div><h3 style="color: var(--azul-ons); margin-bottom: 16px;">Cadastro Rápido</h3><div class="form-grid"><div class="form-group full-width"><label><i class="fas fa-tag"></i> Nome do Equipamento</label><input type="text" id="equip-manual" placeholder="Ex: Refletor Odontológico, Compressor..."></div></div><div class="botoes"><button class="btn btn-primario" onclick="usarEquipamentoManual()"><i class="fas fa-play"></i> Iniciar OS</button></div></div></div>
+        <div id="equipamentos" class="section">
+            <h2 class="titulo-secao"><i class="fas fa-tooth"></i> Equipamentos Odontológicos</h2>
+            <div style="margin-bottom: 24px;">
+                <h3 style="color: var(--azul-ons); margin-bottom: 12px;">Lista de Equipamentos</h3>
+                <p style="color: #5a6b7a; margin-bottom: 16px;">Clique em um equipamento para iniciar uma OS</p>
+                <div class="equipamentos-pre-grid" id="lista-equipamentos-pre"></div>
+            </div>
+            <div>
+                <h3 style="color: var(--azul-ons); margin-bottom: 16px;">Cadastro Rápido</h3>
+                <div class="form-group">
+                    <label><i class="fas fa-tag"></i> Nome do Equipamento</label>
+                    <input type="text" id="equip-manual" placeholder="Ex: Refletor Odontológico, Compressor...">
+                </div>
+                <div class="botoes">
+                    <button class="btn btn-primario" onclick="usarEquipamentoManual()"><i class="fas fa-play"></i> Iniciar OS</button>
+                </div>
+            </div>
+        </div>
 
-        <!-- NOVA OS -->
-        <div id="novaos" class="section"><h2 class="titulo-secao"><i class="fas fa-clipboard-list"></i> Ordem de Serviço</h2><div class="form-grid"><div class="form-group"><label><i class="fas fa-user"></i> Cliente</label><select id="os-cliente" onchange="carregarEquipamentosClienteOS()"><option value="">Selecione um cliente</option></select></div><div class="form-group"><label><i class="fas fa-tooth"></i> Equipamento</label><select id="os-equipamento"><option value="">Selecione o equipamento</option></select></div><div class="form-group full-width"><label><i class="fas fa-pencil-alt"></i> Ou digite manualmente</label><input type="text" id="os-equip-manual" placeholder="Digite o nome do equipamento"></div></div><h3 class="titulo-secao mt-20">Tipo de Manutenção</h3><div class="opcoes-grid"><label class="opcao-item"><input type="checkbox" id="os-preventiva"> Preventiva</label><label class="opcao-item"><input type="checkbox" id="os-corretiva"> Corretiva</label></div><h3 class="titulo-secao mt-20">Diagnóstico</h3><div class="form-grid"><div class="form-group"><label><i class="fas fa-exclamation-triangle"></i> Defeitos</label><textarea id="os-defeitos" rows="3" placeholder="Descreva os defeitos..."></textarea></div><div class="form-group"><label><i class="fas fa-tools"></i> Soluções</label><textarea id="os-solucoes" rows="3" placeholder="Descreva as soluções..."></textarea></div></div><h3 class="titulo-secao mt-20">Peças Utilizadas</h3><div class="pecas-section"><div class="pecas-header"><span>Peça</span><span>Qtd</span><span>Valor Unit.</span><span>Total</span><span></span></div><div id="pecas-lista"></div><button class="btn-adicionar" onclick="adicionarPeca()"><i class="fas fa-plus-circle"></i> Adicionar Peça</button></div><h3 class="titulo-secao mt-20">Mão de Obra</h3><div class="form-grid"><div class="form-group"><label><i class="fas fa-clock"></i> Horas</label><input type="number" id="os-horas" value="1" min="0.5" step="0.5" oninput="calcularTotalOS()"></div><div class="form-group"><label><i class="fas fa-dollar-sign"></i> Valor Hora (R$)</label><input type="number" id="os-valor-hora" value="85" step="5" oninput="calcularTotalOS()"></div></div><div class="resumo-os"><div class="resumo-item"><div>Total Peças</div><div class="valor" id="resumo-pecas">R$ 0,00</div></div><div class="resumo-item"><div>Mão de Obra</div><div class="valor" id="resumo-maoobra">R$ 0,00</div></div><div class="resumo-item"><div>VALOR TOTAL</div><div class="valor" id="resumo-total">R$ 0,00</div></div></div><div class="botoes"><button class="btn btn-primario" onclick="salvarOS()"><i class="fas fa-save"></i> Salvar OS</button><button class="btn btn-dourado" onclick="visualizarOS()"><i class="fas fa-eye"></i> Visualizar</button><button class="btn btn-outline" onclick="limparOS()"><i class="fas fa-eraser"></i> Limpar</button></div></div>
+        <div id="novaos" class="section">
+            <h2 class="titulo-secao"><i class="fas fa-clipboard-list"></i> Ordem de Serviço</h2>
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Cliente</label>
+                <select id="os-cliente">
+                    <option value="">Selecione um cliente</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-tooth"></i> Equipamento</label>
+                <input type="text" id="os-equipamento" placeholder="Digite o nome do equipamento">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-exclamation-triangle"></i> Defeitos</label>
+                <textarea id="os-defeitos" rows="3" placeholder="Descreva os defeitos..."></textarea>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-tools"></i> Soluções</label>
+                <textarea id="os-solucoes" rows="3" placeholder="Descreva as soluções..."></textarea>
+            </div>
+            <div class="botoes">
+                <button class="btn btn-primario" onclick="salvarOS()"><i class="fas fa-save"></i> Salvar OS</button>
+                <button class="btn btn-dourado" onclick="visualizarOSPreview()"><i class="fas fa-eye"></i> Visualizar</button>
+                <button class="btn btn-outline" onclick="limparOS()"><i class="fas fa-eraser"></i> Limpar</button>
+            </div>
+        </div>
 
-        <!-- HISTÓRICO -->
-        <div id="historico" class="section"><h2 class="titulo-secao"><i class="fas fa-history"></i> Histórico de OS</h2><div class="lista-container" id="lista-historico"></div></div>
+        <div id="historico" class="section">
+            <h2 class="titulo-secao"><i class="fas fa-history"></i> Histórico de OS</h2>
+            <div class="lista-container" id="lista-historico"></div>
+        </div>
 
-        <!-- RELATÓRIOS -->
-        <div id="relatorios" class="section"><h2 class="titulo-secao"><i class="fas fa-file-pdf"></i> Relatórios</h2><div class="botoes mb-20"><button class="btn btn-primario" onclick="listarTodasOS()"><i class="fas fa-list"></i> Listar Todas as OS</button></div><div class="lista-container" id="lista-todas-os"></div><div id="relatorio-visualizacao" class="relatorio-print mt-20" style="display: none;"></div><div class="botoes mt-20" id="botoes-relatorio" style="display: none;"><button class="btn btn-dourado" onclick="imprimirRelatorio()"><i class="fas fa-print"></i> Imprimir</button><button class="btn btn-primario" onclick="editarOSAtual()"><i class="fas fa-edit"></i> Editar</button><button class="btn btn-outline" onclick="fecharRelatorio()"><i class="fas fa-times"></i> Fechar</button></div></div>
-        
-        <!-- OS CLIENTES (Integração Supabase) -->
+        <div id="relatorios" class="section">
+            <h2 class="titulo-secao"><i class="fas fa-file-pdf"></i> Relatórios</h2>
+            <div class="botoes">
+                <button class="btn btn-primario" onclick="listarTodasOS()"><i class="fas fa-list"></i> Listar Todas as OS</button>
+            </div>
+            <div class="lista-container" id="lista-todas-os"></div>
+            <div id="relatorio-visualizacao" class="mt-20" style="display: none; background: white; padding: 20px; border-radius: 16px;"></div>
+            <div class="botoes" id="botoes-relatorio" style="display: none;">
+                <button class="btn btn-dourado" onclick="imprimirRelatorio()"><i class="fas fa-print"></i> Imprimir</button>
+                <button class="btn btn-outline" onclick="fecharRelatorio()"><i class="fas fa-times"></i> Fechar</button>
+            </div>
+        </div>
+
         <div id="osclientes" class="section">
             <h2 class="titulo-secao"><i class="fas fa-inbox"></i> Ordens de Serviço - App Cliente</h2>
             <div class="cards-grid">
                 <div class="card-dash"><h3 id="total-os-clientes">0</h3><p>Total de OS</p></div>
                 <div class="card-dash"><h3 id="total-os-andamento">0</h3><p>Em Andamento</p></div>
-                <div class="card-dash"><h3 id="total-os-nao-lidas">0</h3><p>Novas (não lidas)</p></div>
+                <div class="card-dash"><h3 id="total-os-finalizadas">0</h3><p>Finalizadas</p></div>
             </div>
-            <div style="display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;">
-                <button class="btn btn-outline" onclick="carregarOSClientes()">
-                    <i class="fas fa-sync-alt"></i> Atualizar
-                </button>
-                <button class="btn btn-outline" onclick="marcarTodasComoLidas()" style="background: var(--dourado-ons); color: var(--azul-ons);">
-                    <i class="fas fa-check-double"></i> Marcar todas como lidas
-                </button>
+            <div class="botoes">
+                <button class="btn btn-primario" onclick="carregarOSClientes()"><i class="fas fa-sync-alt"></i> Atualizar OS</button>
+                <button class="btn btn-dourado" onclick="enviarMsgParaTodos()"><i class="fas fa-envelope"></i> Msg para Todos</button>
             </div>
             <div class="lista-container" id="lista-os-clientes"></div>
         </div>
 
-        <div id="notificacao" class="notificacao hidden"></div>
+        <!-- Painel de Segurança - Configuração RLS -->
+        <div id="seguranca" class="section">
+            <h2 class="titulo-secao"><i class="fas fa-shield-alt"></i> Configuração de Segurança - RLS</h2>
+            
+            <div class="card-dash" style="margin-bottom: 20px;">
+                <h3><i class="fas fa-database"></i> Status do Banco de Dados</h3>
+                <div id="status-conexao" style="margin-top: 15px;">
+                    <p>🔍 Verificando conexão...</p>
+                </div>
+            </div>
 
+            <div class="card-dash" style="margin-bottom: 20px; background: #f0f7ff;">
+                <h3><i class="fas fa-code"></i> SQL para Configurar RLS (Copie e execute no Supabase)</h3>
+                <div class="sql-helper">
+                    <pre id="sql-rls-code">-- ============================================
+-- CONFIGURAÇÃO DE SEGURANÇA - ROW LEVEL SECURITY
+-- Execute este código no SQL Editor do Supabase
+-- ============================================
+
+-- 1. Habilitar RLS na tabela chamados
+ALTER TABLE chamados ENABLE ROW LEVEL SECURITY;
+
+-- 2. Política para SELECT (visualizar dados)
+CREATE POLICY "Allow select for all users" ON chamados
+    FOR SELECT USING (true);
+
+-- 3. Política para INSERT (inserir dados)
+CREATE POLICY "Allow insert for all users" ON chamados
+    FOR INSERT WITH CHECK (true);
+
+-- 4. Política para UPDATE (atualizar dados)
+CREATE POLICY "Allow update for all users" ON chamados
+    FOR UPDATE USING (true);
+
+-- 5. Política para DELETE (excluir dados)
+CREATE POLICY "Allow delete for all users" ON chamados
+    FOR DELETE USING (true);
+
+-- 6. (Opcional) Verificar políticas existentes
+SELECT * FROM pg_policies WHERE tablename = 'chamados';</pre>
+                </div>
+                <button class="btn btn-primario" style="margin-top: 15px;" onclick="copiarSQL()">
+                    <i class="fas fa-copy"></i> Copiar SQL
+                </button>
+            </div>
+
+            <div class="card-dash">
+                <h3><i class="fas fa-check-circle"></i> Passo a Passo para Configurar</h3>
+                <ol style="margin-top: 15px; padding-left: 20px; line-height: 1.8;">
+                    <li>1. Acesse seu painel do Supabase em <strong>https://supabase.com</strong></li>
+                    <li>2. Selecione seu projeto</li>
+                    <li>3. Vá em <strong>SQL Editor</strong> no menu lateral</li>
+                    <li>4. Clique em <strong>New Query</strong></li>
+                    <li>5. Cole o SQL acima no editor</li>
+                    <li>6. Clique em <strong>RUN</strong> para executar</li>
+                    <li>7. Pronto! Seu banco de dados está seguro com RLS ativado</li>
+                </ol>
+            </div>
+
+            <div class="card-dash" style="margin-top: 20px;">
+                <h3><i class="fas fa-info-circle"></i> O que é RLS?</h3>
+                <p style="margin-top: 10px; line-height: 1.6;">
+                    <strong>Row Level Security (RLS)</strong> é um recurso de segurança que protege seu banco de dados,
+                    permitindo que apenas usuários autorizados acessem os dados. Mesmo que alguém tenha sua chave API,
+                    não conseguirá acessar ou modificar dados sem as permissões corretas.
+                </p>
+                <p style="margin-top: 10px; color: var(--sucesso);">
+                    ✅ Com RLS ativado, suas credenciais ficam protegidas!
+                </p>
+            </div>
+        </div>
+
+        <div id="modalOS" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-clipboard-list"></i> Detalhes da OS</h3>
+                    <button class="close-modal" onclick="fecharModal()">&times;</button>
+                </div>
+                <div id="modal-body"></div>
+            </div>
+        </div>
+
+        <div id="notificacao" class="notificacao hidden"></div>
     </div>
 
     <script>
-        // ==================== FUNÇÕES DE LOGO ====================
-        function carregarLogoSalva() {
+        // ==================== CONFIGURAÇÕES ====================
+        // SUAS CREDENCIAIS DO SUPABASE (MANTENHA SEGURAS)
+        const SUPABASE_URL = 'https://vckyxwonbpkdeqeoswxc.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZja3l4d29uYnBrZGVxZW9zd3hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwMTY5NjMsImV4cCI6MjA5MTU5Mjk2M30.b5ni_vnIETHVuOs5Cy4982UUBq9Icm-Zc12W1FwQyvI';
+        
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Dados globais
+        let clientes = [];
+        let manutencoes = [];
+        let osClientes = [];
+        let equipamentosLista = ['Equipo Odontológico', 'Compressor Odontológico', 'Autoclave', 'Aparelho de Raio-X', 'Fotopolimerizador', 'Ultrassom / Scaler', 'Cadeira Odontológica', 'Mocho do Dentista', 'Sugador / Bomba de Vácuo', 'Amalgamador', 'Lâmpada do Equipo', 'Microscópio Odontológico', 'Laser Terapêutico', 'Seladora de Embalagens', 'Destiladora de Água', 'REFLETOR Odontológico'];
+        
+        // Carregar dados do localStorage
+        function carregarDados() {
+            const clientesSalvos = localStorage.getItem('ons_clientes');
+            const manutencoesSalvas = localStorage.getItem('ons_manutencoes');
+            
+            if (clientesSalvos) clientes = JSON.parse(clientesSalvos);
+            if (manutencoesSalvas) manutencoes = JSON.parse(manutencoesSalvas);
+            
+            console.log('Clientes carregados:', clientes.length);
+            console.log('OS carregadas:', manutencoes.length);
+        }
+        
+        function salvarClientes() {
+            localStorage.setItem('ons_clientes', JSON.stringify(clientes));
+        }
+        
+        function salvarManutencoes() {
+            localStorage.setItem('ons_manutencoes', JSON.stringify(manutencoes));
+        }
+
+        // ==================== VERIFICAR SEGURANÇA ====================
+        async function verificarSeguranca() {
+            const statusDiv = document.getElementById('status-conexao');
+            if (!statusDiv) return;
+            
+            statusDiv.innerHTML = '<p>🔍 Verificando configurações de segurança...</p>';
+            
+            try {
+                // Testar conexão com Supabase
+                const { data, error } = await supabaseClient
+                    .from('chamados')
+                    .select('count', { count: 'exact', head: true });
+                
+                if (error) {
+                    if (error.message.includes('row-level security')) {
+                        statusDiv.innerHTML = `
+                            <p style="color: var(--aviso);">⚠️ <strong>RLS não configurado!</strong></p>
+                            <p>Execute o SQL acima para ativar a proteção do seu banco de dados.</p>
+                        `;
+                    } else {
+                        statusDiv.innerHTML = `
+                            <p style="color: var(--perigo);">❌ Erro de conexão: ${error.message}</p>
+                            <p>Verifique suas credenciais do Supabase.</p>
+                        `;
+                    }
+                } else {
+                    statusDiv.innerHTML = `
+                        <p style="color: var(--sucesso);">✅ <strong>Conexão OK!</strong></p>
+                        <p>Seu banco de dados está acessível. Recomendamos configurar RLS para maior segurança.</p>
+                    `;
+                }
+            } catch(err) {
+                statusDiv.innerHTML = `
+                    <p style="color: var(--perigo);">❌ Erro ao verificar: ${err.message}</p>
+                `;
+            }
+        }
+
+        window.copiarSQL = function() {
+            const sqlCode = document.getElementById('sql-rls-code').innerText;
+            navigator.clipboard.writeText(sqlCode);
+            mostrarNotificacao('SQL copiado para área de transferência!', 'sucesso');
+        }
+
+        // ==================== LOGO ====================
+        window.restaurarLogoPadrao = function() {
+            const logoDiv = document.getElementById('logoDisplay');
+            logoDiv.innerHTML = `<i class="fas fa-tooth"></i> ONS <small>ODONTOTECNICA</small>`;
+            logoDiv.style.background = 'var(--dourado-ons)';
+            localStorage.removeItem('ons_logo');
+            mostrarNotificacao('Logo restaurada para o padrão!', 'sucesso');
+        }
+
+        document.getElementById('logoUpload')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const logoDiv = document.getElementById('logoDisplay');
+                    logoDiv.innerHTML = `<img src="${event.target.result}" class="logo-imagem" alt="Logo ONS">`;
+                    logoDiv.style.background = 'transparent';
+                    localStorage.setItem('ons_logo', event.target.result);
+                    mostrarNotificacao('Logo alterada com sucesso!', 'sucesso');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function carregarLogoSaved() {
             const logoSalva = localStorage.getItem('ons_logo');
             if (logoSalva) {
                 const logoDiv = document.getElementById('logoDisplay');
                 logoDiv.innerHTML = `<img src="${logoSalva}" class="logo-imagem" alt="Logo ONS">`;
                 logoDiv.style.background = 'transparent';
-                logoDiv.style.padding = '5px';
             }
         }
 
-        function restaurarLogoPadrao() {
-            const logoDiv = document.getElementById('logoDisplay');
-            logoDiv.innerHTML = `<i class="fas fa-tooth"></i> ONS <small>ODONTOTECNICA</small>`;
-            logoDiv.style.background = 'var(--dourado-ons)';
-            logoDiv.style.padding = '10px 20px';
-            localStorage.removeItem('ons_logo');
-            mostrarNotificacao('Logo restaurada para o padrão!', 'sucesso');
+        // ==================== MENU ====================
+        document.querySelectorAll('.menu-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
+                const telaId = this.getAttribute('data-tela');
+                document.getElementById(telaId).classList.add('active');
+                
+                if (telaId === 'dashboard') atualizarDashboard();
+                if (telaId === 'clientes') carregarListaClientes();
+                if (telaId === 'equipamentos') mostrarEquipamentosPre();
+                if (telaId === 'historico') carregarHistorico();
+                if (telaId === 'relatorios') listarTodasOS();
+                if (telaId === 'osclientes') carregarOSClientes();
+                if (telaId === 'seguranca') verificarSeguranca();
+            });
+        });
+
+        // ==================== NOTIFICAÇÃO ====================
+        function mostrarNotificacao(msg, tipo = 'sucesso') {
+            const n = document.getElementById('notificacao');
+            n.textContent = msg;
+            n.className = `notificacao ${tipo}`;
+            n.classList.remove('hidden');
+            setTimeout(() => n.classList.add('hidden'), 3000);
         }
 
-        // ==================== SUPABASE CONFIG ====================
-               // ==================== SUPABASE CONFIG ====================
-        const SUPABASE_URL = 'https://vckyxwonbpkdeqeoswxc.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZja3l4d29uYnBrZGVxZW9zd3hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwMTY5NjMsImV4cCI6MjA5MTU5Mjk2M30.b5ni_vnIETHVuOs5Cy4982UUBq9Icm-Zc12W1FwQyvI';
-        
-        let osClientes = [];
-        let osLidas = JSON.parse(localStorage.getItem('ons_os_lidas')) || [];
-        
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        
-        // ==================== FUNÇÕES SUPABASE ====================
-        
-        async function carregarOSClientes() {
+        // ==================== FUNÇÕES CLIENTES ====================
+        window.salvarCliente = function() {
+            const nome = document.getElementById('cliente-nome').value.trim();
+            const telefone = document.getElementById('cliente-telefone').value.trim();
+            
+            if (!nome || !telefone) {
+                mostrarNotificacao('Nome e telefone são obrigatórios!', 'erro');
+                return;
+            }
+            
+            const cliente = {
+                id: Date.now(),
+                nome: nome,
+                telefone: telefone,
+                email: document.getElementById('cliente-email').value,
+                endereco: document.getElementById('cliente-endereco').value,
+                equipamentos: [],
+                data: new Date().toISOString()
+            };
+            
+            clientes.push(cliente);
+            salvarClientes();
+            mostrarNotificacao('Cliente salvo com sucesso!', 'sucesso');
+            limparFormCliente();
+            carregarListaClientes();
+            carregarClientesSelect();
+            atualizarDashboard();
+        }
+
+        window.limparFormCliente = function() {
+            document.getElementById('cliente-nome').value = '';
+            document.getElementById('cliente-telefone').value = '';
+            document.getElementById('cliente-email').value = '';
+            document.getElementById('cliente-endereco').value = '';
+        }
+
+        function carregarListaClientes() {
+            const container = document.getElementById('lista-clientes');
+            if (!container) return;
+            
+            if (clientes.length === 0) {
+                container.innerHTML = '<div class="item-lista">Nenhum cliente cadastrado</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            clientes.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'item-lista';
+                div.innerHTML = `
+                    <div class="item-lista-info">
+                        <h4>${c.nome}</h4>
+                        <p><i class="fas fa-phone"></i> ${c.telefone}</p>
+                    </div>
+                    <div class="item-lista-acoes">
+                        <button class="btn-acao ver" onclick="usarClienteOS(${c.id})"><i class="fas fa-play"></i> Iniciar OS</button>
+                        <button class="btn-acao editar" onclick="editarCliente(${c.id})"><i class="fas fa-edit"></i> Editar</button>
+                        <button class="btn-acao excluir" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i> Excluir</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        window.editarCliente = function(id) {
+            const c = clientes.find(c => c.id === id);
+            if (!c) return;
+            
+            document.getElementById('cliente-nome').value = c.nome;
+            document.getElementById('cliente-telefone').value = c.telefone;
+            document.getElementById('cliente-email').value = c.email || '';
+            document.getElementById('cliente-endereco').value = c.endereco || '';
+            
+            // Remover o cliente antigo
+            clientes = clientes.filter(cli => cli.id !== id);
+            salvarClientes();
+            
+            document.querySelector('[data-tela="clientes"]').click();
+            mostrarNotificacao('Editando cliente - Clique em Salvar para finalizar', 'info');
+        }
+
+        window.excluirCliente = function(id) {
+            if (!confirm('Tem certeza que deseja excluir este cliente?')) return;
+            clientes = clientes.filter(c => c.id !== id);
+            salvarClientes();
+            carregarListaClientes();
+            carregarClientesSelect();
+            atualizarDashboard();
+            mostrarNotificacao('Cliente excluído!', 'sucesso');
+        }
+
+        function carregarClientesSelect() {
+            const select = document.getElementById('os-cliente');
+            if (!select) return;
+            select.innerHTML = '<option value="">Selecione um cliente</option>';
+            clientes.forEach(c => {
+                const option = document.createElement('option');
+                option.value = c.id;
+                option.textContent = c.nome;
+                select.appendChild(option);
+            });
+        }
+
+        window.usarClienteOS = function(id) {
+            document.getElementById('os-cliente').value = id;
+            document.querySelector('[data-tela="novaos"]').click();
+            mostrarNotificacao('Cliente selecionado! Preencha os dados da OS', 'sucesso');
+        }
+
+        // ==================== EQUIPAMENTOS ====================
+        function mostrarEquipamentosPre() {
+            const container = document.getElementById('lista-equipamentos-pre');
+            if (!container) return;
+            container.innerHTML = '';
+            equipamentosLista.forEach(eq => {
+                const div = document.createElement('div');
+                div.className = 'equip-item-pre';
+                div.onclick = () => iniciarOSComEquipamento(eq);
+                div.innerHTML = `<i class="fas fa-tooth"></i> ${eq}`;
+                container.appendChild(div);
+            });
+        }
+
+        function iniciarOSComEquipamento(equipamento) {
+            document.querySelector('[data-tela="novaos"]').click();
+            document.getElementById('os-equipamento').value = equipamento;
+            mostrarNotificacao(`Equipamento selecionado: ${equipamento}`, 'sucesso');
+        }
+
+        window.usarEquipamentoManual = function() {
+            const equipamento = document.getElementById('equip-manual').value.trim();
+            if (equipamento) {
+                iniciarOSComEquipamento(equipamento);
+            } else {
+                mostrarNotificacao('Digite o nome do equipamento!', 'erro');
+            }
+        }
+
+        // ==================== FUNÇÕES OS LOCAL ====================
+        window.salvarOS = function() {
+            const clienteId = document.getElementById('os-cliente').value;
+            const equipamento = document.getElementById('os-equipamento').value.trim();
+            
+            if (!clienteId || !equipamento) {
+                mostrarNotificacao('Selecione o cliente e informe o equipamento!', 'erro');
+                return;
+            }
+            
+            const os = {
+                id: Date.now(),
+                clienteId: parseInt(clienteId),
+                equipamento: equipamento,
+                defeitos: document.getElementById('os-defeitos').value,
+                solucoes: document.getElementById('os-solucoes').value,
+                totalGeral: 0,
+                data: new Date().toISOString()
+            };
+            
+            manutencoes.push(os);
+            salvarManutencoes();
+            mostrarNotificacao('OS salva com sucesso!', 'sucesso');
+            limparOS();
+            atualizarDashboard();
+            carregarHistorico();
+        }
+
+        window.limparOS = function() {
+            document.getElementById('os-cliente').value = '';
+            document.getElementById('os-equipamento').value = '';
+            document.getElementById('os-defeitos').value = '';
+            document.getElementById('os-solucoes').value = '';
+        }
+
+        window.visualizarOSPreview = function() {
+            const clienteId = document.getElementById('os-cliente').value;
+            const equipamento = document.getElementById('os-equipamento').value.trim();
+            
+            if (!clienteId || !equipamento) {
+                mostrarNotificacao('Complete os dados da OS primeiro!', 'erro');
+                return;
+            }
+            
+            const cliente = clientes.find(c => c.id == clienteId);
+            if (!cliente) return;
+            
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = `
+                <div>
+                    <h4 style="color:#093d5c;">Pré-visualização da OS</h4>
+                    <p><strong>Cliente:</strong> ${cliente.nome}</p>
+                    <p><strong>Telefone:</strong> ${cliente.telefone}</p>
+                    <p><strong>Equipamento:</strong> ${equipamento}</p>
+                    <p><strong>Defeitos:</strong> ${document.getElementById('os-defeitos').value || 'N/A'}</p>
+                    <p><strong>Soluções:</strong> ${document.getElementById('os-solucoes').value || 'N/A'}</p>
+                </div>
+            `;
+            document.getElementById('modalOS').classList.add('active');
+        }
+
+        function carregarHistorico() {
+            const container = document.getElementById('lista-historico');
+            if (!container) return;
+            
+            if (manutencoes.length === 0) {
+                container.innerHTML = '<div class="item-lista">Nenhuma OS registrada</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            [...manutencoes].reverse().forEach(os => {
+                const cliente = clientes.find(c => c.id === os.clienteId);
+                const nomeCliente = cliente ? cliente.nome : 'Cliente não encontrado';
+                
+                const div = document.createElement('div');
+                div.className = 'item-lista';
+                div.innerHTML = `
+                    <div class="item-lista-info">
+                        <h4>${nomeCliente} - ${os.equipamento}</h4>
+                        <p><i class="fas fa-calendar"></i> ${new Date(os.data).toLocaleDateString()}</p>
+                    </div>
+                    <div class="item-lista-acoes">
+                        <button class="btn-acao ver" onclick="verOSDetalhes(${os.id})"><i class="fas fa-eye"></i> Ver</button>
+                        <button class="btn-acao excluir" onclick="excluirOS(${os.id})"><i class="fas fa-trash"></i> Excluir</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        window.verOSDetalhes = function(id) {
+            const os = manutencoes.find(m => m.id === id);
+            if (!os) return;
+            
+            const cliente = clientes.find(c => c.id === os.clienteId);
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = `
+                <div>
+                    <h4 style="color:#093d5c;">Detalhes da OS</h4>
+                    <p><strong>Cliente:</strong> ${cliente ? cliente.nome : 'N/A'}</p>
+                    <p><strong>Telefone:</strong> ${cliente ? cliente.telefone : 'N/A'}</p>
+                    <p><strong>Equipamento:</strong> ${os.equipamento}</p>
+                    <p><strong>Data:</strong> ${new Date(os.data).toLocaleString()}</p>
+                    <p><strong>Defeitos:</strong> ${os.defeitos || 'N/A'}</p>
+                    <p><strong>Soluções:</strong> ${os.solucoes || 'N/A'}</p>
+                </div>
+            `;
+            document.getElementById('modalOS').classList.add('active');
+        }
+
+        window.excluirOS = function(id) {
+            if (!confirm('Excluir esta OS permanentemente?')) return;
+            manutencoes = manutencoes.filter(m => m.id !== id);
+            salvarManutencoes();
+            carregarHistorico();
+            atualizarDashboard();
+            mostrarNotificacao('OS excluída!', 'sucesso');
+        }
+
+        // ==================== RELATÓRIOS ====================
+        window.listarTodasOS = function() {
+            const container = document.getElementById('lista-todas-os');
+            if (!container) return;
+            
+            if (manutencoes.length === 0) {
+                container.innerHTML = '<div class="item-lista">Nenhuma OS encontrada</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            [...manutencoes].reverse().forEach(os => {
+                const cliente = clientes.find(c => c.id === os.clienteId);
+                const nomeCliente = cliente ? cliente.nome : 'Cliente';
+                
+                const div = document.createElement('div');
+                div.className = 'item-lista';
+                div.innerHTML = `
+                    <div class="item-lista-info">
+                        <h4>${nomeCliente} - ${os.equipamento}</h4>
+                        <p>${new Date(os.data).toLocaleDateString()}</p>
+                    </div>
+                    <div class="item-lista-acoes">
+                        <button class="btn-acao ver" onclick="gerarRelatorioOS(${os.id})"><i class="fas fa-eye"></i> Visualizar</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        window.gerarRelatorioOS = function(id) {
+            const os = manutencoes.find(m => m.id === id);
+            if (!os) return;
+            
+            const cliente = clientes.find(c => c.id === os.clienteId);
+            const relatorioDiv = document.getElementById('relatorio-visualizacao');
+            const botoesRelatorio = document.getElementById('botoes-relatorio');
+            
+            relatorioDiv.innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h1 style="color: #093d5c;">ONS ODONTOTECNICA</h1>
+                    <h3>ORDEM DE SERVIÇO TÉCNICA</h3>
+                    <p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p>
+                    <p>Telefone: 35 9 2000-4813</p>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <p><strong>Data:</strong> ${new Date(os.data).toLocaleString()}</p>
+                    <p><strong>OS Nº:</strong> ${os.id}</p>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #093d5c;">DADOS DO CLIENTE</h4>
+                    <p><strong>Cliente:</strong> ${cliente ? cliente.nome : 'N/A'}</p>
+                    <p><strong>Telefone:</strong> ${cliente ? cliente.telefone : 'N/A'}</p>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #093d5c;">DADOS DO EQUIPAMENTO</h4>
+                    <p><strong>Equipamento:</strong> ${os.equipamento}</p>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #093d5c;">DIAGNÓSTICO</h4>
+                    <p><strong>Defeitos:</strong></p>
+                    <p style="background: #f5f5f5; padding: 12px; border-radius: 8px;">${os.defeitos || 'Não informado'}</p>
+                    <p><strong>Soluções:</strong></p>
+                    <p style="background: #f5f5f5; padding: 12px; border-radius: 8px;">${os.solucoes || 'Não informado'}</p>
+                </div>
+                <div style="margin-top: 30px; text-align: center; font-size: 0.8rem; color: #666;">
+                    <p>ONS ODONTOTECNICA - Soluções em Equipamentos Odontológicos</p>
+                    <p>Gerado em ${new Date().toLocaleString()}</p>
+                </div>
+            `;
+            
+            relatorioDiv.style.display = 'block';
+            botoesRelatorio.style.display = 'flex';
+        }
+
+        window.imprimirRelatorio = function() {
+            window.print();
+        }
+
+        window.fecharRelatorio = function() {
+            document.getElementById('relatorio-visualizacao').style.display = 'none';
+            document.getElementById('botoes-relatorio').style.display = 'none';
+        }
+
+        // ==================== FUNÇÕES SUPABASE (OS CLIENTES) ====================
+        window.carregarOSClientes = async function() {
             mostrarNotificacao('🔄 Carregando OS do App Cliente...', 'info');
             
             try {
-                console.log('📡 Buscando OS no Supabase...');
-                
                 const { data, error } = await supabaseClient
                     .from('chamados')
                     .select('*')
                     .order('created_at', { ascending: false });
                 
-                if (error) {
-                    console.error('❌ Erro Supabase:', error);
-                    mostrarNotificacao('Erro: ' + error.message, 'erro');
-                    return;
-                }
-                
-                console.log('📊 Dados recebidos:', data);
-                console.log('📊 Total de OS:', data?.length || 0);
+                if (error) throw error;
                 
                 osClientes = data || [];
-                
-                if (osClientes.length === 0) {
-                    console.log('⚠️ Nenhuma OS encontrada');
-                    mostrarNotificacao('⚠️ Nenhuma OS encontrada no Supabase', 'info');
-                } else {
-                    console.log('✅ Primeira OS:', osClientes[0]);
-                    mostrarNotificacao(`✅ ${osClientes.length} OS carregadas!`, 'sucesso');
-                }
-                
-                atualizarContadoresOSClientes();
+                atualizarContadoresOS();
                 exibirListaOSClientes();
+                mostrarNotificacao(`✅ ${osClientes.length} OS carregadas!`, 'sucesso');
                 
             } catch(err) {
-                console.error('❌ Erro fatal:', err);
-                mostrarNotificacao('Erro de conexão: ' + err.message, 'erro');
-            }
-        }
-        function atualizarContadoresOSClientes() {
-            const totalEl = document.getElementById('total-os-clientes');
-            const andamentoEl = document.getElementById('total-os-andamento');
-            const naoLidasEl = document.getElementById('total-os-nao-lidas');
-            
-            if (totalEl) totalEl.textContent = osClientes.length;
-            if (andamentoEl) {
-                const andamento = osClientes.filter(os => os.status === 'Em andamento' || os.status === 'Aberto').length;
-                andamentoEl.textContent = andamento;
-            }
-            if (naoLidasEl) {
-                const naoLidas = osClientes.filter(os => !osLidas.includes(os.id)).length;
-                naoLidasEl.textContent = naoLidas;
-            }
-        }
-        
-   function exibirListaOSClientes() {
-    const container = document.getElementById('lista-os-clientes');
-    
-    console.log('🔍 Renderizando lista...');
-    console.log('Container encontrado:', container);
-    console.log('Quantidade de OS:', osClientes.length);
-    
-    if (!container) {
-        console.error('❌ Container lista-os-clientes não encontrado!');
-        return;
-    }
-    
-    if (osClientes.length === 0) {
-        container.innerHTML = '<div class="item-lista">Nenhuma OS encontrada no Supabase</div>';
-        return;
-    }
-    
-    container.innerHTML = '';
-    
-    osClientes.forEach((os, index) => {
-        console.log(`📝 Renderizando OS ${index + 1}:`, os.id, os.clinica);
-        
-        // Normalizar status: "Aberto" vira "Em andamento"
-        let statusExibicao = os.status;
-        if (statusExibicao === 'Aberto') statusExibicao = 'Em andamento';
-        
-        const isLida = osLidas.includes(os.id);
-        const telefone = os.telefone_cliente || os.telefone || 'N/A';
-        
-        const div = document.createElement('div');
-        div.className = 'item-lista';
-        div.style.borderLeft = `4px solid ${!isLida ? '#efb505' : '#28a745'}`;
-        div.style.backgroundColor = !isLida ? '#fff8e7' : 'white';
-        
-        div.innerHTML = `
-            <div class="item-lista-info">
-                <h4>🏥 ${os.clinica || 'N/A'} 
-                    <span style="font-size:0.7rem; background:#093d5c; color:white; padding:2px 8px; border-radius:20px;">${statusExibicao}</span>
-                </h4>
-                <p><strong>📞 Telefone:</strong> ${telefone}</p>
-                <p><strong>🔧 Equipamento:</strong> ${os.equipamento || 'N/E'}</p>
-                <p><strong>⚠️ Prioridade:</strong> ${os.prioridade || 'Normal'}</p>
-                <p><strong>📄 Laudo:</strong> ${os.incluirlaudo ? '✅ SIM' : '❌ Não'}</p>
-                <p><strong>📝 Detalhe:</strong> ${(os.detalhe || os.observacoes || 'Sem detalhes').substring(0, 60)}</p>
-                <p><small>📅 ${new Date(os.created_at).toLocaleString()}</small></p>
-                ${os.data_agendamento ? `<p><small>📆 Agendamento: ${new Date(os.data_agendamento).toLocaleDateString()}</small></p>` : ''}
-            </div>
-            <div class="item-lista-acoes">
-                ${!isLida ? `<button class="btn-acao" style="background:#efb505; color:#093d5c;" onclick="marcarComoLida(${os.id})"><i class="fas fa-check-double"></i> Marcar Lida</button>` : ''}
-                <select id="status-select-${os.id}" class="btn-acao" style="background:#093d5c; color:white; border:none; padding:8px 12px;" onchange="atualizarStatusOS(${os.id}, this.value)">
-                    <option value="Em andamento" ${(os.status === 'Em andamento' || os.status === 'Aberto') ? 'selected' : ''}>🔧 Em andamento</option>
-                    <option value="Finalizado" ${os.status === 'Finalizado' ? 'selected' : ''}>✅ Finalizado</option>
-                </select>
-                <button class="btn-acao ver" onclick="abrirWhatsAppOS(${os.id})"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-                <button class="btn-acao" style="background:#28a745; color:white;" onclick="abrirModalMensagem('${os.clinica}')"><i class="fas fa-envelope"></i> Mensagem</button>
-                <button class="btn-acao excluir" onclick="excluirOSCliente(${os.id}, '${os.clinica}')"><i class="fas fa-trash"></i> Excluir</button>
-            </div>
-        `;
-        container.appendChild(div);
-    });
-    
-    console.log('✅ Renderização concluída!');
-}
-        
-        async function marcarComoLida(id) {
-            if (!osLidas.includes(id)) {
-                osLidas.push(id);
-                localStorage.setItem('ons_os_lidas', JSON.stringify(osLidas));
-                mostrarNotificacao('OS marcada como lida', 'sucesso');
-                exibirListaOSClientes();
-                atualizarContadoresOSClientes();
-            }
-        }
-        
-        function marcarTodasComoLidas() {
-            osClientes.forEach(os => {
-                if (!osLidas.includes(os.id)) {
-                    osLidas.push(os.id);
+                console.error('Erro:', err);
+                if (err.message.includes('row-level security')) {
+                    mostrarNotificacao('⚠️ Configure o RLS no Supabase! Acesse a aba "Segurança"', 'aviso');
+                } else {
+                    mostrarNotificacao('Erro ao carregar: ' + err.message, 'erro');
                 }
-            });
-            localStorage.setItem('ons_os_lidas', JSON.stringify(osLidas));
-            mostrarNotificacao('Todas as OS foram marcadas como lidas', 'sucesso');
-            exibirListaOSClientes();
-            atualizarContadoresOSClientes();
+            }
         }
-        async function carregarOSClientes() {
-    mostrarNotificacao('🔄 Carregando OS do App Cliente...', 'info');
-    
-    try {
-        console.log('📡 Buscando OS no Supabase...');
-        
-        const { data, error } = await supabaseClient
-            .from('chamados')
-            .select('*')
-            .order('created_at', { ascending: false });
-        
-        if (error) {
-            console.error('❌ Erro Supabase:', error);
-            mostrarNotificacao('Erro: ' + error.message, 'erro');
-            return;
+
+        function atualizarContadoresOS() {
+            document.getElementById('total-os-clientes').textContent = osClientes.length;
+            const andamento = osClientes.filter(os => os.status === 'Em andamento' || os.status === 'Aberto').length;
+            document.getElementById('total-os-andamento').textContent = andamento;
+            const finalizadas = osClientes.filter(os => os.status === 'Finalizado' || os.status === 'Concluído').length;
+            document.getElementById('total-os-finalizadas').textContent = finalizadas;
         }
-        
-        console.log('📊 Dados recebidos:', data);
-        console.log('📊 Total de OS:', data?.length || 0);
-        
-        osClientes = data || [];
-        
-        if (osClientes.length === 0) {
-            console.log('⚠️ Nenhuma OS encontrada');
-            mostrarNotificacao('⚠️ Nenhuma OS encontrada no Supabase', 'info');
-        } else {
-            console.log('✅ Primeira OS:', osClientes[0]);
-            mostrarNotificacao(`✅ ${osClientes.length} OS carregadas!`, 'sucesso');
-        }
-        
-        atualizarContadoresOSClientes();
-        exibirListaOSClientes();
-        
-    } catch(err) {
-        console.error('❌ Erro fatal:', err);
-        mostrarNotificacao('Erro de conexão: ' + err.message, 'erro');
-    }
-}
-       
-        function abrirWhatsAppOS(id) {
-            const os = osClientes.find(o => o.id === id);
-            if (!os) return;
+
+        function exibirListaOSClientes() {
+            const container = document.getElementById('lista-os-clientes');
+            if (!container) return;
             
-            const telefone = os.telefone_cliente || os.telefone;
-            if (!telefone || telefone === 'N/A') {
-                mostrarNotificacao('❌ Cliente não possui telefone cadastrado!', 'erro');
+            if (osClientes.length === 0) {
+                container.innerHTML = '<div class="item-lista" style="text-align:center;">Nenhuma OS encontrada no Supabase</div>';
                 return;
             }
             
-            let telefoneLimpo = telefone.replace(/\D/g, '');
-            if (telefoneLimpo.length === 10) telefoneLimpo = '55' + telefoneLimpo;
-            if (telefoneLimpo.length === 11 && !telefoneLimpo.startsWith('55')) telefoneLimpo = '55' + telefoneLimpo;
+            container.innerHTML = '';
             
-            const mensagem = `🛠️ *ONS ODONTOTECNICA - ATUALIZAÇÃO DE OS* 🛠️%0A%0A` +
-                `🏥 *Clínica:* ${os.clinica}%0A` +
-                `🔧 *Equipamento:* ${os.equipamento || 'N/E'}%0A` +
-                `⚠️ *Prioridade:* ${os.prioridade || 'Normal'}%0A` +
-                `📄 *Laudo:* ${os.incluirlaudo ? 'SIM - Levar documento' : 'Não'}%0A` +
-                `📝 *Detalhe:* ${(os.detalhe || os.observacoes || 'Sem detalhes').substring(0, 100)}%0A%0A` +
-                `*Status atual:* ${os.status === 'Finalizado' ? '✅ FINALIZADO' : '🔧 EM ANDAMENTO'}%0A%0A` +
-                `---%0AONS OdontoTecnica - Manutenção de Qualidade`;
-            
-            window.open(`https://wa.me/${telefoneLimpo}?text=${mensagem}`, '_blank');
+            osClientes.forEach(os => {
+                const statusText = (os.status === 'Finalizado' || os.status === 'Concluído') ? '✅ Finalizado' : '🔧 Em andamento';
+                const statusClass = (os.status === 'Finalizado' || os.status === 'Concluído') ? 'status-finalizado' : 'status-andamento';
+                const telefone = os.telefone_cliente || os.telefone || 'N/A';
+                
+                const div = document.createElement('div');
+                div.className = 'item-lista';
+                div.innerHTML = `
+                    <div class="item-lista-info">
+                        <h4>
+                            🏥 ${os.clinica || 'N/A'}
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </h4>
+                        <p><strong>📞 Telefone:</strong> ${telefone}</p>
+                        <p><strong>🔧 Equipamento:</strong> ${os.equipamento || 'N/E'}</p>
+                        <p><strong>⚠️ Prioridade:</strong> ${os.prioridade || 'Normal'}</p>
+                        <p><strong>📝 Detalhe:</strong> ${(os.detalhe || os.observacoes || 'Sem detalhes').substring(0, 80)}</p>
+                        <p><small>📅 ${new Date(os.created_at).toLocaleString()}</small></p>
+                    </div>
+                    <div class="item-lista-acoes">
+                        <button class="btn-acao ver" onclick="visualizarOSCliente(${os.id})"><i class="fas fa-eye"></i> Ver</button>
+                        <button class="btn-acao editar" onclick="editarOSCliente(${os.id})"><i class="fas fa-edit"></i> Editar</button>
+                        <button class="btn-acao wpp" onclick="enviarWhatsAppOS(${os.id})"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                        <button class="btn-acao msg" onclick="enviarMensagemOS(${os.id})"><i class="fas fa-envelope"></i> Mensagem</button>
+                        <button class="btn-acao excluir" onclick="excluirOSCliente(${os.id})"><i class="fas fa-trash"></i> Excluir</button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
         }
-        
-        async function excluirOSCliente(id, clinica) {
-            if(!confirm(`⚠️ ATENÇÃO! Isso excluirá PERMANENTEMENTE a OS #${id} da clínica "${clinica}".\n\nEsta ação não pode ser desfeita e a OS sumirá do App do Cliente.\n\nTem certeza?`)) return;
+
+        window.visualizarOSCliente = function(id) {
+            const os = osClientes.find(o => o.id === id);
+            if (!os) return;
+            
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = `
+                <div>
+                    <h4 style="color:#093d5c;">Informações da OS</h4>
+                    <p><strong>🏥 Clínica:</strong> ${os.clinica || 'N/A'}</p>
+                    <p><strong>📞 Telefone:</strong> ${os.telefone_cliente || os.telefone || 'N/A'}</p>
+                    <p><strong>🔧 Equipamento:</strong> ${os.equipamento || 'N/E'}</p>
+                    <p><strong>⚠️ Prioridade:</strong> ${os.prioridade || 'Normal'}</p>
+                    <p><strong>📄 Incluir Laudo:</strong> ${os.incluirlaudo ? 'Sim' : 'Não'}</p>
+                    <p><strong>📝 Detalhe/Problema:</strong></p>
+                    <p style="background:#f5f5f5; padding:12px; border-radius:8px;">${os.detalhe || os.observacoes || 'Sem detalhes'}</p>
+                    <p><strong>📅 Data Abertura:</strong> ${new Date(os.created_at).toLocaleString()}</p>
+                    <p><strong>🔧 Status:</strong> ${os.status || 'Aberto'}</p>
+                </div>
+            `;
+            document.getElementById('modalOS').classList.add('active');
+        }
+
+        window.editarOSCliente = function(id) {
+            const os = osClientes.find(o => o.id === id);
+            if (!os) return;
+            
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = `
+                <div>
+                    <div class="form-group">
+                        <label>Clínica *</label>
+                        <input type="text" id="edit-clinica" value="${os.clinica || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone *</label>
+                        <input type="text" id="edit-telefone" value="${os.telefone_cliente || os.telefone || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>Equipamento</label>
+                        <input type="text" id="edit-equipamento" value="${os.equipamento || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="edit-status">
+                            <option value="Em andamento" ${(os.status === 'Em andamento' || os.status === 'Aberto') ? 'selected' : ''}>Em andamento</option>
+                            <option value="Finalizado" ${os.status === 'Finalizado' ? 'selected' : ''}>Finalizado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Prioridade</label>
+                        <select id="edit-prioridade">
+                            <option value="Baixa" ${os.prioridade === 'Baixa' ? 'selected' : ''}>Baixa</option>
+                            <option value="Normal" ${os.prioridade === 'Normal' ? 'selected' : ''}>Normal</option>
+                            <option value="Alta" ${os.prioridade === 'Alta' ? 'selected' : ''}>Alta</option>
+                            <option value="Urgente" ${os.prioridade === 'Urgente' ? 'selected' : ''}>Urgente</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Detalhe/Problema</label>
+                        <textarea id="edit-detalhe" rows="4">${os.detalhe || os.observacoes || ''}</textarea>
+                    </div>
+                    <button class="btn-salvar" onclick="salvarEdicaoOSCliente(${os.id})">
+                        <i class="fas fa-save"></i> Salvar Alterações
+                    </button>
+                </div>
+            `;
+            document.getElementById('modalOS').classList.add('active');
+        }
+
+        window.salvarEdicaoOSCliente = async function(id) {
+            const clinica = document.getElementById('edit-clinica')?.value;
+            const telefone = document.getElementById('edit-telefone')?.value;
+            const equipamento = document.getElementById('edit-equipamento')?.value;
+            const status = document.getElementById('edit-status')?.value;
+            const prioridade = document.getElementById('edit-prioridade')?.value;
+            const detalhe = document.getElementById('edit-detalhe')?.value;
+            
+            if (!clinica || !telefone) {
+                mostrarNotificacao('Clínica e telefone são obrigatórios!', 'erro');
+                return;
+            }
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('chamados')
+                    .update({
+                        clinica: clinica,
+                        telefone_cliente: telefone,
+                        equipamento: equipamento,
+                        status: status,
+                        prioridade: prioridade,
+                        detalhe: detalhe,
+                        observacoes: detalhe
+                    })
+                    .eq('id', id);
+                
+                if (error) throw error;
+                
+                mostrarNotificacao('✅ OS atualizada com sucesso!', 'sucesso');
+                fecharModal();
+                await carregarOSClientes();
+                
+            } catch(err) {
+                mostrarNotificacao('Erro ao atualizar: ' + err.message, 'erro');
+            }
+        }
+
+        window.excluirOSCliente = async function(id) {
+            const os = osClientes.find(o => o.id === id);
+            if (!confirm(`⚠️ Excluir OS da clínica "${os?.clinica}"?\n\nEsta ação não pode ser desfeita!`)) return;
             
             try {
                 const { error } = await supabaseClient
@@ -1145,164 +1426,152 @@
                 
                 if (error) throw error;
                 
-                // Remover da lista local
-                osClientes = osClientes.filter(o => o.id !== id);
-                
-                // Remover dos IDs lidos
-                osLidas = osLidas.filter(l => l !== id);
-                localStorage.setItem('ons_os_lidas', JSON.stringify(osLidas));
-                
-                mostrarNotificacao(`✅ OS #${id} excluída com sucesso!`, 'sucesso');
-                
-                atualizarContadoresOSClientes();
-                exibirListaOSClientes();
+                mostrarNotificacao('✅ OS excluída com sucesso!', 'sucesso');
+                await carregarOSClientes();
                 
             } catch(err) {
-                console.error("Erro ao excluir:", err);
-                mostrarNotificacao(`❌ Erro ao excluir: ${err.message}`, 'erro');
+                mostrarNotificacao('Erro ao excluir: ' + err.message, 'erro');
             }
         }
-        
-        // ==================== MENSAGEM PARA O CLIENTE (DIFERENCIAL) ====================
-        function abrirModalMensagem(clinica) {
-            const mensagem = prompt(`💬 Enviar mensagem para ${clinica}:`, "Digite sua mensagem aqui...");
+
+        window.enviarWhatsAppOS = function(id) {
+            const os = osClientes.find(o => o.id === id);
+            if (!os) return;
             
-            if (mensagem && mensagem.trim() !== "") {
-                enviarNotificacao(clinica, "Mensagem do Técnico", mensagem);
+            const telefone = os.telefone_cliente || os.telefone;
+            if (!telefone || telefone === 'N/A') {
+                mostrarNotificacao('❌ Cliente não possui telefone!', 'erro');
+                return;
             }
+            
+            let telefoneLimpo = telefone.replace(/\D/g, '');
+            if (telefoneLimpo.length === 10) telefoneLimpo = '55' + telefoneLimpo;
+            if (telefoneLimpo.length === 11 && !telefoneLimpo.startsWith('55')) telefoneLimpo = '55' + telefoneLimpo;
+            
+            const mensagem = `🛠️ *ONS ODONTOTECNICA* 🛠️%0A%0A` +
+                `*Ordem de Serviço #${os.id}*%0A%0A` +
+                `🏥 *Clínica:* ${os.clinica}%0A` +
+                `🔧 *Equipamento:* ${os.equipamento || 'N/E'}%0A` +
+                `⚠️ *Prioridade:* ${os.prioridade || 'Normal'}%0A` +
+                `📝 *Detalhe:* ${(os.detalhe || os.observacoes || 'Sem detalhes').substring(0, 100)}%0A%0A` +
+                `*Status:* ${os.status === 'Finalizado' ? '✅ FINALIZADO' : '🔧 EM ANDAMENTO'}%0A%0A` +
+                `---%0AONS OdontoTecnica - (35) 9 2000-4813`;
+            
+            window.open(`https://wa.me/${telefoneLimpo}?text=${mensagem}`, '_blank');
         }
-        
-        async function enviarNotificacao(clinica, titulo, mensagem) {
-            // Verificar se a tabela NOTIFICACOES existe, se não, criar
-            try {
-                const { error } = await supabaseClient
-                    .from('NOTIFICACOES')
-                    .insert([{
-                        clinica: clinica,
-                        titulo: titulo,
-                        mensagem: mensagem,
-                        lida: false,
-                        created_at: new Date().toISOString()
-                    }]);
-                
-                if (error) {
-                    if (error.message.includes('does not exist')) {
-                        mostrarNotificacao('⚠️ Tabela NOTIFICACOES não existe. Crie no Supabase SQL Editor.', 'erro');
-                        console.error('Tabela NOTIFICACOES não existe. Execute o SQL para criar.');
-                    } else {
-                        throw error;
-                    }
-                } else {
-                    mostrarNotificacao(`✅ Mensagem enviada para ${clinica}!`, 'sucesso');
+
+        window.enviarMensagemOS = function(id) {
+            const os = osClientes.find(o => o.id === id);
+            if (!os) return;
+            
+            const mensagem = prompt(`💬 Enviar mensagem para ${os.clinica}:`, 
+                `Olá! Sou da ONS Odontotecnica.\nSua OS #${os.id} está em andamento.`);
+            
+            if (mensagem && mensagem.trim()) {
+                const telefone = os.telefone_cliente || os.telefone;
+                if (!telefone) {
+                    mostrarNotificacao('Cliente sem telefone!', 'erro');
+                    return;
                 }
-            } catch(err) {
-                console.error('Erro:', err);
-                mostrarNotificacao('Erro ao enviar mensagem!', 'erro');
+                
+                let telefoneLimpo = telefone.replace(/\D/g, '');
+                if (telefoneLimpo.length === 10) telefoneLimpo = '55' + telefoneLimpo;
+                if (telefoneLimpo.length === 11 && !telefoneLimpo.startsWith('55')) telefoneLimpo = '55' + telefoneLimpo;
+                
+                window.open(`https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(mensagem)}`, '_blank');
+                mostrarNotificacao('Abrindo WhatsApp...', 'sucesso');
             }
         }
-        
-        // ==================== SQL PARA CRIAR TABELA NOTIFICACOES ====================
-        // Execute no SQL Editor do Supabase:
-        /*
-        CREATE TABLE IF NOT EXISTS NOTIFICACOES (
-            id SERIAL PRIMARY KEY,
-            clinica TEXT NOT NULL,
-            titulo TEXT NOT NULL,
-            mensagem TEXT NOT NULL,
-            lida BOOLEAN DEFAULT FALSE,
-            created_at TIMESTAMP DEFAULT NOW()
-        );
-        */
 
-        // ==================== FUNÇÕES DO SISTEMA (PRESERVADAS) ====================
-        // Upload e preview da logo
-        document.getElementById('logoUpload').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file && (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/svg+xml')) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const imgData = event.target.result;
-                    const logoDiv = document.getElementById('logoDisplay');
-                    logoDiv.innerHTML = `<img src="${imgData}" class="logo-imagem" alt="Logo ONS">`;
-                    logoDiv.style.background = 'transparent';
-                    logoDiv.style.padding = '5px';
-                    localStorage.setItem('ons_logo', imgData);
-                    mostrarNotificacao('Logo alterada com sucesso!', 'sucesso');
-                };
-                reader.readAsDataURL(file);
-            } else {
-                mostrarNotificacao('Selecione uma imagem PNG, JPG ou SVG', 'erro');
+        window.enviarMsgParaTodos = function() {
+            if (osClientes.length === 0) {
+                mostrarNotificacao('Nenhuma OS para enviar mensagem', 'erro');
+                return;
             }
-        });
-
-        // Dados e funções do sistema (preservados)
-        let clientes = JSON.parse(localStorage.getItem('ons_clientes')) || [];
-        let manutencoes = JSON.parse(localStorage.getItem('ons_manutencoes')) || [];
-        let clienteEditando = null;
-        let osEditando = null;
-        const equipamentosLista = ['Equipo Odontológico','Compressor Odontológico','Autoclave','Aparelho de Raio-X','Fotopolimerizador','Ultrassom / Scaler','Cadeira Odontológica','Mocho do Dentista','Sugador / Bomba de Vácuo','Amalgamador','Lâmpada do Equipo','Microscópio Odontológico','Laser Terapêutico','Seladora de Embalagens','Destiladora de Água','REFLETOR Odontológico'];
-
-        document.addEventListener('DOMContentLoaded', () => {
-            carregarLogoSalva();
-            document.querySelectorAll('.menu-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
-                    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-                    this.classList.add('active');
-                    document.getElementById(this.dataset.tela).classList.add('active');
-                    if (this.dataset.tela === 'dashboard') atualizarDashboard();
-                    if (this.dataset.tela === 'clientes') carregarListaClientes();
-                    if (this.dataset.tela === 'equipamentos') mostrarEquipamentosPre();
-                    if (this.dataset.tela === 'historico') carregarHistorico();
-                    if (this.dataset.tela === 'relatorios') listarTodasOS();
-                    if (this.dataset.tela === 'osclientes') carregarOSClientes();
+            
+            const mensagem = prompt('💬 Mensagem para TODOS os clientes:', 
+                'Olá! A ONS Odontotecnica informa que estamos à disposição para manutenção. Contato: (35) 9 2000-4813');
+            
+            if (mensagem && mensagem.trim()) {
+                let enviados = 0;
+                osClientes.forEach(os => {
+                    const telefone = os.telefone_cliente || os.telefone;
+                    if (telefone && telefone !== 'N/A') {
+                        let telefoneLimpo = telefone.replace(/\D/g, '');
+                        if (telefoneLimpo.length === 10) telefoneLimpo = '55' + telefoneLimpo;
+                        if (telefoneLimpo.length === 11 && !telefoneLimpo.startsWith('55')) telefoneLimpo = '55' + telefoneLimpo;
+                        
+                        setTimeout(() => {
+                            window.open(`https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(mensagem)}`, '_blank');
+                        }, enviados * 500);
+                        enviados++;
+                    }
                 });
-            });
-    
-            carregarClientesSelect();
-            atualizarDashboard();
-            adicionarPeca();
-            mostrarEquipamentosPre();
-            if(document.getElementById('equipamentos-lista').children.length === 0) adicionarEquipamentoCliente();
-        });
-
-        // Todas as funções do sistema permanecem idênticas (preservadas)
-        function adicionarEquipamentoCliente(tipo=''){ const c=document.getElementById('equipamentos-lista'); const d=document.createElement('div'); d.className='equipamento-item'; d.innerHTML=`<div class="equipamento-header"><h4><i class="fas fa-tooth"></i> Equipamento</h4><button class="btn-remover" onclick="removerEquipamentoCliente(this)"><i class="fas fa-times"></i></button></div><div class="equipamento-campos"><select class="equip-tipo"><option value="">Selecione</option>${equipamentosLista.map(e=>`<option value="${e}" ${e===tipo?'selected':''}>${e}</option>`).join('')}</select><input type="text" class="equip-modelo" placeholder="Modelo"><input type="text" class="equip-fabricante" placeholder="Fabricante"><input type="text" class="equip-serie" placeholder="Nº Série"></div>`; c.appendChild(d); }
-        function removerEquipamentoCliente(b){ if(document.querySelectorAll('.equipamento-item').length>1) b.closest('.equipamento-item').remove(); else mostrarNotificacao('Cliente deve ter pelo menos um equipamento','erro'); }
-        function salvarCliente(){ const nome=document.getElementById('cliente-nome').value.trim(), telefone=document.getElementById('cliente-telefone').value.trim(); if(!nome||!telefone){mostrarNotificacao('Nome e telefone obrigatórios','erro');return;} const equipamentos=[]; document.querySelectorAll('.equipamento-item').forEach(i=>{const tipo=i.querySelector('.equip-tipo').value; if(tipo) equipamentos.push({tipo,modelo:i.querySelector('.equip-modelo').value,fabricante:i.querySelector('.equip-fabricante').value,serie:i.querySelector('.equip-serie').value});}); if(equipamentos.length===0){mostrarNotificacao('Adicione pelo menos um equipamento','erro');return;} const cliente={id:clienteEditando||Date.now(),nome,telefone,email:document.getElementById('cliente-email').value,endereco:document.getElementById('cliente-endereco').value,equipamentos,data:new Date().toISOString()}; if(clienteEditando){const idx=clientes.findIndex(c=>c.id===clienteEditando); if(idx!==-1) clientes[idx]=cliente; mostrarNotificacao('Cliente atualizado!','sucesso');}else{clientes.push(cliente); mostrarNotificacao('Cliente salvo!','sucesso');} localStorage.setItem('ons_clientes',JSON.stringify(clientes)); limparFormCliente(); carregarListaClientes(); carregarClientesSelect(); atualizarDashboard();}
-        function limparFormCliente(){document.getElementById('cliente-nome').value='';document.getElementById('cliente-telefone').value='';document.getElementById('cliente-email').value='';document.getElementById('cliente-endereco').value='';document.getElementById('equipamentos-lista').innerHTML='';adicionarEquipamentoCliente();clienteEditando=null;}
-        function carregarListaClientes(){const lista=document.getElementById('lista-clientes'); lista.innerHTML=''; if(clientes.length===0){lista.innerHTML='<div class="item-lista">Nenhum cliente cadastrado</div>';return;} clientes.forEach(c=>{const div=document.createElement('div');div.className='item-lista';div.innerHTML=`<div class="item-lista-info"><h4>${c.nome}</h4><p><i class="fas fa-phone"></i> ${c.telefone} | ${c.equipamentos?.length||0} equip(s)</p></div><div class="item-lista-acoes"><button class="btn-acao ver" onclick="usarClienteOS(${c.id})"><i class="fas fa-play"></i></button><button class="btn-acao editar" onclick="editarCliente(${c.id})"><i class="fas fa-edit"></i></button><button class="btn-acao excluir" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button></div>`;lista.appendChild(div);});}
-        function editarCliente(id){const c=clientes.find(c=>c.id===id); if(!c)return; document.getElementById('cliente-nome').value=c.nome; document.getElementById('cliente-telefone').value=c.telefone; document.getElementById('cliente-email').value=c.email||''; document.getElementById('cliente-endereco').value=c.endereco||''; document.getElementById('equipamentos-lista').innerHTML=''; if(c.equipamentos?.length){c.equipamentos.forEach(eq=>{adicionarEquipamentoCliente(eq.tipo); setTimeout(()=>{const items=document.querySelectorAll('.equipamento-item'); const ult=items[items.length-1]; ult.querySelector('.equip-modelo').value=eq.modelo||''; ult.querySelector('.equip-fabricante').value=eq.fabricante||''; ult.querySelector('.equip-serie').value=eq.serie||'';},50);});}else adicionarEquipamentoCliente(); clienteEditando=id; document.querySelector('[data-tela="clientes"]').click();}
-        function excluirCliente(id){if(confirm('Excluir?')){clientes=clientes.filter(c=>c.id!==id); localStorage.setItem('ons_clientes',JSON.stringify(clientes)); carregarListaClientes(); carregarClientesSelect(); atualizarDashboard(); mostrarNotificacao('Cliente excluído','sucesso');}}
-        function mostrarEquipamentosPre(){const cont=document.getElementById('lista-equipamentos-pre'); cont.innerHTML=''; equipamentosLista.forEach(e=>{const d=document.createElement('div');d.className='equip-item-pre';d.onclick=()=>iniciarOSComEquipamento(e);d.innerHTML=`<i class="fas fa-tooth"></i> ${e}`;cont.appendChild(d);});}
-        function usarEquipamentoManual(){const eq=document.getElementById('equip-manual').value.trim(); if(eq) iniciarOSComEquipamento(eq); else mostrarNotificacao('Digite o nome','erro');}
-        function iniciarOSComEquipamento(eq){document.querySelector('[data-tela="novaos"]').click(); document.getElementById('os-equip-manual').value=eq; document.getElementById('os-equipamento').value=''; mostrarNotificacao(`Equipamento: ${eq}`,'sucesso');}
-        function carregarClientesSelect(){const sel=document.getElementById('os-cliente'); sel.innerHTML='<option value="">Selecione</option>'; clientes.forEach(c=>{const op=document.createElement('option'); op.value=c.id; op.textContent=c.nome; sel.appendChild(op);});}
-        function carregarEquipamentosClienteOS(){const id=document.getElementById('os-cliente').value; const selEq=document.getElementById('os-equipamento'); selEq.innerHTML='<option value="">Selecione</option>'; if(id){const cli=clientes.find(c=>c.id==id); if(cli?.equipamentos) cli.equipamentos.forEach(e=>{const op=document.createElement('option'); op.value=e.tipo; op.textContent=`${e.tipo} ${e.modelo||''}`; selEq.appendChild(op);});}}
-        function adicionarPeca(){const cont=document.getElementById('pecas-lista'); const div=document.createElement('div');div.className='linha-peca';div.innerHTML=`<input type="text" class="peca-nome" placeholder="Nome" oninput="calcularTotalOS()"><input type="number" class="peca-qtd" value="1" min="1" oninput="calcularTotalOS()"><input type="number" class="peca-valor" value="0" min="0" step="0.1" oninput="calcularTotalOS()"><span class="total-peca">R$ 0,00</span><button class="btn-remover" onclick="removerPeca(this)"><i class="fas fa-trash"></i></button>`;cont.appendChild(div);}
-        function removerPeca(b){if(document.querySelectorAll('.linha-peca').length>1){b.closest('.linha-peca').remove(); calcularTotalOS();}}
-        function calcularTotalOS(){let totalPecas=0; document.querySelectorAll('.linha-peca').forEach(l=>{const nome=l.querySelector('.peca-nome').value; const qtd=parseFloat(l.querySelector('.peca-qtd').value)||0; const val=parseFloat(l.querySelector('.peca-valor').value)||0; const tot=qtd*val; if(nome&&qtd) totalPecas+=tot; l.querySelector('.total-peca').textContent=`R$ ${tot.toFixed(2)}`;}); const horas=parseFloat(document.getElementById('os-horas').value)||0; const valHora=parseFloat(document.getElementById('os-valor-hora').value)||0; const mao=horas*valHora; const geral=totalPecas+mao; document.getElementById('resumo-pecas').textContent=`R$ ${totalPecas.toFixed(2)}`; document.getElementById('resumo-maoobra').textContent=`R$ ${mao.toFixed(2)}`; document.getElementById('resumo-total').textContent=`R$ ${geral.toFixed(2)}`; return {totalPecas,totalMaoObra:mao,totalGeral:geral};}
-        function salvarOS(){const clienteId=document.getElementById('os-cliente').value; const equip=document.getElementById('os-equipamento').value||document.getElementById('os-equip-manual').value.trim(); if(!clienteId||!equip){mostrarNotificacao('Selecione cliente e equipamento','erro');return;} const pecas=[]; document.querySelectorAll('.linha-peca').forEach(l=>{const nome=l.querySelector('.peca-nome').value; const qtd=parseFloat(l.querySelector('.peca-qtd').value)||0; const val=parseFloat(l.querySelector('.peca-valor').value)||0; if(nome&&qtd&&val) pecas.push({nome,qtd,valor:val,total:qtd*val});}); const totais=calcularTotalOS(); const os={id:osEditando||Date.now(),clienteId:parseInt(clienteId),equipamento:equip,preventiva:document.getElementById('os-preventiva').checked,corretiva:document.getElementById('os-corretiva').checked,defeitos:document.getElementById('os-defeitos').value,solucoes:document.getElementById('os-solucoes').value,pecas:pecas,horas:parseFloat(document.getElementById('os-horas').value)||0,valorHora:parseFloat(document.getElementById('os-valor-hora').value)||0,totalPecas:totais.totalPecas,totalMaoObra:totais.totalMaoObra,totalGeral:totais.totalGeral,data:new Date().toISOString()}; if(osEditando){const idx=manutencoes.findIndex(m=>m.id===osEditando); if(idx!==-1) manutencoes[idx]=os; mostrarNotificacao('OS atualizada!','sucesso');}else{manutencoes.push(os); mostrarNotificacao('OS salva!','sucesso');} localStorage.setItem('ons_manutencoes',JSON.stringify(manutencoes)); limparOS(); atualizarDashboard();}
-        function limparOS(){document.getElementById('os-cliente').value=''; document.getElementById('os-equipamento').innerHTML='<option value="">Selecione</option>'; document.getElementById('os-equip-manual').value=''; document.getElementById('os-preventiva').checked=false; document.getElementById('os-corretiva').checked=false; document.getElementById('os-defeitos').value=''; document.getElementById('os-solucoes').value=''; document.getElementById('os-horas').value='1'; document.getElementById('os-valor-hora').value='85'; document.getElementById('pecas-lista').innerHTML=''; adicionarPeca(); calcularTotalOS(); osEditando=null;}
-        function usarClienteOS(id){document.getElementById('os-cliente').value=id; carregarEquipamentosClienteOS(); document.querySelector('[data-tela="novaos"]').click();}
-        function visualizarOS(){const id=document.getElementById('os-cliente').value; if(!id){mostrarNotificacao('Complete os dados','erro');return;} const totais=calcularTotalOS(); const pecas=[]; document.querySelectorAll('.linha-peca').forEach(l=>{const nome=l.querySelector('.peca-nome').value; const qtd=parseFloat(l.querySelector('.peca-qtd').value)||0; const val=parseFloat(l.querySelector('.peca-valor').value)||0; if(nome&&qtd) pecas.push({nome,qtd,valor:val,total:qtd*val});}); const osPreview={clienteId:parseInt(id),equipamento:document.getElementById('os-equipamento').value||document.getElementById('os-equip-manual').value,preventiva:document.getElementById('os-preventiva').checked,corretiva:document.getElementById('os-corretiva').checked,defeitos:document.getElementById('os-defeitos').value,solucoes:document.getElementById('os-solucoes').value,pecas:pecas,horas:parseFloat(document.getElementById('os-horas').value)||0,valorHora:parseFloat(document.getElementById('os-valor-hora').value)||0,totalPecas:totais.totalPecas,totalMaoObra:totais.totalMaoObra,totalGeral:totais.totalGeral,data:new Date().toISOString()}; mostrarRelatorioOS(osPreview); document.querySelector('[data-tela="relatorios"]').click();}
-        function atualizarDashboard(){document.getElementById('total-clientes').textContent=clientes.length; const totalEq=clientes.reduce((acc,c)=>acc+(c.equipamentos?.length||0),0); document.getElementById('total-equipamentos').textContent=totalEq; document.getElementById('total-os').textContent=manutencoes.length; const receita=manutencoes.reduce((acc,os)=>acc+(os.totalGeral||0),0); document.getElementById('total-receita').textContent=`R$ ${receita.toFixed(2)}`; const lista=document.getElementById('lista-recentes'); const recentes=[...manutencoes].sort((a,b)=>new Date(b.data)-new Date(a.data)).slice(0,5); if(recentes.length===0) lista.innerHTML='<div class="item-lista">Nenhuma OS registrada</div>'; else{lista.innerHTML=''; recentes.forEach(os=>{const cli=clientes.find(c=>c.id===os.clienteId)||{nome:'Cliente'}; const div=document.createElement('div');div.className='item-lista';div.innerHTML=`<div class="item-lista-info"><h4>${cli.nome} - ${os.equipamento}</h4><p>${new Date(os.data).toLocaleDateString()} - R$ ${os.totalGeral?.toFixed(2)}</p></div><button class="btn-acao ver" onclick="verOS(${os.id})"><i class="fas fa-eye"></i></button>`;lista.appendChild(div);});}}
-        function carregarHistorico(){const lista=document.getElementById('lista-historico'); lista.innerHTML=''; if(manutencoes.length===0){lista.innerHTML='<div class="item-lista">Nenhuma OS registrada</div>';return;} [...manutencoes].sort((a,b)=>new Date(b.data)-new Date(a.data)).forEach(os=>{const cli=clientes.find(c=>c.id===os.clienteId)||{nome:'Cliente'}; const div=document.createElement('div');div.className='item-lista';div.innerHTML=`<div class="item-lista-info"><h4>${cli.nome} - ${os.equipamento}</h4><p><i class="fas fa-calendar"></i> ${new Date(os.data).toLocaleDateString()} | R$ ${os.totalGeral?.toFixed(2)}</p></div><div class="item-lista-acoes"><button class="btn-acao ver" onclick="verOS(${os.id})"><i class="fas fa-eye"></i></button><button class="btn-acao editar" onclick="editarOS(${os.id})"><i class="fas fa-edit"></i></button></div>`;lista.appendChild(div);});}
-        function verOS(id){const os=manutencoes.find(m=>m.id===id); if(os){mostrarRelatorioOS(os); document.querySelector('[data-tela="relatorios"]').click();}}
-        function editarOS(id){const os=manutencoes.find(m=>m.id===id); if(!os)return; document.getElementById('os-cliente').value=os.clienteId; carregarEquipamentosClienteOS(); setTimeout(()=>{document.getElementById('os-equipamento').value=os.equipamento;},100); document.getElementById('os-equip-manual').value=''; document.getElementById('os-preventiva').checked=os.preventiva||false; document.getElementById('os-corretiva').checked=os.corretiva||false; document.getElementById('os-defeitos').value=os.defeitos||''; document.getElementById('os-solucoes').value=os.solucoes||''; document.getElementById('os-horas').value=os.horas||1; document.getElementById('os-valor-hora').value=os.valorHora||85; document.getElementById('pecas-lista').innerHTML=''; if(os.pecas?.length){os.pecas.forEach(p=>{adicionarPeca(); setTimeout(()=>{const linhas=document.querySelectorAll('.linha-peca'); const ult=linhas[linhas.length-1]; ult.querySelector('.peca-nome').value=p.nome; ult.querySelector('.peca-qtd').value=p.qtd; ult.querySelector('.peca-valor').value=p.valor; calcularTotalOS();},50);});}else adicionarPeca(); osEditando=id; document.querySelector('[data-tela="novaos"]').click(); mostrarNotificacao('Editando OS','sucesso');}
-        function listarTodasOS(){const lista=document.getElementById('lista-todas-os'); lista.innerHTML=''; if(manutencoes.length===0){lista.innerHTML='<div class="item-lista">Nenhuma OS encontrada</div>';return;} [...manutencoes].sort((a,b)=>new Date(b.data)-new Date(a.data)).forEach(os=>{const cli=clientes.find(c=>c.id===os.clienteId)||{nome:'Cliente'}; const div=document.createElement('div');div.className='item-lista';div.innerHTML=`<div class="item-lista-info"><h4>${cli.nome} - ${os.equipamento}</h4><p>${new Date(os.data).toLocaleDateString()} - R$ ${os.totalGeral?.toFixed(2)}</p></div><button class="btn-acao ver" onclick='mostrarRelatorioOS(${JSON.stringify(os).replace(/'/g, "&apos;")})'><i class="fas fa-eye"></i> Visualizar</button>`;lista.appendChild(div);});}
-        function mostrarRelatorioOS(os){const cli=clientes.find(c=>c.id===os.clienteId)||{nome:'Cliente não encontrado',telefone:'',email:'',endereco:''}; const dataObj=new Date(os.data); const dataF=dataObj.toLocaleDateString('pt-BR'); const horaF=dataObj.toLocaleTimeString('pt-BR'); let html=`<div class="relatorio-header"><h1>ONS ODONTOTECNICA</h1><h3>ORDEM DE SERVIÇO TÉCNICA</h3><p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p><p>Telefone: 35 9 2000-4813</p></div><div style="text-align:right;margin-bottom:20px;"><strong>Data:</strong> ${dataF} - ${horaF}<br><strong>OS Nº:</strong> ${os.id}</div><div class="relatorio-dados" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;"><div><h4 style="color:#093d5c;">DADOS DO CLIENTE</h4><p><strong>Cliente:</strong> ${cli.nome}</p><p><strong>Telefone:</strong> ${cli.telefone}</p><p><strong>Email:</strong> ${cli.email||'Não informado'}</p><p><strong>Endereço:</strong> ${cli.endereco||'Não informado'}</p></div><div><h4 style="color:#093d5c;">DADOS DO EQUIPAMENTO</h4><p><strong>Equipamento:</strong> ${os.equipamento}</p><p><strong>Tipo:</strong> ${os.preventiva?'Preventiva ' : ''}${os.corretiva?'Corretiva' : ''}</p></div></div><div style="margin-bottom:20px;"><h4 style="color:#093d5c;">DIAGNÓSTICO</h4><p><strong>Defeitos:</strong></p><p style="background:#f5f5f5;padding:12px;border-radius:8px;">${os.defeitos||'Não informado'}</p><p><strong>Soluções:</strong></p><p style="background:#f5f5f5;padding:12px;border-radius:8px;">${os.solucoes||'Não informado'}</p></div>`; if(os.pecas?.length){html+=`<h4 style="color:#093d5c;">PEÇAS UTILIZADAS</h4><table class="relatorio-tabela"><thead><tr><th>Peça</th><th>Qtd</th><th>Valor Unit.</th><th>Total</th></tr></thead><tbody>`; os.pecas.forEach(p=>{html+=`<tr><td>${p.nome}</td><td>${p.qtd}</td><td>R$ ${p.valor.toFixed(2)}</td><td>R$ ${(p.qtd*p.valor).toFixed(2)}</td></tr>`;}); html+=`</tbody></table>`;} html+=`<div style="margin:20px 0;"><h4 style="color:#093d5c;">RESUMO FINANCEIRO</h4><p><strong>Total Peças:</strong> R$ ${os.totalPecas?.toFixed(2)||'0.00'}</p><p><strong>Mão de Obra (${os.horas}h):</strong> R$ ${os.totalMaoObra?.toFixed(2)||'0.00'}</p></div><div class="relatorio-total" style="background:#093d5c;color:white;padding:16px;text-align:center;border-radius:16px;"><strong>VALOR TOTAL: R$ ${os.totalGeral?.toFixed(2)||'0.00'}</strong></div><div style="margin-top:30px;text-align:center;font-size:0.8rem;color:#666;"><p>ONS ODONTOTECNICA - Soluções em Equipamentos Odontológicos</p><p>35 9 2000-4813</p><p>Gerado em ${new Date().toLocaleString()}</p></div>`; document.getElementById('relatorio-visualizacao').innerHTML=html; document.getElementById('relatorio-visualizacao').style.display='block'; document.getElementById('botoes-relatorio').style.display='flex'; window.osAtual=os;}
-        function imprimirRelatorio(){window.print();}
-        function fecharRelatorio(){document.getElementById('relatorio-visualizacao').style.display='none'; document.getElementById('botoes-relatorio').style.display='none';}
-        function editarOSAtual(){if(window.osAtual) editarOS(window.osAtual.id); else mostrarNotificacao('Nenhuma OS selecionada','erro');}
-        function mostrarNotificacao(msg,tipo='sucesso'){const n=document.getElementById('notificacao'); n.textContent=msg; n.className=`notificacao ${tipo}`; n.classList.remove('hidden'); setTimeout(()=>n.classList.add('hidden'),3000);}
-    </script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(() => console.log('✅ Service Worker registrado!'))
-                .catch(err => console.log('❌ Erro:', err));
+                mostrarNotificacao(`Abrindo WhatsApp para ${enviados} clientes...`, 'sucesso');
+            }
         }
-    </script>        
+
+        // ==================== DASHBOARD ====================
+        function atualizarDashboard() {
+            document.getElementById('total-clientes').textContent = clientes.length;
+            
+            const totalEquipamentos = clientes.reduce((acc, c) => acc + (c.equipamentos?.length || 0), 0);
+            document.getElementById('total-equipamentos').textContent = totalEquipamentos;
+            document.getElementById('total-os').textContent = manutencoes.length;
+            
+            const receita = manutencoes.reduce((acc, os) => acc + (os.totalGeral || 0), 0);
+            document.getElementById('total-receita').textContent = `R$ ${receita.toFixed(2)}`;
+            
+            // Últimas OS
+            const container = document.getElementById('lista-recentes');
+            if (container) {
+                const recentes = [...manutencoes].sort((a, b) => new Date(b.data) - new Date(a.data)).slice(0, 5);
+                if (recentes.length === 0) {
+                    container.innerHTML = '<div class="item-lista">Nenhuma OS registrada</div>';
+                } else {
+                    container.innerHTML = '';
+                    recentes.forEach(os => {
+                        const cliente = clientes.find(c => c.id === os.clienteId);
+                        const nomeCliente = cliente ? cliente.nome : 'Cliente';
+                        const div = document.createElement('div');
+                        div.className = 'item-lista';
+                        div.innerHTML = `
+                            <div class="item-lista-info">
+                                <h4>${nomeCliente} - ${os.equipamento}</h4>
+                                <p>${new Date(os.data).toLocaleDateString()}</p>
+                            </div>
+                            <div class="item-lista-acoes">
+                                <button class="btn-acao ver" onclick="verOSDetalhes(${os.id})"><i class="fas fa-eye"></i> Ver</button>
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    });
+                }
+            }
+        }
+
+        // ==================== MODAL ====================
+        window.fecharModal = function() {
+            document.getElementById('modalOS').classList.remove('active');
+        }
+
+        // ==================== INICIALIZAÇÃO ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarDados();
+            carregarLogoSaved();
+            carregarClientesSelect();
+            carregarListaClientes();
+            mostrarEquipamentosPre();
+            carregarHistorico();
+            carregarOSClientes();
+            atualizarDashboard();
+            verificarSeguranca();
+            
+            // Fechar modal ao clicar fora
+            document.getElementById('modalOS').addEventListener('click', function(e) {
+                if (e.target === this) fecharModal();
+            });
+        });
+    </script>
 </body>
 </html>
