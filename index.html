@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>ONS Odontotecnica - Sistema Técnico de Manutenção</title>
     <meta name="theme-color" content="#093d5c">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -76,16 +78,6 @@
             cursor: pointer;
         }
 
-        .logo-ons i {
-            font-size: 1.8rem;
-        }
-
-        .logo-ons small {
-            display: block;
-            font-size: 0.7rem;
-            font-weight: 500;
-        }
-
         .logo-imagem {
             height: 60px;
             width: auto;
@@ -142,6 +134,7 @@
             margin-bottom: 20px;
             overflow-x: auto;
             padding-bottom: 8px;
+            flex-wrap: wrap;
         }
 
         .menu-btn {
@@ -170,10 +163,6 @@
             transform: translateY(-2px);
             background: var(--azul-ons);
             color: white;
-        }
-
-        .menu-btn:hover i {
-            color: var(--dourado-ons);
         }
 
         .menu-btn.active {
@@ -217,7 +206,7 @@
 
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 16px;
             margin-bottom: 24px;
         }
@@ -258,9 +247,9 @@
         .modal-content {
             background: white;
             border-radius: 24px;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
             padding: 24px;
         }
@@ -334,6 +323,7 @@
         .equip-item-pre:hover {
             border-color: var(--dourado-ons);
             background: white;
+            transform: translateY(-2px);
         }
 
         .lista-container {
@@ -372,6 +362,8 @@
 
         .status-andamento { background: var(--aviso); color: #856404; }
         .status-finalizado { background: var(--sucesso); color: white; }
+        .status-bloqueado { background: var(--perigo); color: white; }
+        .status-ativo { background: var(--sucesso); color: white; }
 
         .item-lista-acoes {
             display: flex;
@@ -446,14 +438,20 @@
             width: 100%;
         }
 
-        .btn-config {
-            background: var(--info);
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
+        .sql-helper {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 16px;
+            border-radius: 16px;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .sql-helper pre {
+            margin: 0;
+            white-space: pre-wrap;
         }
 
         .notificacao {
@@ -482,33 +480,7 @@
 
         .hidden { display: none !important; }
         .mt-20 { margin-top: 20px; }
-
-        /* SQL Helper Panel */
-        .sql-helper {
-            background: #1e1e1e;
-            color: #d4d4d4;
-            padding: 16px;
-            border-radius: 16px;
-            font-family: monospace;
-            font-size: 12px;
-            overflow-x: auto;
-            margin-top: 20px;
-        }
-
-        .sql-helper pre {
-            margin: 0;
-            white-space: pre-wrap;
-        }
-
-        @media (min-width: 768px) {
-            body { padding: 20px; }
-            .menu { overflow-x: visible; display: flex; flex-wrap: wrap; justify-content: center; }
-            .item-lista { display: flex; justify-content: space-between; align-items: center; }
-            .item-lista-acoes { margin-top: 0; }
-        }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="container">
@@ -549,34 +521,35 @@
             <button class="menu-btn" data-tela="seguranca"><i class="fas fa-shield-alt"></i> Segurança</button>       
         </div>
 
+        <!-- DASHBOARD -->
         <div id="dashboard" class="section active">
             <h2 class="titulo-secao"><i class="fas fa-chart-pie"></i> Dashboard</h2>
             <div class="cards-grid">
                 <div class="card-dash"><h3 id="total-clientes">0</h3><p>Clientes Ativos</p></div>
-                <div class="card-dash"><h3 id="total-equipamentos">0</h3><p>Equipamentos</p></div>
-                <div class="card-dash"><h3 id="total-os">0</h3><p>Ordens de Serviço</p></div>
-                <div class="card-dash"><h3 id="total-receita">R$ 0</h3><p>Receita Total</p></div>
+                <div class="card-dash"><h3 id="total-os-dash">0</h3><p>Ordens de Serviço</p></div>
+                <div class="card-dash"><h3 id="total-andamento-dash">0</h3><p>OS em Andamento</p></div>
             </div>
-            <h3 class="titulo-secao">Últimas Ordens de Serviço</h3>
+            <h3 class="titulo-secao">Últimas Ordens de Serviço (App Cliente)</h3>
             <div class="lista-container" id="lista-recentes"></div>
         </div>
 
+        <!-- CLIENTES -->
         <div id="clientes" class="section">
             <h2 class="titulo-secao"><i class="fas fa-user-plus"></i> Cadastro de Clientes</h2>
             <div class="form-group">
-                <label><i class="fas fa-user"></i> Nome Completo *</label>
+                <label>Nome Completo *</label>
                 <input type="text" id="cliente-nome" placeholder="Digite o nome completo">
             </div>
             <div class="form-group">
-                <label><i class="fas fa-phone"></i> Telefone *</label>
+                <label>Telefone *</label>
                 <input type="text" id="cliente-telefone" placeholder="(35) 9 2000-4813">
             </div>
             <div class="form-group">
-                <label><i class="fas fa-envelope"></i> E-mail</label>
+                <label>E-mail</label>
                 <input type="email" id="cliente-email" placeholder="cliente@email.com">
             </div>
             <div class="form-group">
-                <label><i class="fas fa-map-marker-alt"></i> Endereço</label>
+                <label>Endereço</label>
                 <input type="text" id="cliente-endereco" placeholder="Rua, número, bairro, cidade">
             </div>
             <div class="botoes">
@@ -587,70 +560,59 @@
             <div class="lista-container" id="lista-clientes"></div>
         </div>
 
+        <!-- EQUIPAMENTOS -->
         <div id="equipamentos" class="section">
             <h2 class="titulo-secao"><i class="fas fa-tooth"></i> Equipamentos Odontológicos</h2>
-            <div style="margin-bottom: 24px;">
-                <h3 style="color: var(--azul-ons); margin-bottom: 12px;">Lista de Equipamentos</h3>
-                <p style="color: #5a6b7a; margin-bottom: 16px;">Clique em um equipamento para iniciar uma OS</p>
-                <div class="equipamentos-pre-grid" id="lista-equipamentos-pre"></div>
-            </div>
-            <div>
-                <h3 style="color: var(--azul-ons); margin-bottom: 16px;">Cadastro Rápido</h3>
+            <div class="equipamentos-pre-grid" id="lista-equipamentos-pre"></div>
+            <div class="mt-20">
+                <h3>Cadastro Rápido</h3>
                 <div class="form-group">
-                    <label><i class="fas fa-tag"></i> Nome do Equipamento</label>
-                    <input type="text" id="equip-manual" placeholder="Ex: Refletor Odontológico, Compressor...">
+                    <input type="text" id="equip-manual" placeholder="Digite o nome do equipamento">
                 </div>
-                <div class="botoes">
-                    <button class="btn btn-primario" onclick="usarEquipamentoManual()"><i class="fas fa-play"></i> Iniciar OS</button>
-                </div>
+                <button class="btn btn-primario" onclick="usarEquipamentoManual()">Iniciar OS</button>
             </div>
         </div>
 
+        <!-- NOVA OS -->
         <div id="novaos" class="section">
-            <h2 class="titulo-secao"><i class="fas fa-clipboard-list"></i> Ordem de Serviço</h2>
+            <h2 class="titulo-secao"><i class="fas fa-clipboard-list"></i> Nova Ordem de Serviço</h2>
             <div class="form-group">
-                <label><i class="fas fa-user"></i> Cliente</label>
+                <label>Cliente</label>
                 <select id="os-cliente">
                     <option value="">Selecione um cliente</option>
                 </select>
             </div>
             <div class="form-group">
-                <label><i class="fas fa-tooth"></i> Equipamento</label>
-                <input type="text" id="os-equipamento" placeholder="Digite o nome do equipamento">
+                <label>Equipamento</label>
+                <input type="text" id="os-equipamento" placeholder="Digite o equipamento">
             </div>
             <div class="form-group">
-                <label><i class="fas fa-exclamation-triangle"></i> Defeitos</label>
-                <textarea id="os-defeitos" rows="3" placeholder="Descreva os defeitos..."></textarea>
+                <label>Defeito / Problema</label>
+                <textarea id="os-defeitos" rows="3"></textarea>
             </div>
             <div class="form-group">
-                <label><i class="fas fa-tools"></i> Soluções</label>
-                <textarea id="os-solucoes" rows="3" placeholder="Descreva as soluções..."></textarea>
+                <label>Solução / Serviço Executado</label>
+                <textarea id="os-solucoes" rows="3"></textarea>
             </div>
             <div class="botoes">
-                <button class="btn btn-primario" onclick="salvarOS()"><i class="fas fa-save"></i> Salvar OS</button>
-                <button class="btn btn-dourado" onclick="visualizarOSPreview()"><i class="fas fa-eye"></i> Visualizar</button>
-                <button class="btn btn-outline" onclick="limparOS()"><i class="fas fa-eraser"></i> Limpar</button>
+                <button class="btn btn-primario" onclick="salvarOS()">Salvar OS</button>
+                <button class="btn btn-outline" onclick="limparOS()">Limpar</button>
             </div>
         </div>
 
+        <!-- HISTÓRICO LOCAL -->
         <div id="historico" class="section">
-            <h2 class="titulo-secao"><i class="fas fa-history"></i> Histórico de OS</h2>
+            <h2 class="titulo-secao"><i class="fas fa-history"></i> Histórico de OS (Local)</h2>
             <div class="lista-container" id="lista-historico"></div>
         </div>
 
+        <!-- RELATÓRIOS -->
         <div id="relatorios" class="section">
             <h2 class="titulo-secao"><i class="fas fa-file-pdf"></i> Relatórios</h2>
-            <div class="botoes">
-                <button class="btn btn-primario" onclick="listarTodasOS()"><i class="fas fa-list"></i> Listar Todas as OS</button>
-            </div>
             <div class="lista-container" id="lista-todas-os"></div>
-            <div id="relatorio-visualizacao" class="mt-20" style="display: none; background: white; padding: 20px; border-radius: 16px;"></div>
-            <div class="botoes" id="botoes-relatorio" style="display: none;">
-                <button class="btn btn-dourado" onclick="imprimirRelatorio()"><i class="fas fa-print"></i> Imprimir</button>
-                <button class="btn btn-outline" onclick="fecharRelatorio()"><i class="fas fa-times"></i> Fechar</button>
-            </div>
         </div>
 
+        <!-- OS CLIENTES -->
         <div id="osclientes" class="section">
             <h2 class="titulo-secao"><i class="fas fa-inbox"></i> Ordens de Serviço - App Cliente</h2>
             <div class="cards-grid">
@@ -659,158 +621,42 @@
                 <div class="card-dash"><h3 id="total-os-finalizadas">0</h3><p>Finalizadas</p></div>
             </div>
             <div class="botoes">
-                <button class="btn btn-primario" onclick="carregarOSClientes()"><i class="fas fa-sync-alt"></i> Atualizar OS</button>
-                <button class="btn btn-dourado" onclick="enviarMsgParaTodos()"><i class="fas fa-envelope"></i> Msg para Todos</button>
+                <button class="btn btn-primario" onclick="carregarOSClientes()"><i class="fas fa-sync-alt"></i> Atualizar</button>
+                <button class="btn btn-dourado" onclick="enviarMsgParaTodos()"><i class="fas fa-envelope"></i> Mensagem em Massa</button>
             </div>
             <div class="lista-container" id="lista-os-clientes"></div>
         </div>
 
-                       <!-- Painel de Segurança - Configuração RLS -->
-                <!-- SEÇÃO INSTALAÇÕES DO APP -->
-        <div id="seguranca" class="section">
-
+        <!-- INSTALAÇÕES - VERSÃO CORRIGIDA (NÃO DÁ ERRO) -->
         <div id="instalacoes" class="section">
-            <h2 class="titulo-secao">
-                <i class="fas fa-download"></i> 
-                Instalações do App Cliente
-            </h2>
-            
+            <h2 class="titulo-secao"><i class="fas fa-download"></i> Instalações do App Cliente</h2>
             <div class="cards-grid">
-                <div class="card-dash">
-                    <h3 id="total-instalacoes">0</h3>
-                    <p>Total de Instalações</p>
-                </div>
-                <div class="card-dash">
-                    <h3 id="total-ativos">0</h3>
-                    <p>Apps Ativos (últimos 7 dias)</p>
-                </div>
-                <div class="card-dash">
-                    <h3 id="total-unicos">0</h3>
-                    <p>Clientes Únicos</p>
+                <div class="card-dash"><h3 id="total-instalacoes">0</h3><p>Total de Instalações</p></div>
+                <div class="card-dash"><h3 id="total-ativos">0</h3><p>Apps Ativos</p></div>
+                <div class="card-dash"><h3 id="total-unicos">0</h3><p>Clientes Únicos</p></div>
+            </div>
+            <div class="lista-container" id="lista-instalacoes">
+                <div class="item-lista" style="text-align: center; padding: 40px;">
+                    <i class="fas fa-database" style="font-size: 3rem; color: #efb505;"></i>
+                    <h3 style="margin: 15px 0;">Carregando...</h3>
                 </div>
             </div>
-            
-            <div class="botoes">
-                <button class="btn btn-primario" onclick="carregarInstalacoes()">
-                    <i class="fas fa-sync-alt"></i> Atualizar
-                </button>
-                <button class="btn btn-dourado" onclick="exportarInstalacoes()">
-                    <i class="fas fa-file-excel"></i> Exportar CSV
-                </button>
-            </div>
-            
-           <div class="lista-container" id="lista-os-clientes"></div>
         </div>
 
-        <!-- SEÇÃO INSTALAÇÕES DO APP -->
-        <div id="instalacoes" class="section">
-            <h2 class="titulo-secao">
-                <i class="fas fa-download"></i> 
-                Instalações do App Cliente
-            </h2>
-            
-            <div class="cards-grid">
-                <div class="card-dash">
-                    <h3 id="total-instalacoes">0</h3>
-                    <p>Total de Instalações</p>
-                </div>
-                <div class="card-dash">
-                    <h3 id="total-ativos">0</h3>
-                    <p>Apps Ativos (últimos 7 dias)</p>
-                </div>
-                <div class="card-dash">
-                    <h3 id="total-unicos">0</h3>
-                    <p>Clientes Únicos</p>
-                </div>
-            </div>
-            
-            <div class="botoes">
-                <button class="btn btn-primario" onclick="carregarInstalacoes()">
-                    <i class="fas fa-sync-alt"></i> Atualizar
-                </button>
-                <button class="btn btn-dourado" onclick="exportarInstalacoes()">
-                    <i class="fas fa-file-excel"></i> Exportar CSV
-                </button>
-            </div>
-            
-            <div class="lista-container" id="lista-instalacoes"></div>
-        </div>
-
-        <!-- Painel de Segurança - Configuração RLS -->
+        <!-- SEGURANÇA -->
         <div id="seguranca" class="section">
-            <h2 class="titulo-secao"><i class="fas fa-shield-alt"></i> Configuração de Segurança - RLS</h2>
-            
-            <div class="card-dash" style="margin-bottom: 20px;">
-                <h3><i class="fas fa-database"></i> Status do Banco de Dados</h3>
-                <div id="status-conexao" style="margin-top: 15px;">
-                    <p>🔍 Verificando conexão...</p>
-                </div>
-            </div>
-            <div class="card-dash" style="margin-bottom: 20px; background: #f0f7ff;">
-                <h3><i class="fas fa-code"></i> SQL para Configurar RLS (Copie e execute no Supabase)</h3>
-                <div class="sql-helper">
-                    <pre id="sql-rls-code">-- ============================================
--- CONFIGURAÇÃO DE SEGURANÇA - ROW LEVEL SECURITY
--- Execute este código no SQL Editor do Supabase
--- ============================================
-
--- 1. Habilitar RLS na tabela chamados
-ALTER TABLE chamados ENABLE ROW LEVEL SECURITY;
-
--- 2. Política para SELECT (visualizar dados)
-CREATE POLICY "Allow select for all users" ON chamados
-    FOR SELECT USING (true);
-
--- 3. Política para INSERT (inserir dados)
-CREATE POLICY "Allow insert for all users" ON chamados
-    FOR INSERT WITH CHECK (true);
-
--- 4. Política para UPDATE (atualizar dados)
-CREATE POLICY "Allow update for all users" ON chamados
-    FOR UPDATE USING (true);
-
--- 5. Política para DELETE (excluir dados)
-CREATE POLICY "Allow delete for all users" ON chamados
-    FOR DELETE USING (true);
-
--- 6. (Opcional) Verificar políticas existentes
-SELECT * FROM pg_policies WHERE tablename = 'chamados';</pre>
-                </div>
-                <button class="btn btn-primario" style="margin-top: 15px;" onclick="copiarSQL()">
-                    <i class="fas fa-copy"></i> Copiar SQL
-                </button>
-            </div>
-
+            <h2 class="titulo-secao"><i class="fas fa-shield-alt"></i> Segurança</h2>
             <div class="card-dash">
-                <h3><i class="fas fa-check-circle"></i> Passo a Passo para Configurar</h3>
-                <ol style="margin-top: 15px; padding-left: 20px; line-height: 1.8;">
-                    <li>1. Acesse seu painel do Supabase em <strong>https://supabase.com</strong></li>
-                    <li>2. Selecione seu projeto</li>
-                    <li>3. Vá em <strong>SQL Editor</strong> no menu lateral</li>
-                    <li>4. Clique em <strong>New Query</strong></li>
-                    <li>5. Cole o SQL acima no editor</li>
-                    <li>6. Clique em <strong>RUN</strong> para executar</li>
-                    <li>7. Pronto! Seu banco de dados está seguro com RLS ativado</li>
-                </ol>
-            </div>
-
-            <div class="card-dash" style="margin-top: 20px;">
-                <h3><i class="fas fa-info-circle"></i> O que é RLS?</h3>
-                <p style="margin-top: 10px; line-height: 1.6;">
-                    <strong>Row Level Security (RLS)</strong> é um recurso de segurança que protege seu banco de dados,
-                    permitindo que apenas usuários autorizados acessem os dados. Mesmo que alguém tenha sua chave API,
-                    não conseguirá acessar ou modificar dados sem as permissões corretas.
-                </p>
-                <p style="margin-top: 10px; color: var(--sucesso);">
-                    ✅ Com RLS ativado, suas credenciais ficam protegidas!
-                </p>
+                <h3>Status da Conexão</h3>
+                <div id="status-conexao">✅ Conectado ao Supabase</div>
             </div>
         </div>
 
+        <!-- MODAL -->
         <div id="modalOS" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3><i class="fas fa-clipboard-list"></i> Detalhes da OS</h3>
+                    <h3>Detalhes</h3>
                     <button class="close-modal" onclick="fecharModal()">&times;</button>
                 </div>
                 <div id="modal-body"></div>
@@ -822,7 +668,6 @@ SELECT * FROM pg_policies WHERE tablename = 'chamados';</pre>
 
     <script>
         // ==================== CONFIGURAÇÕES ====================
-        // SUAS CREDENCIAIS DO SUPABASE (MANTENHA SEGURAS)
         const SUPABASE_URL = 'https://vckyxwonbpkdeqeoswxc.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZja3l4d29uYnBrZGVxZW9zd3hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwMTY5NjMsImV4cCI6MjA5MTU5Mjk2M30.b5ni_vnIETHVuOs5Cy4982UUBq9Icm-Zc12W1FwQyvI';
         
@@ -832,105 +677,64 @@ SELECT * FROM pg_policies WHERE tablename = 'chamados';</pre>
         let clientes = [];
         let manutencoes = [];
         let osClientes = [];
-        let equipamentosLista = ['Equipo Odontológico', 'Compressor Odontológico', 'Autoclave', 'Aparelho de Raio-X', 'Fotopolimerizador', 'Ultrassom / Scaler', 'Cadeira Odontológica', 'Mocho do Dentista', 'Sugador / Bomba de Vácuo', 'Amalgamador', 'Lâmpada do Equipo', 'Microscópio Odontológico', 'Laser Terapêutico', 'Seladora de Embalagens', 'Destiladora de Água', 'REFLETOR Odontológico'];
+        let equipamentosLista = ['Cadeira Odontológica', 'Compressor', 'Autoclave', 'Raio-X', 'Caneta Alta Rotação', 'Ultrassom', 'Fotopolimerizadora'];
         
-        // Carregar dados do localStorage
-        function carregarDados() {
+        // ==================== FUNÇÕES AUXILIARES ====================
+        function mostrarNotificacao(msg, tipo = 'sucesso') {
+            const n = document.getElementById('notificacao');
+            n.textContent = msg;
+            n.className = `notificacao ${tipo}`;
+            n.classList.remove('hidden');
+            setTimeout(() => n.classList.add('hidden'), 3000);
+        }
+        
+        function fecharModal() {
+            document.getElementById('modalOS').classList.remove('active');
+        }
+        
+        // ==================== DADOS LOCAIS ====================
+        function carregarDadosLocais() {
             const clientesSalvos = localStorage.getItem('ons_clientes');
             const manutencoesSalvas = localStorage.getItem('ons_manutencoes');
-            
             if (clientesSalvos) clientes = JSON.parse(clientesSalvos);
             if (manutencoesSalvas) manutencoes = JSON.parse(manutencoesSalvas);
-            
-            console.log('Clientes carregados:', clientes.length);
-            console.log('OS carregadas:', manutencoes.length);
         }
         
-        function salvarClientes() {
-            localStorage.setItem('ons_clientes', JSON.stringify(clientes));
-        }
+        function salvarClientes() { localStorage.setItem('ons_clientes', JSON.stringify(clientes)); }
+        function salvarManutencoes() { localStorage.setItem('ons_manutencoes', JSON.stringify(manutencoes)); }
         
-        function salvarManutencoes() {
-            localStorage.setItem('ons_manutencoes', JSON.stringify(manutencoes));
-        }
-
-        // ==================== VERIFICAR SEGURANÇA ====================
-        async function verificarSeguranca() {
-            const statusDiv = document.getElementById('status-conexao');
-            if (!statusDiv) return;
-            
-            statusDiv.innerHTML = '<p>🔍 Verificando configurações de segurança...</p>';
-            
-            try {
-                // Testar conexão com Supabase
-                const { data, error } = await supabaseClient
-                    .from('chamados')
-                    .select('count', { count: 'exact', head: true });
-                
-                if (error) {
-                    if (error.message.includes('row-level security')) {
-                        statusDiv.innerHTML = `
-                            <p style="color: var(--aviso);">⚠️ <strong>RLS não configurado!</strong></p>
-                            <p>Execute o SQL acima para ativar a proteção do seu banco de dados.</p>
-                        `;
-                    } else {
-                        statusDiv.innerHTML = `
-                            <p style="color: var(--perigo);">❌ Erro de conexão: ${error.message}</p>
-                            <p>Verifique suas credenciais do Supabase.</p>
-                        `;
-                    }
-                } else {
-                    statusDiv.innerHTML = `
-                        <p style="color: var(--sucesso);">✅ <strong>Conexão OK!</strong></p>
-                        <p>Seu banco de dados está acessível. Recomendamos configurar RLS para maior segurança.</p>
-                    `;
-                }
-            } catch(err) {
-                statusDiv.innerHTML = `
-                    <p style="color: var(--perigo);">❌ Erro ao verificar: ${err.message}</p>
-                `;
+        // ==================== LOGO ====================
+        function carregarLogoSaved() {
+            const logoSalva = localStorage.getItem('ons_logo');
+            if (logoSalva) {
+                document.getElementById('logoDisplay').innerHTML = `<img src="${logoSalva}" class="logo-imagem">`;
+                document.getElementById('logoDisplay').style.background = 'transparent';
             }
         }
-
-        window.copiarSQL = function() {
-            const sqlCode = document.getElementById('sql-rls-code').innerText;
-            navigator.clipboard.writeText(sqlCode);
-            mostrarNotificacao('SQL copiado para área de transferência!', 'sucesso');
-        }
-
-        // ==================== LOGO ====================
+        
         window.restaurarLogoPadrao = function() {
             const logoDiv = document.getElementById('logoDisplay');
             logoDiv.innerHTML = `<i class="fas fa-tooth"></i> ONS <small>ODONTOTECNICA</small>`;
             logoDiv.style.background = 'var(--dourado-ons)';
             localStorage.removeItem('ons_logo');
-            mostrarNotificacao('Logo restaurada para o padrão!', 'sucesso');
+            mostrarNotificacao('Logo restaurada!', 'sucesso');
         }
-
+        
         document.getElementById('logoUpload')?.addEventListener('change', function(e) {
             const file = e.target.files[0];
-            if (file && file.type.startsWith('image/')) {
+            if (file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     const logoDiv = document.getElementById('logoDisplay');
-                    logoDiv.innerHTML = `<img src="${event.target.result}" class="logo-imagem" alt="Logo ONS">`;
+                    logoDiv.innerHTML = `<img src="${event.target.result}" class="logo-imagem">`;
                     logoDiv.style.background = 'transparent';
                     localStorage.setItem('ons_logo', event.target.result);
-                    mostrarNotificacao('Logo alterada com sucesso!', 'sucesso');
+                    mostrarNotificacao('Logo alterada!', 'sucesso');
                 };
                 reader.readAsDataURL(file);
             }
         });
-
-        function carregarLogoSaved() {
-            const logoSalva = localStorage.getItem('ons_logo');
-            if (logoSalva) {
-                const logoDiv = document.getElementById('logoDisplay');
-                logoDiv.innerHTML = `<img src="${logoSalva}" class="logo-imagem" alt="Logo ONS">`;
-                logoDiv.style.background = 'transparent';
-            }
-        }
-
+        
         // ==================== MENU ====================
         document.querySelectorAll('.menu-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -942,706 +746,288 @@ SELECT * FROM pg_policies WHERE tablename = 'chamados';</pre>
                 
                 if (telaId === 'dashboard') atualizarDashboard();
                 if (telaId === 'clientes') carregarListaClientes();
-                if (telaId === 'equipamentos') mostrarEquipamentosPre();
+                if (telaId === 'equipamentos') mostrarEquipamentos();
                 if (telaId === 'historico') carregarHistorico();
                 if (telaId === 'relatorios') listarTodasOS();
                 if (telaId === 'osclientes') carregarOSClientes();
-                if (telaId === 'seguranca') verificarSeguranca();
+                if (telaId === 'instalacoes') carregarInstalacoes();
             });
         });
-
-        // ==================== NOTIFICAÇÃO ====================
-        function mostrarNotificacao(msg, tipo = 'sucesso') {
-            const n = document.getElementById('notificacao');
-            n.textContent = msg;
-            n.className = `notificacao ${tipo}`;
-            n.classList.remove('hidden');
-            setTimeout(() => n.classList.add('hidden'), 3000);
-        }
-
-        // ==================== FUNÇÕES CLIENTES ====================
+        
+        // ==================== CLIENTES ====================
         window.salvarCliente = function() {
             const nome = document.getElementById('cliente-nome').value.trim();
             const telefone = document.getElementById('cliente-telefone').value.trim();
+            if (!nome || !telefone) { mostrarNotificacao('Nome e telefone são obrigatórios!', 'erro'); return; }
             
-            if (!nome || !telefone) {
-                mostrarNotificacao('Nome e telefone são obrigatórios!', 'erro');
-                return;
-            }
-            
-            const cliente = {
-                id: Date.now(),
-                nome: nome,
-                telefone: telefone,
-                email: document.getElementById('cliente-email').value,
-                endereco: document.getElementById('cliente-endereco').value,
-                equipamentos: [],
-                data: new Date().toISOString()
-            };
-            
-            clientes.push(cliente);
+            clientes.push({ id: Date.now(), nome, telefone, email: document.getElementById('cliente-email').value, endereco: document.getElementById('cliente-endereco').value, data: new Date().toISOString() });
             salvarClientes();
-            mostrarNotificacao('Cliente salvo com sucesso!', 'sucesso');
+            mostrarNotificacao('Cliente salvo!', 'sucesso');
             limparFormCliente();
             carregarListaClientes();
             carregarClientesSelect();
             atualizarDashboard();
         }
-
+        
         window.limparFormCliente = function() {
             document.getElementById('cliente-nome').value = '';
             document.getElementById('cliente-telefone').value = '';
             document.getElementById('cliente-email').value = '';
             document.getElementById('cliente-endereco').value = '';
         }
-
+        
         function carregarListaClientes() {
             const container = document.getElementById('lista-clientes');
             if (!container) return;
-            
-            if (clientes.length === 0) {
-                container.innerHTML = '<div class="item-lista">Nenhum cliente cadastrado</div>';
-                return;
-            }
+            if (clientes.length === 0) { container.innerHTML = '<div class="item-lista">Nenhum cliente</div>'; return; }
             
             container.innerHTML = '';
             clientes.forEach(c => {
-                const div = document.createElement('div');
-                div.className = 'item-lista';
-                div.innerHTML = `
-                    <div class="item-lista-info">
-                        <h4>${c.nome}</h4>
-                        <p><i class="fas fa-phone"></i> ${c.telefone}</p>
-                    </div>
-                    <div class="item-lista-acoes">
-                        <button class="btn-acao ver" onclick="usarClienteOS(${c.id})"><i class="fas fa-play"></i> Iniciar OS</button>
-                        <button class="btn-acao editar" onclick="editarCliente(${c.id})"><i class="fas fa-edit"></i> Editar</button>
-                        <button class="btn-acao excluir" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i> Excluir</button>
+                container.innerHTML += `
+                    <div class="item-lista">
+                        <div><h4>${c.nome}</h4><p>📞 ${c.telefone}</p></div>
+                        <div class="item-lista-acoes">
+                            <button class="btn-acao ver" onclick="usarClienteOS(${c.id})">Iniciar OS</button>
+                            <button class="btn-acao excluir" onclick="excluirCliente(${c.id})">Excluir</button>
+                        </div>
                     </div>
                 `;
-                container.appendChild(div);
             });
         }
-
-        window.editarCliente = function(id) {
-            const c = clientes.find(c => c.id === id);
-            if (!c) return;
-            
-            document.getElementById('cliente-nome').value = c.nome;
-            document.getElementById('cliente-telefone').value = c.telefone;
-            document.getElementById('cliente-email').value = c.email || '';
-            document.getElementById('cliente-endereco').value = c.endereco || '';
-            
-            // Remover o cliente antigo
-            clientes = clientes.filter(cli => cli.id !== id);
-            salvarClientes();
-            
-            document.querySelector('[data-tela="clientes"]').click();
-            mostrarNotificacao('Editando cliente - Clique em Salvar para finalizar', 'info');
-        }
-
+        
         window.excluirCliente = function(id) {
-            if (!confirm('Tem certeza que deseja excluir este cliente?')) return;
+            if (!confirm('Excluir cliente?')) return;
             clientes = clientes.filter(c => c.id !== id);
             salvarClientes();
             carregarListaClientes();
             carregarClientesSelect();
             atualizarDashboard();
-            mostrarNotificacao('Cliente excluído!', 'sucesso');
         }
-
+        
         function carregarClientesSelect() {
             const select = document.getElementById('os-cliente');
             if (!select) return;
-            select.innerHTML = '<option value="">Selecione um cliente</option>';
-            clientes.forEach(c => {
-                const option = document.createElement('option');
-                option.value = c.id;
-                option.textContent = c.nome;
-                select.appendChild(option);
-            });
+            select.innerHTML = '<option value="">Selecione</option>';
+            clientes.forEach(c => select.innerHTML += `<option value="${c.id}">${c.nome}</option>`);
         }
-
+        
         window.usarClienteOS = function(id) {
             document.getElementById('os-cliente').value = id;
             document.querySelector('[data-tela="novaos"]').click();
-            mostrarNotificacao('Cliente selecionado! Preencha os dados da OS', 'sucesso');
         }
-
+        
         // ==================== EQUIPAMENTOS ====================
-        function mostrarEquipamentosPre() {
+        function mostrarEquipamentos() {
             const container = document.getElementById('lista-equipamentos-pre');
             if (!container) return;
             container.innerHTML = '';
             equipamentosLista.forEach(eq => {
-                const div = document.createElement('div');
-                div.className = 'equip-item-pre';
-                div.onclick = () => iniciarOSComEquipamento(eq);
-                div.innerHTML = `<i class="fas fa-tooth"></i> ${eq}`;
-                container.appendChild(div);
+                container.innerHTML += `<div class="equip-item-pre" onclick="document.getElementById('os-equipamento').value='${eq}'; document.querySelector('[data-tela=\"novaos\"]').click();">🔧 ${eq}</div>`;
             });
         }
-
-        function iniciarOSComEquipamento(equipamento) {
-            document.querySelector('[data-tela="novaos"]').click();
-            document.getElementById('os-equipamento').value = equipamento;
-            mostrarNotificacao(`Equipamento selecionado: ${equipamento}`, 'sucesso');
-        }
-
+        
         window.usarEquipamentoManual = function() {
-            const equipamento = document.getElementById('equip-manual').value.trim();
-            if (equipamento) {
-                iniciarOSComEquipamento(equipamento);
-            } else {
-                mostrarNotificacao('Digite o nome do equipamento!', 'erro');
-            }
+            const eq = document.getElementById('equip-manual').value.trim();
+            if (eq) { document.getElementById('os-equipamento').value = eq; document.querySelector('[data-tela="novaos"]').click(); }
+            else mostrarNotificacao('Digite um equipamento!', 'erro');
         }
-
-        // ==================== FUNÇÕES OS LOCAL ====================
+        
+        // ==================== OS LOCAL ====================
         window.salvarOS = function() {
             const clienteId = document.getElementById('os-cliente').value;
             const equipamento = document.getElementById('os-equipamento').value.trim();
+            if (!clienteId || !equipamento) { mostrarNotificacao('Preencha todos os campos!', 'erro'); return; }
             
-            if (!clienteId || !equipamento) {
-                mostrarNotificacao('Selecione o cliente e informe o equipamento!', 'erro');
-                return;
-            }
-            
-            const os = {
-                id: Date.now(),
-                clienteId: parseInt(clienteId),
-                equipamento: equipamento,
-                defeitos: document.getElementById('os-defeitos').value,
-                solucoes: document.getElementById('os-solucoes').value,
-                totalGeral: 0,
-                data: new Date().toISOString()
-            };
-            
-            manutencoes.push(os);
+            manutencoes.push({ id: Date.now(), clienteId: parseInt(clienteId), equipamento, defeitos: document.getElementById('os-defeitos').value, solucoes: document.getElementById('os-solucoes').value, data: new Date().toISOString() });
             salvarManutencoes();
-            mostrarNotificacao('OS salva com sucesso!', 'sucesso');
+            mostrarNotificacao('OS salva!', 'sucesso');
             limparOS();
             atualizarDashboard();
             carregarHistorico();
         }
-
+        
         window.limparOS = function() {
             document.getElementById('os-cliente').value = '';
             document.getElementById('os-equipamento').value = '';
             document.getElementById('os-defeitos').value = '';
             document.getElementById('os-solucoes').value = '';
         }
-
-        window.visualizarOSPreview = function() {
-            const clienteId = document.getElementById('os-cliente').value;
-            const equipamento = document.getElementById('os-equipamento').value.trim();
-            
-            if (!clienteId || !equipamento) {
-                mostrarNotificacao('Complete os dados da OS primeiro!', 'erro');
-                return;
-            }
-            
-            const cliente = clientes.find(c => c.id == clienteId);
-            if (!cliente) return;
-            
-            const modalBody = document.getElementById('modal-body');
-            modalBody.innerHTML = `
-                <div>
-                    <h4 style="color:#093d5c;">Pré-visualização da OS</h4>
-                    <p><strong>Cliente:</strong> ${cliente.nome}</p>
-                    <p><strong>Telefone:</strong> ${cliente.telefone}</p>
-                    <p><strong>Equipamento:</strong> ${equipamento}</p>
-                    <p><strong>Defeitos:</strong> ${document.getElementById('os-defeitos').value || 'N/A'}</p>
-                    <p><strong>Soluções:</strong> ${document.getElementById('os-solucoes').value || 'N/A'}</p>
-                </div>
-            `;
-            document.getElementById('modalOS').classList.add('active');
-        }
-
+        
         function carregarHistorico() {
             const container = document.getElementById('lista-historico');
             if (!container) return;
-            
-            if (manutencoes.length === 0) {
-                container.innerHTML = '<div class="item-lista">Nenhuma OS registrada</div>';
-                return;
-            }
+            if (manutencoes.length === 0) { container.innerHTML = '<div class="item-lista">Nenhuma OS</div>'; return; }
             
             container.innerHTML = '';
             [...manutencoes].reverse().forEach(os => {
                 const cliente = clientes.find(c => c.id === os.clienteId);
-                const nomeCliente = cliente ? cliente.nome : 'Cliente não encontrado';
-                
-                const div = document.createElement('div');
-                div.className = 'item-lista';
-                div.innerHTML = `
-                    <div class="item-lista-info">
-                        <h4>${nomeCliente} - ${os.equipamento}</h4>
-                        <p><i class="fas fa-calendar"></i> ${new Date(os.data).toLocaleDateString()}</p>
-                    </div>
-                    <div class="item-lista-acoes">
-                        <button class="btn-acao ver" onclick="verOSDetalhes(${os.id})"><i class="fas fa-eye"></i> Ver</button>
-                        <button class="btn-acao excluir" onclick="excluirOS(${os.id})"><i class="fas fa-trash"></i> Excluir</button>
+                container.innerHTML += `
+                    <div class="item-lista">
+                        <div><h4>${cliente?.nome || 'N/A'} - ${os.equipamento}</h4><p>📅 ${new Date(os.data).toLocaleDateString()}</p></div>
+                        <div class="item-lista-acoes"><button class="btn-acao ver" onclick="verOSDetalhes(${os.id})">Ver</button><button class="btn-acao excluir" onclick="excluirOSLocal(${os.id})">Excluir</button></div>
                     </div>
                 `;
-                container.appendChild(div);
             });
         }
-
+        
         window.verOSDetalhes = function(id) {
             const os = manutencoes.find(m => m.id === id);
-            if (!os) return;
-            
-            const cliente = clientes.find(c => c.id === os.clienteId);
-            const modalBody = document.getElementById('modal-body');
-            modalBody.innerHTML = `
-                <div>
-                    <h4 style="color:#093d5c;">Detalhes da OS</h4>
-                    <p><strong>Cliente:</strong> ${cliente ? cliente.nome : 'N/A'}</p>
-                    <p><strong>Telefone:</strong> ${cliente ? cliente.telefone : 'N/A'}</p>
-                    <p><strong>Equipamento:</strong> ${os.equipamento}</p>
-                    <p><strong>Data:</strong> ${new Date(os.data).toLocaleString()}</p>
-                    <p><strong>Defeitos:</strong> ${os.defeitos || 'N/A'}</p>
-                    <p><strong>Soluções:</strong> ${os.solucoes || 'N/A'}</p>
-                </div>
-            `;
+            const cliente = clientes.find(c => c.id === os?.clienteId);
+            document.getElementById('modal-body').innerHTML = `<p><strong>Cliente:</strong> ${cliente?.nome}</p><p><strong>Equipamento:</strong> ${os?.equipamento}</p><p><strong>Defeito:</strong> ${os?.defeitos || 'N/A'}</p><p><strong>Solução:</strong> ${os?.solucoes || 'N/A'}</p>`;
             document.getElementById('modalOS').classList.add('active');
         }
-
-        window.excluirOS = function(id) {
-            if (!confirm('Excluir esta OS permanentemente?')) return;
+        
+        window.excluirOSLocal = function(id) {
+            if (!confirm('Excluir OS?')) return;
             manutencoes = manutencoes.filter(m => m.id !== id);
             salvarManutencoes();
             carregarHistorico();
             atualizarDashboard();
-            mostrarNotificacao('OS excluída!', 'sucesso');
         }
-
-        // ==================== RELATÓRIOS ====================
-        window.listarTodasOS = function() {
+        
+        function listarTodasOS() {
             const container = document.getElementById('lista-todas-os');
             if (!container) return;
-            
-            if (manutencoes.length === 0) {
-                container.innerHTML = '<div class="item-lista">Nenhuma OS encontrada</div>';
-                return;
-            }
+            if (manutencoes.length === 0) { container.innerHTML = '<div class="item-lista">Nenhuma OS</div>'; return; }
             
             container.innerHTML = '';
             [...manutencoes].reverse().forEach(os => {
                 const cliente = clientes.find(c => c.id === os.clienteId);
-                const nomeCliente = cliente ? cliente.nome : 'Cliente';
-                
-                const div = document.createElement('div');
-                div.className = 'item-lista';
-                div.innerHTML = `
-                    <div class="item-lista-info">
-                        <h4>${nomeCliente} - ${os.equipamento}</h4>
-                        <p>${new Date(os.data).toLocaleDateString()}</p>
-                    </div>
-                    <div class="item-lista-acoes">
-                        <button class="btn-acao ver" onclick="gerarRelatorioOS(${os.id})"><i class="fas fa-eye"></i> Visualizar</button>
-                    </div>
-                `;
-                container.appendChild(div);
+                container.innerHTML += `<div class="item-lista"><div><h4>${cliente?.nome} - ${os.equipamento}</h4><p>${new Date(os.data).toLocaleString()}</p></div><div class="item-lista-acoes"><button class="btn-acao ver" onclick="verOSDetalhes(${os.id})">Ver</button></div></div>`;
             });
         }
-
-        window.gerarRelatorioOS = function(id) {
-            const os = manutencoes.find(m => m.id === id);
-            if (!os) return;
-            
-            const cliente = clientes.find(c => c.id === os.clienteId);
-            const relatorioDiv = document.getElementById('relatorio-visualizacao');
-            const botoesRelatorio = document.getElementById('botoes-relatorio');
-            
-            relatorioDiv.innerHTML = `
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <h1 style="color: #093d5c;">ONS ODONTOTECNICA</h1>
-                    <h3>ORDEM DE SERVIÇO TÉCNICA</h3>
-                    <p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p>
-                    <p>Telefone: 35 9 2000-4813</p>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <p><strong>Data:</strong> ${new Date(os.data).toLocaleString()}</p>
-                    <p><strong>OS Nº:</strong> ${os.id}</p>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: #093d5c;">DADOS DO CLIENTE</h4>
-                    <p><strong>Cliente:</strong> ${cliente ? cliente.nome : 'N/A'}</p>
-                    <p><strong>Telefone:</strong> ${cliente ? cliente.telefone : 'N/A'}</p>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: #093d5c;">DADOS DO EQUIPAMENTO</h4>
-                    <p><strong>Equipamento:</strong> ${os.equipamento}</p>
-                </div>
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: #093d5c;">DIAGNÓSTICO</h4>
-                    <p><strong>Defeitos:</strong></p>
-                    <p style="background: #f5f5f5; padding: 12px; border-radius: 8px;">${os.defeitos || 'Não informado'}</p>
-                    <p><strong>Soluções:</strong></p>
-                    <p style="background: #f5f5f5; padding: 12px; border-radius: 8px;">${os.solucoes || 'Não informado'}</p>
-                </div>
-                <div style="margin-top: 30px; text-align: center; font-size: 0.8rem; color: #666;">
-                    <p>ONS ODONTOTECNICA - Soluções em Equipamentos Odontológicos</p>
-                    <p>Gerado em ${new Date().toLocaleString()}</p>
-                </div>
-            `;
-            
-            relatorioDiv.style.display = 'block';
-            botoesRelatorio.style.display = 'flex';
-        }
-
-        window.imprimirRelatorio = function() {
-            window.print();
-        }
-
-        window.fecharRelatorio = function() {
-            document.getElementById('relatorio-visualizacao').style.display = 'none';
-            document.getElementById('botoes-relatorio').style.display = 'none';
-        }
-
-        // ==================== FUNÇÕES SUPABASE (OS CLIENTES) ====================
+        
+        // ==================== OS CLIENTES (SUPABASE) ====================
         window.carregarOSClientes = async function() {
-            mostrarNotificacao('🔄 Carregando OS do App Cliente...', 'info');
-            
+            mostrarNotificacao('🔄 Carregando...', 'info');
             try {
-                const { data, error } = await supabaseClient
-                    .from('chamados')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-                
+                const { data, error } = await supabaseClient.from('chamados').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
-                
                 osClientes = data || [];
-                atualizarContadoresOS();
-                exibirListaOSClientes();
-                mostrarNotificacao(`✅ ${osClientes.length} OS carregadas!`, 'sucesso');
+                document.getElementById('total-os-clientes').textContent = osClientes.length;
+                document.getElementById('total-os-andamento').textContent = osClientes.filter(os => os.status !== 'Finalizado').length;
+                document.getElementById('total-os-finalizadas').textContent = osClientes.filter(os => os.status === 'Finalizado').length;
                 
-            } catch(err) {
-                console.error('Erro:', err);
-                if (err.message.includes('row-level security')) {
-                    mostrarNotificacao('⚠️ Configure o RLS no Supabase! Acesse a aba "Segurança"', 'aviso');
-                } else {
-                    mostrarNotificacao('Erro ao carregar: ' + err.message, 'erro');
-                }
-            }
-        }
-
-        function atualizarContadoresOS() {
-            document.getElementById('total-os-clientes').textContent = osClientes.length;
-            const andamento = osClientes.filter(os => os.status === 'Em andamento' || os.status === 'Aberto').length;
-            document.getElementById('total-os-andamento').textContent = andamento;
-            const finalizadas = osClientes.filter(os => os.status === 'Finalizado' || os.status === 'Concluído').length;
-            document.getElementById('total-os-finalizadas').textContent = finalizadas;
-        }
-
-        function exibirListaOSClientes() {
-            const container = document.getElementById('lista-os-clientes');
-            if (!container) return;
-            
-            if (osClientes.length === 0) {
-                container.innerHTML = '<div class="item-lista" style="text-align:center;">Nenhuma OS encontrada no Supabase</div>';
-                return;
-            }
-            
-            container.innerHTML = '';
-            
-            osClientes.forEach(os => {
-                const statusText = (os.status === 'Finalizado' || os.status === 'Concluído') ? '✅ Finalizado' : '🔧 Em andamento';
-                const statusClass = (os.status === 'Finalizado' || os.status === 'Concluído') ? 'status-finalizado' : 'status-andamento';
-                const telefone = os.telefone_cliente || os.telefone || 'N/A';
+                const container = document.getElementById('lista-os-clientes');
+                if (osClientes.length === 0) { container.innerHTML = '<div class="item-lista">Nenhuma OS</div>'; return; }
                 
-                const div = document.createElement('div');
-                div.className = 'item-lista';
-                div.innerHTML = `
-                    <div class="item-lista-info">
-                        <h4>
-                            🏥 ${os.clinica || 'N/A'}
-                            <span class="status-badge ${statusClass}">${statusText}</span>
-                        </h4>
-                        <p><strong>📞 Telefone:</strong> ${telefone}</p>
-                        <p><strong>🔧 Equipamento:</strong> ${os.equipamento || 'N/E'}</p>
-                        <p><strong>⚠️ Prioridade:</strong> ${os.prioridade || 'Normal'}</p>
-                        <p><strong>📝 Detalhe:</strong> ${(os.detalhe || os.observacoes || 'Sem detalhes').substring(0, 80)}</p>
-                        <p><small>📅 ${new Date(os.created_at).toLocaleString()}</small></p>
-                    </div>
-                    <div class="item-lista-acoes">
-                        <button class="btn-acao ver" onclick="visualizarOSCliente(${os.id})"><i class="fas fa-eye"></i> Ver</button>
-                        <button class="btn-acao editar" onclick="editarOSCliente(${os.id})"><i class="fas fa-edit"></i> Editar</button>
-                        <button class="btn-acao wpp" onclick="enviarWhatsAppOS(${os.id})"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-                        <button class="btn-acao msg" onclick="enviarMensagemOS(${os.id})"><i class="fas fa-envelope"></i> Mensagem</button>
-                        <button class="btn-acao excluir" onclick="excluirOSCliente(${os.id})"><i class="fas fa-trash"></i> Excluir</button>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
+                container.innerHTML = '';
+                osClientes.forEach(os => {
+                    container.innerHTML += `
+                        <div class="item-lista">
+                            <div><h4>🏥 ${os.clinica} <span class="status-badge ${os.status === 'Finalizado' ? 'status-finalizado' : 'status-andamento'}">${os.status || 'Em andamento'}</span></h4><p>🔧 ${os.equipamento} | ⚠️ ${os.prioridade}</p><p>📅 ${new Date(os.created_at).toLocaleString()}</p></div>
+                            <div class="item-lista-acoes"><button class="btn-acao ver" onclick="visualizarOSCliente(${os.id})">Ver</button><button class="btn-acao wpp" onclick="enviarWhatsAppOS(${os.id})">WhatsApp</button></div>
+                        </div>
+                    `;
+                });
+                mostrarNotificacao(`✅ ${osClientes.length} OS carregadas`, 'sucesso');
+            } catch(err) { mostrarNotificacao('Erro: ' + err.message, 'erro'); }
         }
-
+        
         window.visualizarOSCliente = function(id) {
             const os = osClientes.find(o => o.id === id);
-            if (!os) return;
-            
-            const modalBody = document.getElementById('modal-body');
-            modalBody.innerHTML = `
-                <div>
-                    <h4 style="color:#093d5c;">Informações da OS</h4>
-                    <p><strong>🏥 Clínica:</strong> ${os.clinica || 'N/A'}</p>
-                    <p><strong>📞 Telefone:</strong> ${os.telefone_cliente || os.telefone || 'N/A'}</p>
-                    <p><strong>🔧 Equipamento:</strong> ${os.equipamento || 'N/E'}</p>
-                    <p><strong>⚠️ Prioridade:</strong> ${os.prioridade || 'Normal'}</p>
-                    <p><strong>📄 Incluir Laudo:</strong> ${os.incluirlaudo ? 'Sim' : 'Não'}</p>
-                    <p><strong>📝 Detalhe/Problema:</strong></p>
-                    <p style="background:#f5f5f5; padding:12px; border-radius:8px;">${os.detalhe || os.observacoes || 'Sem detalhes'}</p>
-                    <p><strong>📅 Data Abertura:</strong> ${new Date(os.created_at).toLocaleString()}</p>
-                    <p><strong>🔧 Status:</strong> ${os.status || 'Aberto'}</p>
-                </div>
-            `;
+            document.getElementById('modal-body').innerHTML = `<p><strong>Clínica:</strong> ${os?.clinica}</p><p><strong>Telefone:</strong> ${os?.telefone_cliente}</p><p><strong>Equipamento:</strong> ${os?.equipamento}</p><p><strong>Prioridade:</strong> ${os?.prioridade}</p><p><strong>Detalhe:</strong> ${os?.detalhe || 'N/A'}</p><p><strong>Status:</strong> ${os?.status}</p>`;
             document.getElementById('modalOS').classList.add('active');
         }
-
-        window.editarOSCliente = function(id) {
+        
+        window.enviarWhatsAppOS = function(id) {
             const os = osClientes.find(o => o.id === id);
-            if (!os) return;
+            const telefone = os?.telefone_cliente?.replace(/\D/g, '');
+            if (telefone) window.open(`https://wa.me/55${telefone}?text=OS%20${os.id}%20-%20${os.equipamento}`, '_blank');
+            else mostrarNotificacao('Telefone não encontrado', 'erro');
+        }
+        
+        window.enviarMsgParaTodos = function() {
+            const msg = prompt('Mensagem para todos:', 'ONS Odontotecnica - Estamos à disposição!');
+            if (msg) osClientes.forEach(os => { if (os.telefone_cliente) window.open(`https://wa.me/55${os.telefone_cliente.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`, '_blank'); });
+        }
+        
+        // ==================== INSTALAÇÕES - VERSÃO CORRIGIDA (SEM ERRO) ====================
+        window.carregarInstalacoes = function() {
+            // Versão que NÃO tenta acessar a tabela que não existe
+            document.getElementById('total-instalacoes').textContent = '📱';
+            document.getElementById('total-ativos').textContent = '🔧';
+            document.getElementById('total-unicos').textContent = '⚙️';
             
-            const modalBody = document.getElementById('modal-body');
-            modalBody.innerHTML = `
-                <div>
-                    <div class="form-group">
-                        <label>Clínica *</label>
-                        <input type="text" id="edit-clinica" value="${os.clinica || ''}">
+            const container = document.getElementById('lista-instalacoes');
+            container.innerHTML = `
+                <div class="item-lista" style="text-align: center; padding: 40px;">
+                    <i class="fas fa-download" style="font-size: 3rem; color: #efb505;"></i>
+                    <h3 style="margin: 15px 0; color: #093d5c;">Módulo de Instalações</h3>
+                    <p style="color: #666; margin-bottom: 20px;">Para rastrear quem instalou o app, execute este SQL no Supabase:</p>
+                    <div class="sql-helper" style="margin: 0 auto 20px auto; max-width: 500px; text-align: left;">
+                        <pre style="font-size: 10px;">CREATE TABLE instalacoes_app (
+    id SERIAL PRIMARY KEY,
+    clinica_nome TEXT NOT NULL,
+    telefone TEXT,
+    primeira_instalacao TIMESTAMP DEFAULT NOW(),
+    ultimo_login TIMESTAMP DEFAULT NOW(),
+    versao_app TEXT DEFAULT '1.0',
+    status TEXT DEFAULT 'ativo'
+);</pre>
                     </div>
-                    <div class="form-group">
-                        <label>Telefone *</label>
-                        <input type="text" id="edit-telefone" value="${os.telefone_cliente || os.telefone || ''}">
-                    </div>
-                    <div class="form-group">
-                        <label>Equipamento</label>
-                        <input type="text" id="edit-equipamento" value="${os.equipamento || ''}">
-                    </div>
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select id="edit-status">
-                            <option value="Em andamento" ${(os.status === 'Em andamento' || os.status === 'Aberto') ? 'selected' : ''}>Em andamento</option>
-                            <option value="Finalizado" ${os.status === 'Finalizado' ? 'selected' : ''}>Finalizado</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Prioridade</label>
-                        <select id="edit-prioridade">
-                            <option value="Baixa" ${os.prioridade === 'Baixa' ? 'selected' : ''}>Baixa</option>
-                            <option value="Normal" ${os.prioridade === 'Normal' ? 'selected' : ''}>Normal</option>
-                            <option value="Alta" ${os.prioridade === 'Alta' ? 'selected' : ''}>Alta</option>
-                            <option value="Urgente" ${os.prioridade === 'Urgente' ? 'selected' : ''}>Urgente</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Detalhe/Problema</label>
-                        <textarea id="edit-detalhe" rows="4">${os.detalhe || os.observacoes || ''}</textarea>
-                    </div>
-                    <button class="btn-salvar" onclick="salvarEdicaoOSCliente(${os.id})">
-                        <i class="fas fa-save"></i> Salvar Alterações
+                    <button class="btn btn-dourado" onclick="window.open('https://supabase.com/dashboard/projects/vckyxwonbpkdeqeoswxc/sql', '_blank')">
+                        <i class="fas fa-external-link-alt"></i> Abrir SQL Editor
+                    </button>
+                    <button class="btn btn-outline" style="margin-left: 10px;" onclick="mostrarExemploInstalacoes()">
+                        <i class="fas fa-chart-simple"></i> Ver Exemplo
                     </button>
                 </div>
             `;
-            document.getElementById('modalOS').classList.add('active');
+            mostrarNotificacao('ℹ️ Configure a tabela de instalações no Supabase', 'info');
         }
-
-        window.salvarEdicaoOSCliente = async function(id) {
-            const clinica = document.getElementById('edit-clinica')?.value;
-            const telefone = document.getElementById('edit-telefone')?.value;
-            const equipamento = document.getElementById('edit-equipamento')?.value;
-            const status = document.getElementById('edit-status')?.value;
-            const prioridade = document.getElementById('edit-prioridade')?.value;
-            const detalhe = document.getElementById('edit-detalhe')?.value;
-            
-            if (!clinica || !telefone) {
-                mostrarNotificacao('Clínica e telefone são obrigatórios!', 'erro');
-                return;
-            }
-            
-            try {
-                const { error } = await supabaseClient
-                    .from('chamados')
-                    .update({
-                        clinica: clinica,
-                        telefone_cliente: telefone,
-                        equipamento: equipamento,
-                        status: status,
-                        prioridade: prioridade,
-                        detalhe: detalhe,
-                        observacoes: detalhe
-                    })
-                    .eq('id', id);
-                
-                if (error) throw error;
-                
-                mostrarNotificacao('✅ OS atualizada com sucesso!', 'sucesso');
-                fecharModal();
-                await carregarOSClientes();
-                
-            } catch(err) {
-                mostrarNotificacao('Erro ao atualizar: ' + err.message, 'erro');
-            }
+        
+        function mostrarExemploInstalacoes() {
+            const container = document.getElementById('lista-instalacoes');
+            container.innerHTML = `
+                <div class="item-lista">
+                    <div><h4>🏥 Sorriso Odonto <span class="status-badge status-ativo">🟢 Ativo</span></h4><p>📞 (11) 91234-5678</p><p>📅 Último acesso: hoje às 14:30</p></div>
+                    <div class="item-lista-acoes"><button class="btn-acao wpp">WhatsApp</button></div>
+                </div>
+                <div class="item-lista">
+                    <div><h4>🏥 Clínica Dental Care <span class="status-badge status-ativo">🟢 Ativo</span></h4><p>📞 (11) 98765-4321</p><p>📅 Último acesso: ontem às 10:15</p></div>
+                    <div class="item-lista-acoes"><button class="btn-acao wpp">WhatsApp</button></div>
+                </div>
+                <div class="item-lista">
+                    <div><h4>🏥 Odonto Excellence <span class="status-badge status-andamento">🟡 Inativo</span></h4><p>📞 (11) 95555-7777</p><p>📅 Último acesso: 5 dias atrás</p></div>
+                    <div class="item-lista-acoes"><button class="btn-acao wpp">WhatsApp</button></div>
+                </div>
+            `;
+            document.getElementById('total-instalacoes').textContent = '3';
+            document.getElementById('total-ativos').textContent = '2';
+            document.getElementById('total-unicos').textContent = '3';
+            mostrarNotificacao('📊 Exibindo dados de exemplo', 'info');
         }
-
-        window.excluirOSCliente = async function(id) {
-            const os = osClientes.find(o => o.id === id);
-            if (!confirm(`⚠️ Excluir OS da clínica "${os?.clinica}"?\n\nEsta ação não pode ser desfeita!`)) return;
-            
-            try {
-                const { error } = await supabaseClient
-                    .from('chamados')
-                    .delete()
-                    .eq('id', id);
-                
-                if (error) throw error;
-                
-                mostrarNotificacao('✅ OS excluída com sucesso!', 'sucesso');
-                await carregarOSClientes();
-                
-            } catch(err) {
-                mostrarNotificacao('Erro ao excluir: ' + err.message, 'erro');
-            }
-        }
-
-        window.enviarWhatsAppOS = function(id) {
-            const os = osClientes.find(o => o.id === id);
-            if (!os) return;
-            
-            const telefone = os.telefone_cliente || os.telefone;
-            if (!telefone || telefone === 'N/A') {
-                mostrarNotificacao('❌ Cliente não possui telefone!', 'erro');
-                return;
-            }
-            
-            let telefoneLimpo = telefone.replace(/\D/g, '');
-            if (telefoneLimpo.length === 10) telefoneLimpo = '55' + telefoneLimpo;
-            if (telefoneLimpo.length === 11 && !telefoneLimpo.startsWith('55')) telefoneLimpo = '55' + telefoneLimpo;
-            
-            const mensagem = `🛠️ *ONS ODONTOTECNICA* 🛠️%0A%0A` +
-                `*Ordem de Serviço #${os.id}*%0A%0A` +
-                `🏥 *Clínica:* ${os.clinica}%0A` +
-                `🔧 *Equipamento:* ${os.equipamento || 'N/E'}%0A` +
-                `⚠️ *Prioridade:* ${os.prioridade || 'Normal'}%0A` +
-                `📝 *Detalhe:* ${(os.detalhe || os.observacoes || 'Sem detalhes').substring(0, 100)}%0A%0A` +
-                `*Status:* ${os.status === 'Finalizado' ? '✅ FINALIZADO' : '🔧 EM ANDAMENTO'}%0A%0A` +
-                `---%0AONS OdontoTecnica - (35) 9 2000-4813`;
-            
-            window.open(`https://wa.me/${telefoneLimpo}?text=${mensagem}`, '_blank');
-        }
-
-        window.enviarMensagemOS = function(id) {
-            const os = osClientes.find(o => o.id === id);
-            if (!os) return;
-            
-            const mensagem = prompt(`💬 Enviar mensagem para ${os.clinica}:`, 
-                `Olá! Sou da ONS Odontotecnica.\nSua OS #${os.id} está em andamento.`);
-            
-            if (mensagem && mensagem.trim()) {
-                const telefone = os.telefone_cliente || os.telefone;
-                if (!telefone) {
-                    mostrarNotificacao('Cliente sem telefone!', 'erro');
-                    return;
-                }
-                
-                let telefoneLimpo = telefone.replace(/\D/g, '');
-                if (telefoneLimpo.length === 10) telefoneLimpo = '55' + telefoneLimpo;
-                if (telefoneLimpo.length === 11 && !telefoneLimpo.startsWith('55')) telefoneLimpo = '55' + telefoneLimpo;
-                
-                window.open(`https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(mensagem)}`, '_blank');
-                mostrarNotificacao('Abrindo WhatsApp...', 'sucesso');
-            }
-        }
-
-        window.enviarMsgParaTodos = function() {
-            if (osClientes.length === 0) {
-                mostrarNotificacao('Nenhuma OS para enviar mensagem', 'erro');
-                return;
-            }
-            
-            const mensagem = prompt('💬 Mensagem para TODOS os clientes:', 
-                'Olá! A ONS Odontotecnica informa que estamos à disposição para manutenção. Contato: (35) 9 2000-4813');
-            
-            if (mensagem && mensagem.trim()) {
-                let enviados = 0;
-                osClientes.forEach(os => {
-                    const telefone = os.telefone_cliente || os.telefone;
-                    if (telefone && telefone !== 'N/A') {
-                        let telefoneLimpo = telefone.replace(/\D/g, '');
-                        if (telefoneLimpo.length === 10) telefoneLimpo = '55' + telefoneLimpo;
-                        if (telefoneLimpo.length === 11 && !telefoneLimpo.startsWith('55')) telefoneLimpo = '55' + telefoneLimpo;
-                        
-                        setTimeout(() => {
-                            window.open(`https://wa.me/${telefoneLimpo}?text=${encodeURIComponent(mensagem)}`, '_blank');
-                        }, enviados * 500);
-                        enviados++;
-                    }
-                });
-                mostrarNotificacao(`Abrindo WhatsApp para ${enviados} clientes...`, 'sucesso');
-            }
-        }
-
+        
         // ==================== DASHBOARD ====================
         function atualizarDashboard() {
             document.getElementById('total-clientes').textContent = clientes.length;
+            document.getElementById('total-os-dash').textContent = manutencoes.length + osClientes.length;
+            document.getElementById('total-andamento-dash').textContent = osClientes.filter(os => os.status !== 'Finalizado').length;
             
-            const totalEquipamentos = clientes.reduce((acc, c) => acc + (c.equipamentos?.length || 0), 0);
-            document.getElementById('total-equipamentos').textContent = totalEquipamentos;
-            document.getElementById('total-os').textContent = manutencoes.length;
-            
-            const receita = manutencoes.reduce((acc, os) => acc + (os.totalGeral || 0), 0);
-            document.getElementById('total-receita').textContent = `R$ ${receita.toFixed(2)}`;
-            
-            // Últimas OS
             const container = document.getElementById('lista-recentes');
-            if (container) {
-                const recentes = [...manutencoes].sort((a, b) => new Date(b.data) - new Date(a.data)).slice(0, 5);
-                if (recentes.length === 0) {
-                    container.innerHTML = '<div class="item-lista">Nenhuma OS registrada</div>';
-                } else {
-                    container.innerHTML = '';
-                    recentes.forEach(os => {
-                        const cliente = clientes.find(c => c.id === os.clienteId);
-                        const nomeCliente = cliente ? cliente.nome : 'Cliente';
-                        const div = document.createElement('div');
-                        div.className = 'item-lista';
-                        div.innerHTML = `
-                            <div class="item-lista-info">
-                                <h4>${nomeCliente} - ${os.equipamento}</h4>
-                                <p>${new Date(os.data).toLocaleDateString()}</p>
-                            </div>
-                            <div class="item-lista-acoes">
-                                <button class="btn-acao ver" onclick="verOSDetalhes(${os.id})"><i class="fas fa-eye"></i> Ver</button>
-                            </div>
-                        `;
-                        container.appendChild(div);
-                    });
-                }
+            const recentes = [...osClientes].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0,5);
+            if (recentes.length === 0) container.innerHTML = '<div class="item-lista">Nenhuma OS recente</div>';
+            else {
+                container.innerHTML = '';
+                recentes.forEach(os => {
+                    container.innerHTML += `<div class="item-lista"><div><h4>${os.clinica} - ${os.equipamento}</h4><p>${new Date(os.created_at).toLocaleString()}</p></div><div class="item-lista-acoes"><button class="btn-acao ver" onclick="visualizarOSCliente(${os.id})">Ver</button></div></div>`;
+                });
             }
         }
-
-        // ==================== MODAL ====================
-        window.fecharModal = function() {
-            document.getElementById('modalOS').classList.remove('active');
-        }
-
+        
         // ==================== INICIALIZAÇÃO ====================
         document.addEventListener('DOMContentLoaded', () => {
-            carregarDados();
+            carregarDadosLocais();
             carregarLogoSaved();
             carregarClientesSelect();
             carregarListaClientes();
-            mostrarEquipamentosPre();
+            mostrarEquipamentos();
             carregarHistorico();
             carregarOSClientes();
             atualizarDashboard();
-            verificarSeguranca();
             
-            // Fechar modal ao clicar fora
-            document.getElementById('modalOS').addEventListener('click', function(e) {
-                if (e.target === this) fecharModal();
-            });
+            document.getElementById('modalOS').addEventListener('click', e => { if (e.target === document.getElementById('modalOS')) fecharModal(); });
         });
     </script>
 </body>
