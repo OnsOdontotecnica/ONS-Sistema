@@ -545,7 +545,8 @@
             <button class="menu-btn" data-tela="historico"><i class="fas fa-history"></i> Histórico</button>
             <button class="menu-btn" data-tela="relatorios"><i class="fas fa-file-pdf"></i> Relatórios</button>
             <button class="menu-btn" data-tela="osclientes"><i class="fas fa-inbox"></i> OS Clientes</button>
-            <button class="menu-btn" data-tela="seguranca"><i class="fas fa-shield-alt"></i> Segurança</button>
+            <button class="menu-btn" data-tela="instalacoes"><i class="fas fa-download"></i> Instalações</button>
+            <button class="menu-btn" data-tela="seguranca"><i class="fas fa-shield-alt"></i> Segurança</button>       
         </div>
 
         <div id="dashboard" class="section active">
@@ -664,6 +665,77 @@
             <div class="lista-container" id="lista-os-clientes"></div>
         </div>
 
+                       <!-- Painel de Segurança - Configuração RLS -->
+                <!-- SEÇÃO INSTALAÇÕES DO APP -->
+        <div id="seguranca" class="section">
+
+        <div id="instalacoes" class="section">
+            <h2 class="titulo-secao">
+                <i class="fas fa-download"></i> 
+                Instalações do App Cliente
+            </h2>
+            
+            <div class="cards-grid">
+                <div class="card-dash">
+                    <h3 id="total-instalacoes">0</h3>
+                    <p>Total de Instalações</p>
+                </div>
+                <div class="card-dash">
+                    <h3 id="total-ativos">0</h3>
+                    <p>Apps Ativos (últimos 7 dias)</p>
+                </div>
+                <div class="card-dash">
+                    <h3 id="total-unicos">0</h3>
+                    <p>Clientes Únicos</p>
+                </div>
+            </div>
+            
+            <div class="botoes">
+                <button class="btn btn-primario" onclick="carregarInstalacoes()">
+                    <i class="fas fa-sync-alt"></i> Atualizar
+                </button>
+                <button class="btn btn-dourado" onclick="exportarInstalacoes()">
+                    <i class="fas fa-file-excel"></i> Exportar CSV
+                </button>
+            </div>
+            
+           <div class="lista-container" id="lista-os-clientes"></div>
+        </div>
+
+        <!-- SEÇÃO INSTALAÇÕES DO APP -->
+        <div id="instalacoes" class="section">
+            <h2 class="titulo-secao">
+                <i class="fas fa-download"></i> 
+                Instalações do App Cliente
+            </h2>
+            
+            <div class="cards-grid">
+                <div class="card-dash">
+                    <h3 id="total-instalacoes">0</h3>
+                    <p>Total de Instalações</p>
+                </div>
+                <div class="card-dash">
+                    <h3 id="total-ativos">0</h3>
+                    <p>Apps Ativos (últimos 7 dias)</p>
+                </div>
+                <div class="card-dash">
+                    <h3 id="total-unicos">0</h3>
+                    <p>Clientes Únicos</p>
+                </div>
+            </div>
+            
+            <div class="botoes">
+                <button class="btn btn-primario" onclick="carregarInstalacoes()">
+                    <i class="fas fa-sync-alt"></i> Atualizar
+                </button>
+                <button class="btn btn-dourado" onclick="exportarInstalacoes()">
+                    <i class="fas fa-file-excel"></i> Exportar CSV
+                </button>
+            </div>
+            
+            <div class="lista-container" id="lista-instalacoes"></div>
+        </div>
+
         <!-- Painel de Segurança - Configuração RLS -->
         <div id="seguranca" class="section">
             <h2 class="titulo-secao"><i class="fas fa-shield-alt"></i> Configuração de Segurança - RLS</h2>
@@ -674,7 +746,6 @@
                     <p>🔍 Verificando conexão...</p>
                 </div>
             </div>
-
             <div class="card-dash" style="margin-bottom: 20px; background: #f0f7ff;">
                 <h3><i class="fas fa-code"></i> SQL para Configurar RLS (Copie e execute no Supabase)</h3>
                 <div class="sql-helper">
