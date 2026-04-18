@@ -1,16 +1,10 @@
 {
-  "short_name": "ONS",
   "name": "ONS Odontotecnica",
-  "icons": [
-    {
-      "src": "logo-icon.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
-  "start_url": "index.html",
+  "short_name": "ONS Odonto",
+  "description": "Sistema de Manutenção Odontológica",
+  "start_url": "/ONS-Sistema/",
   "display": "standalone",
-  "theme_color": "#093d5c",
-  "background_color": "#ffffff"
+  "theme_color": "#0a2b3e",
+  "background_color": "#ffffff",
+  "orientation": "portrait"
 }
