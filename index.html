@@ -7,592 +7,100 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ONS Odonto">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <!-- PWA manifest inline via JavaScript -->
     <title>ONS Odontotecnica - Sistema Técnico de Manutenção</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* SEU CSS EXISTENTE - COLE AQUI O CSS COMPLETO */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary: #0a2b3e;
             --primary-dark: #061e2c;
             --secondary: #c6a43f;
-            --secondary-light: #d4b85c;
-            --gray-50: #f8f9fa;
             --gray-100: #f1f3f5;
             --gray-200: #e9ecef;
-            --gray-300: #dee2e6;
             --gray-600: #6c757d;
-            --gray-800: #343a40;
             --success: #2b8c4e;
             --danger: #c92a2a;
-            --warning: #e67700;
-            --info: #1864ab;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 20px;
         }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: var(--gray-100);
-            color: var(--gray-800);
-            line-height: 1.5;
-        }
-
-        /* Header Profissional */
-        .app-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 20px 24px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: var(--shadow-md);
-        }
-
-        .header-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            cursor: pointer;
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--secondary);
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: var(--primary);
-        }
-
-        .logo-text h1 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-        }
-
-        .logo-text p {
-            font-size: 0.7rem;
-            opacity: 0.8;
-            letter-spacing: 0.5px;
-        }
-
-        .header-contact {
-            background: rgba(255,255,255,0.1);
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            backdrop-filter: blur(4px);
-        }
-
-        .logo-imagem {
-            height: 50px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        /* Menu Navegação */
-        .nav-menu {
-            background: white;
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--gray-200);
-            position: sticky;
-            top: 88px;
-            z-index: 99;
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: thin;
-        }
-
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            gap: 8px;
-        }
-
-        .nav-btn {
-            background: transparent;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 0.85rem;
-            color: var(--gray-600);
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-btn i {
-            font-size: 1rem;
-        }
-
-        .nav-btn:hover {
-            background: var(--gray-100);
-            color: var(--primary);
-        }
-
-        .nav-btn.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Container Principal */
-        .main-container {
-            max-width: 1400px;
-            margin: 24px auto;
-            padding: 0 20px;
-        }
-
-        /* Cards Dashboard */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-            margin-bottom: 32px;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--gray-200);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .stat-title {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--gray-600);
-            margin-bottom: 8px;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            line-height: 1;
-        }
-
-        /* Seções */
-        .section-card {
-            background: white;
-            border-radius: var(--radius-lg);
-            padding: 28px;
-            margin-bottom: 32px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--gray-200);
-            display: none;
-        }
-
-        .section-card.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--primary);
-            border-left: 4px solid var(--secondary);
-            padding-left: 16px;
-            margin-bottom: 24px;
-        }
-
-        /* Formulários */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--gray-600);
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1.5px solid var(--gray-200);
-            border-radius: var(--radius-md);
-            font-size: 0.9rem;
-            transition: all 0.2s;
-            background: white;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--secondary);
-            box-shadow: 0 0 0 3px rgba(198, 164, 63, 0.1);
-        }
-
-        /* Botões */
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background: var(--secondary);
-            color: var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--secondary-light);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1.5px solid var(--gray-300);
-            color: var(--gray-600);
-        }
-
-        .btn-outline:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        /* Listas */
-        .list-container {
-            max-height: 500px;
-            overflow-y: auto;
-            border-radius: var(--radius-md);
-        }
-
-        .list-item {
-            padding: 16px;
-            border-bottom: 1px solid var(--gray-200);
-            transition: background 0.2s;
-        }
-
-        .list-item:hover {
-            background: var(--gray-50);
-        }
-
-        .list-item-title {
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 4px;
-        }
-
-        .list-item-sub {
-            font-size: 0.8rem;
-            color: var(--gray-600);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-        }
-
-        .btn-sm {
-            padding: 6px 14px;
-            font-size: 0.75rem;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .btn-sm:hover {
-            transform: translateY(-1px);
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: var(--radius-lg);
-            max-width: 600px;
-            width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 28px;
-        }
-
-        /* Notificação */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--gray-800);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            z-index: 1100;
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(100%); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
-
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--gray-100); }
+        .app-header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; padding: 20px 24px; position: sticky; top: 0; z-index: 100; }
+        .header-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        .logo-area { display: flex; align-items: center; gap: 16px; cursor: pointer; }
+        .logo-icon { width: 48px; height: 48px; background: var(--secondary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--primary); }
+        .logo-text h1 { font-size: 1.25rem; font-weight: 600; }
+        .logo-text p { font-size: 0.7rem; opacity: 0.8; }
+        .header-contact { background: rgba(255,255,255,0.1); padding: 8px 18px; border-radius: 40px; font-size: 0.85rem; }
+        .nav-menu { background: white; padding: 12px 20px; border-bottom: 1px solid var(--gray-200); position: sticky; top: 88px; z-index: 99; overflow-x: auto; white-space: nowrap; }
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; gap: 8px; }
+        .nav-btn { background: transparent; border: none; padding: 10px 20px; border-radius: 40px; font-weight: 500; font-size: 0.85rem; color: var(--gray-600); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .nav-btn:hover { background: var(--gray-100); color: var(--primary); }
+        .nav-btn.active { background: var(--primary); color: white; }
+        .main-container { max-width: 1400px; margin: 24px auto; padding: 0 20px; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 32px; }
+        .stat-card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); border: 1px solid var(--gray-200); }
+        .stat-title { font-size: 0.85rem; text-transform: uppercase; color: var(--gray-600); margin-bottom: 8px; }
+        .stat-value { font-size: 2.5rem; font-weight: 700; color: var(--primary); line-height: 1; }
+        .section-card { background: white; border-radius: 20px; padding: 28px; margin-bottom: 32px; border: 1px solid var(--gray-200); display: none; }
+        .section-card.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .section-title { font-size: 1.25rem; font-weight: 600; color: var(--primary); border-left: 4px solid var(--secondary); padding-left: 16px; margin-bottom: 24px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--gray-600); margin-bottom: 6px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 12px 16px; border: 1.5px solid var(--gray-200); border-radius: 12px; font-size: 0.9rem; background: white; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--secondary); }
+        .btn { padding: 12px 24px; border: none; border-radius: 12px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-secondary { background: var(--secondary); color: var(--primary); }
+        .btn-outline { background: transparent; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
+        .btn-danger { background: var(--danger); color: white; }
+        .list-container { max-height: 500px; overflow-y: auto; border-radius: 12px; }
+        .list-item { padding: 16px; border-bottom: 1px solid var(--gray-200); }
+        .list-item-title { font-weight: 600; color: var(--primary); margin-bottom: 4px; }
+        .list-item-sub { font-size: 0.8rem; color: var(--gray-600); }
+        .action-buttons { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+        .btn-sm { padding: 6px 14px; font-size: 0.75rem; border-radius: 20px; border: none; cursor: pointer; font-weight: 500; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: white; border-radius: 20px; max-width: 600px; width: 90%; max-height: 85vh; overflow-y: auto; padding: 28px; }
+        .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #343a40; color: white; padding: 12px 24px; border-radius: 40px; font-size: 0.85rem; z-index: 1100; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateX(-50%) translateY(100%); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
         .hidden { display: none; }
-
-        /* Equipamentos grid */
-        .equip-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .equip-card {
-            background: var(--gray-50);
-            border: 1px solid var(--gray-200);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .equip-card:hover {
-            border-color: var(--secondary);
-            background: white;
-            transform: translateY(-2px);
-        }
-
-        /* Tabelas */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
-
-        .data-table th {
-            text-align: left;
-            padding: 12px;
-            background: var(--gray-50);
-            font-weight: 600;
-            color: var(--gray-600);
-            border-bottom: 2px solid var(--gray-200);
-        }
-
-        .data-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--gray-200);
-        }
-
-        /* Badge status */
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
+        .equip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
+        .equip-card { background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .equip-card:hover { border-color: var(--secondary); background: white; transform: translateY(-2px); }
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .data-table th { text-align: left; padding: 12px; background: var(--gray-100); font-weight: 600; border-bottom: 2px solid var(--gray-200); }
+        .data-table td { padding: 12px; border-bottom: 1px solid var(--gray-200); }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
         .badge-success { background: #d3f9d8; color: #2b8c4e; }
         .badge-warning { background: #fff3bf; color: #e67700; }
-
-        /* Subseção equipamentos */
-        .subsecao {
-            background: #f0f4f8;
-            padding: 20px;
-            border-radius: 16px;
-            margin: 20px 0;
-            border: 1px solid var(--gray-200);
-        }
-
-        .grid-equipamento {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .tabela-equipamentos {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 0.85rem;
-        }
-
-        .tabela-equipamentos th, .tabela-equipamentos td {
-            border: 1px solid var(--gray-200);
-            padding: 8px;
-            text-align: left;
-        }
-
-        .tabela-equipamentos th {
-            background: var(--primary);
-            color: white;
-        }
-
-        .badge-equip {
-            background: var(--success);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            margin-left: 10px;
-        }
-
-        /* Impressão */
-        @media print {
-            .app-header, .nav-menu, .btn, .action-buttons, .no-print {
-                display: none !important;
-            }
-            .section-card {
-                display: block !important;
-                box-shadow: none;
-                padding: 0;
-            }
-        }
-
-        /* Documento impressão */
-        .documento-empresarial {
-            max-width: 100%;
-            background: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.4;
-        }
-
-        .doc-header {
-            text-align: center;
-            padding: 20px 0;
-            border-bottom: 2px solid var(--primary);
-            margin-bottom: 25px;
-        }
-
-        .doc-titulo {
-            background: var(--primary);
-            color: white;
-            padding: 8px;
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-            margin: 20px 0;
-        }
-
-        /* Responsivo */
-        @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                text-align: center;
-            }
-            .logo-area {
-                justify-content: center;
-            }
-            .nav-menu {
-                top: 120px;
-            }
-            .section-card {
-                padding: 20px;
-            }
-        }
+        .subsecao { background: #f0f4f8; padding: 20px; border-radius: 16px; margin: 20px 0; border: 1px solid var(--gray-200); }
+        .grid-equipamento { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px; }
+        .tabela-equipamentos { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.85rem; }
+        .tabela-equipamentos th, .tabela-equipamentos td { border: 1px solid var(--gray-200); padding: 8px; text-align: left; }
+        .tabela-equipamentos th { background: var(--primary); color: white; }
+        .badge-equip { background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 10px; }
+        @media print { .app-header, .nav-menu, .btn, .action-buttons, .no-print { display: none !important; } }
+        @media (max-width: 768px) { .header-container { flex-direction: column; text-align: center; } .logo-area { justify-content: center; } .nav-menu { top: 120px; } .section-card { padding: 20px; } }
+        
+        .documento-empresarial { max-width: 100%; background: white; font-family: 'Segoe UI', sans-serif; line-height: 1.4; }
+        .doc-header { text-align: center; padding: 20px 0; border-bottom: 2px solid var(--primary); margin-bottom: 25px; }
+        .doc-titulo { background: var(--primary); color: white; padding: 8px; text-align: center; font-size: 16px; font-weight: bold; margin: 20px 0; }
+        .logo-imagem { height: 50px; width: auto; object-fit: contain; }
     </style>
 </head>
 <body>
     <header class="app-header">
         <div class="header-container">
             <div class="logo-area" id="logoDisplay" onclick="document.getElementById('logoUpload').click()">
-                <div class="logo-icon">
-                    <i class="fas fa-tooth"></i>
-                </div>
-                <div class="logo-text">
-                    <h1>ONS Odontotecnica</h1>
-                    <p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p>
-                </div>
+                <div class="logo-icon"><i class="fas fa-tooth"></i></div>
+                <div class="logo-text"><h1>ONS Odontotecnica</h1><p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p></div>
             </div>
-            <div class="header-contact">
-                <i class="fas fa-phone-alt"></i> (35) 9 2000-4813
-            </div>
+            <div class="header-contact"><i class="fas fa-phone-alt"></i> (35) 9 2000-4813</div>
             <input type="file" id="logoUpload" accept="image/*" style="display: none;">
             <button class="btn-sm" onclick="restaurarLogoPadrao()" style="background: rgba(255,255,255,0.2); color: white;">Logo Padrão</button>
         </div>
@@ -614,52 +122,27 @@
     </nav>
 
     <main class="main-container">
-        <!-- DASHBOARD -->
         <div id="dashboard" class="section-card active">
             <h2 class="section-title">Dashboard</h2>
             <div class="dashboard-grid">
-                <div class="stat-card">
-                    <div class="stat-title">Clientes Ativos</div>
-                    <div class="stat-value" id="total-clientes">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-title">Ordens de Serviço</div>
-                    <div class="stat-value" id="total-os-dash">0</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-title">OS em Andamento</div>
-                    <div class="stat-value" id="total-andamento-dash">0</div>
-                </div>
+                <div class="stat-card"><div class="stat-title">Clientes Ativos</div><div class="stat-value" id="total-clientes">0</div></div>
+                <div class="stat-card"><div class="stat-title">Ordens de Serviço</div><div class="stat-value" id="total-os-dash">0</div></div>
+                <div class="stat-card"><div class="stat-title">OS em Andamento</div><div class="stat-value" id="total-andamento-dash">0</div></div>
             </div>
             <h2 class="section-title" style="margin-top: 24px;">Últimas Ordens de Serviço</h2>
             <div class="list-container" id="lista-recentes"></div>
         </div>
 
-        <!-- CLIENTES -->
         <div id="clientes" class="section-card">
             <h2 class="section-title">Cadastro de Clientes</h2>
-            <div class="form-group">
-                <label class="form-label">Nome do Cliente / Consultório *</label>
-                <input type="text" id="cliente-nome" placeholder="Digite o nome completo">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Telefone *</label>
-                <input type="text" id="cliente-telefone" placeholder="(35) 9 2000-4813">
-            </div>
-            <div class="form-group">
-                <label class="form-label">E-mail</label>
-                <input type="email" id="cliente-email" placeholder="cliente@email.com">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Endereço</label>
-                <input type="text" id="cliente-endereco" placeholder="Rua, número, bairro, cidade">
-            </div>
+            <div class="form-group"><label class="form-label">Nome do Cliente / Consultório *</label><input type="text" id="cliente-nome" placeholder="Digite o nome completo"></div>
+            <div class="form-group"><label class="form-label">Telefone *</label><input type="text" id="cliente-telefone" placeholder="(35) 9 2000-4813"></div>
+            <div class="form-group"><label class="form-label">E-mail</label><input type="email" id="cliente-email" placeholder="cliente@email.com"></div>
+            <div class="form-group"><label class="form-label">Endereço</label><input type="text" id="cliente-endereco" placeholder="Rua, número, bairro, cidade"></div>
             <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                 <button class="btn btn-primary" onclick="salvarCliente()">Salvar Cliente</button>
                 <button class="btn btn-outline" onclick="limparFormCliente()">Limpar</button>
             </div>
-
-            <!-- SEÇÃO DE EQUIPAMENTOS DO CONSULTÓRIO -->
             <div class="subsecao" id="secao-equipamentos" style="display: none; margin-top: 24px;">
                 <h3>Equipamentos do Consultório</h3>
                 <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Cadastre os equipamentos deste cliente</p>
@@ -671,184 +154,66 @@
                     <input type="date" id="equip-data-fab" placeholder="Data Fab.">
                 </div>
                 <button class="btn btn-primary" onclick="adicionarEquipamento()">+ Adicionar Equipamento</button>
-                <table class="tabela-equipamentos">
-                    <thead><tr><th>Equipamento</th><th>Fabricante</th><th>Modelo</th><th>Nº Série</th><th>Data Fab.</th><th>Ação</th></tr></thead>
-                    <tbody id="lista-equipamentos"></tbody>
-                </table>
+                <table class="tabela-equipamentos"><thead><tr><th>Equipamento</th><th>Fabricante</th><th>Modelo</th><th>Nº Série</th><th>Data Fab.</th><th>Ação</th></tr></thead><tbody id="lista-equipamentos"></tbody></table>
             </div>
-
             <h2 class="section-title" style="margin-top: 32px;">Clientes Cadastrados</h2>
             <div class="list-container" id="lista-clientes"></div>
         </div>
 
-        <!-- EQUIPAMENTOS -->
         <div id="equipamentos" class="section-card">
             <h2 class="section-title">Equipamentos Odontológicos</h2>
             <div class="equip-grid" id="lista-equipamentos-pre"></div>
-            <div style="margin-top: 24px;">
-                <label class="form-label">Cadastro Rápido</label>
-                <div style="display: flex; gap: 12px;">
-                    <input type="text" id="equip-manual" placeholder="Digite o nome do equipamento" style="flex: 1;">
-                    <button class="btn btn-primary" onclick="usarEquipamentoManual()">Iniciar OS</button>
-                </div>
-            </div>
+            <div style="margin-top: 24px;"><label class="form-label">Cadastro Rápido</label><div style="display: flex; gap: 12px;"><input type="text" id="equip-manual" placeholder="Digite o nome do equipamento" style="flex: 1;"><button class="btn btn-primary" onclick="usarEquipamentoManual()">Iniciar OS</button></div></div>
         </div>
 
-        <!-- NOVA OS -->
         <div id="novaos" class="section-card">
             <h2 class="section-title">Nova Ordem de Serviço</h2>
-            <div class="form-group">
-                <label class="form-label">Cliente</label>
-                <select id="os-cliente" onchange="carregarEquipamentosCliente()">
-                    <option value="">Selecione um cliente</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Equipamento</label>
-                <select id="os-equipamento-select" style="display: none;" onchange="selecionarEquipamentoOS()">
-                    <option value="">Selecione um equipamento cadastrado</option>
-                </select>
-                <input type="text" id="os-equipamento" placeholder="Digite o equipamento">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Defeito / Problema</label>
-                <textarea id="os-defeitos" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Solução / Serviço Executado</label>
-                <textarea id="os-solucoes" rows="3"></textarea>
-            </div>
-            <div style="display: flex; gap: 12px;">
-                <button class="btn btn-primary" onclick="salvarOS()">Salvar OS</button>
-                <button class="btn btn-outline" onclick="limparOS()">Limpar</button>
-            </div>
+            <div class="form-group"><label class="form-label">Cliente</label><select id="os-cliente" onchange="carregarEquipamentosCliente()"><option value="">Selecione um cliente</option></select></div>
+            <div class="form-group"><label class="form-label">Equipamento</label><select id="os-equipamento-select" style="display: none;" onchange="selecionarEquipamentoOS()"><option value="">Selecione um equipamento cadastrado</option></select><input type="text" id="os-equipamento" placeholder="Digite o equipamento"></div>
+            <div class="form-group"><label class="form-label">Defeito / Problema</label><textarea id="os-defeitos" rows="3"></textarea></div>
+            <div class="form-group"><label class="form-label">Solução / Serviço Executado</label><textarea id="os-solucoes" rows="3"></textarea></div>
+            <div style="display: flex; gap: 12px;"><button class="btn btn-primary" onclick="salvarOS()">Salvar OS</button><button class="btn btn-outline" onclick="limparOS()">Limpar</button></div>
         </div>
 
-        <!-- FATURAMENTO -->
         <div id="faturamento" class="section-card">
             <h2 class="section-title">Faturamento</h2>
-            <div class="form-group">
-                <label class="form-label">Selecione a Ordem de Serviço</label>
-                <select id="faturamento-os-select" onchange="carregarDadosOSFaturamento()">
-                    <option value="">Selecione uma OS</option>
-                </select>
-            </div>
+            <div class="form-group"><label class="form-label">Selecione a Ordem de Serviço</label><select id="faturamento-os-select" onchange="carregarDadosOSFaturamento()"><option value="">Selecione uma OS</option></select></div>
             <div id="dados-faturamento" style="display: none;">
-                <div class="form-group">
-                    <label class="form-label">Número do Documento</label>
-                    <input type="text" id="num-documento" placeholder="Ex: OS-001/2026">
-                </div>
+                <div class="form-group"><label class="form-label">Número do Documento</label><input type="text" id="num-documento" placeholder="Ex: OS-001/2026"></div>
                 <h3 class="section-title" style="font-size: 1rem;">Peças Utilizadas</h3>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;">
-                    <input type="text" id="peca-nome" placeholder="Nome da peça" style="flex: 2;">
-                    <input type="number" id="peca-valor" placeholder="Valor R$" style="flex: 1;">
-                    <input type="number" id="peca-quantidade" placeholder="Qtd" style="flex: 0.5;" value="1">
-                    <button class="btn btn-primary" onclick="adicionarPeca()">Adicionar</button>
-                </div>
-                <table class="data-table">
-                    <thead><tr><th>Peça</th><th>Qtd</th><th>Valor Unit.</th><th>Subtotal</th><th>Ação</th></tr></thead>
-                    <tbody id="lista-pecas-body"></tbody>
-                </table>
-                <div class="form-group" style="margin-top: 20px;">
-                    <label class="form-label">Mão de Obra</label>
-                    <div style="display: flex; gap: 12px;">
-                        <input type="number" id="valor-hora" value="80.00" step="0.01" placeholder="Valor da Hora">
-                        <input type="number" id="horas-trabalhadas" value="2" step="0.5" placeholder="Horas Trabalhadas">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Forma de Exibição</label>
-                    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-                        <label><input type="radio" name="forma-exibicao" value="somado" checked onchange="atualizarDocumento()"> Valor Único</label>
-                        <label><input type="radio" name="forma-exibicao" value="discriminado" onchange="atualizarDocumento()"> Valores Discriminados</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Forma de Pagamento</label>
-                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-                        <label><input type="radio" name="pagamento-tipo" value="vista" checked onchange="atualizarDocumento()"> À Vista</label>
-                        <label><input type="radio" name="pagamento-tipo" value="cartao" onchange="atualizarDocumento()"> Cartão</label>
-                        <label><input type="radio" name="pagamento-tipo" value="pix" onchange="togglePixCampo()"> PIX</label>
-                        <label><input type="radio" name="pagamento-tipo" value="boleto" onchange="atualizarDocumento()"> Boleto</label>
-                    </div>
-                </div>
-                <div id="campo-pix-container" style="display: none;">
-                    <div class="form-group">
-                        <label class="form-label">Chave PIX</label>
-                        <input type="text" id="pix-chave" placeholder="CPF, CNPJ, E-mail ou Telefone">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Observações</label>
-                    <textarea id="obs-pagamento" rows="2"></textarea>
-                </div>
-                <div class="no-print" style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
-                    <button class="btn btn-primary" onclick="imprimirDocumento()">Imprimir</button>
-                    <button class="btn btn-secondary" onclick="enviarPorWhatsApp()">Enviar WhatsApp</button>
-                </div>
-                <div id="preview-documento" style="margin-top: 24px; padding: 20px; background: var(--gray-50); border-radius: var(--radius-md);"></div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;"><input type="text" id="peca-nome" placeholder="Nome da peça" style="flex: 2;"><input type="number" id="peca-valor" placeholder="Valor R$" style="flex: 1;"><input type="number" id="peca-quantidade" placeholder="Qtd" style="flex: 0.5;" value="1"><button class="btn btn-primary" onclick="adicionarPeca()">Adicionar</button></div>
+                <table class="data-table"><thead><tr><th>Peça</th><th>Qtd</th><th>Valor Unit.</th><th>Subtotal</th><th>Ação</th></tr></thead><tbody id="lista-pecas-body"></tbody></table>
+                <div class="form-group" style="margin-top: 20px;"><label class="form-label">Mão de Obra</label><div style="display: flex; gap: 12px;"><input type="number" id="valor-hora" value="80.00" step="0.01" placeholder="Valor da Hora"><input type="number" id="horas-trabalhadas" value="2" step="0.5" placeholder="Horas Trabalhadas"></div></div>
+                <div class="form-group"><label class="form-label">Forma de Exibição</label><div style="display: flex; gap: 20px; flex-wrap: wrap;"><label><input type="radio" name="forma-exibicao" value="somado" checked onchange="atualizarDocumento()"> Valor Único</label><label><input type="radio" name="forma-exibicao" value="discriminado" onchange="atualizarDocumento()"> Valores Discriminados</label></div></div>
+                <div class="form-group"><label class="form-label">Forma de Pagamento</label><div style="display: flex; gap: 15px; flex-wrap: wrap;"><label><input type="radio" name="pagamento-tipo" value="vista" checked onchange="atualizarDocumento()"> À Vista</label><label><input type="radio" name="pagamento-tipo" value="cartao" onchange="atualizarDocumento()"> Cartão</label><label><input type="radio" name="pagamento-tipo" value="pix" onchange="togglePixCampo()"> PIX</label><label><input type="radio" name="pagamento-tipo" value="boleto" onchange="atualizarDocumento()"> Boleto</label></div></div>
+                <div id="campo-pix-container" style="display: none;"><div class="form-group"><label class="form-label">Chave PIX</label><input type="text" id="pix-chave" placeholder="CPF, CNPJ, E-mail ou Telefone"></div></div>
+                <div class="form-group"><label class="form-label">Observações</label><textarea id="obs-pagamento" rows="2"></textarea></div>
+                <div class="no-print" style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;"><button class="btn btn-primary" onclick="imprimirDocumento()">Imprimir</button><button class="btn btn-secondary" onclick="enviarPorWhatsApp()">Enviar WhatsApp</button></div>
+                <div id="preview-documento" style="margin-top: 24px; padding: 20px; background: var(--gray-100); border-radius: 12px;"></div>
                 <div id="documento-impressao" style="display: none;"></div>
             </div>
         </div>
 
-        <!-- HISTÓRICO -->
-        <div id="historico" class="section-card">
-            <h2 class="section-title">Histórico de OS</h2>
-            <div class="list-container" id="lista-historico"></div>
-        </div>
-
-        <!-- RELATÓRIOS -->
-        <div id="relatorios" class="section-card">
-            <h2 class="section-title">Relatórios</h2>
-            <div class="list-container" id="lista-todas-os"></div>
-        </div>
-
-        <!-- OS CLIENTES -->
+        <div id="historico" class="section-card"><h2 class="section-title">Histórico de OS</h2><div class="list-container" id="lista-historico"></div></div>
+        <div id="relatorios" class="section-card"><h2 class="section-title">Relatórios</h2><div class="list-container" id="lista-todas-os"></div></div>
+        
         <div id="osclientes" class="section-card">
             <h2 class="section-title">Ordens de Serviço - App Cliente</h2>
-            <div class="dashboard-grid">
-                <div class="stat-card"><div class="stat-title">Total de OS</div><div class="stat-value" id="total-os-clientes">0</div></div>
-                <div class="stat-card"><div class="stat-title">Em Andamento</div><div class="stat-value" id="total-os-andamento">0</div></div>
-                <div class="stat-card"><div class="stat-title">Finalizadas</div><div class="stat-value" id="total-os-finalizadas">0</div></div>
-            </div>
-            <div style="display: flex; gap: 12px; margin-bottom: 20px;">
-                <button class="btn btn-primary" onclick="carregarOSClientes()">Atualizar</button>
-                <button class="btn btn-secondary" onclick="enviarMsgParaTodos()">Mensagem em Massa</button>
-            </div>
+            <div class="dashboard-grid"><div class="stat-card"><div class="stat-title">Total de OS</div><div class="stat-value" id="total-os-clientes">0</div></div><div class="stat-card"><div class="stat-title">Em Andamento</div><div class="stat-value" id="total-os-andamento">0</div></div><div class="stat-card"><div class="stat-title">Finalizadas</div><div class="stat-value" id="total-os-finalizadas">0</div></div></div>
+            <div style="display: flex; gap: 12px; margin-bottom: 20px;"><button class="btn btn-primary" onclick="carregarOSClientes()">Atualizar</button><button class="btn btn-secondary" onclick="enviarMsgParaTodos()">Mensagem em Massa</button></div>
             <div class="list-container" id="lista-os-clientes"></div>
         </div>
 
-        <!-- INSTALAÇÕES -->
         <div id="instalacoes" class="section-card">
             <h2 class="section-title">Instalações do App Cliente</h2>
-            <div class="dashboard-grid">
-                <div class="stat-card"><div class="stat-title">Total</div><div class="stat-value" id="total-instalacoes">0</div></div>
-                <div class="stat-card"><div class="stat-title">Ativos</div><div class="stat-value" id="total-ativos">0</div></div>
-                <div class="stat-card"><div class="stat-title">Clientes</div><div class="stat-value" id="total-unicos">0</div></div>
-            </div>
+            <div class="dashboard-grid"><div class="stat-card"><div class="stat-title">Total</div><div class="stat-value" id="total-instalacoes">0</div></div><div class="stat-card"><div class="stat-title">Ativos</div><div class="stat-value" id="total-ativos">0</div></div><div class="stat-card"><div class="stat-title">Clientes</div><div class="stat-value" id="total-unicos">0</div></div></div>
             <div class="list-container" id="lista-instalacoes"></div>
         </div>
 
-        <!-- SEGURANÇA -->
-        <div id="seguranca" class="section-card">
-            <h2 class="section-title">Segurança</h2>
-            <div class="stat-card">
-                <div class="stat-title">Status da Conexão</div>
-                <div class="stat-value" id="status-conexao" style="font-size: 1rem;">Conectado ao Supabase</div>
-            </div>
-        </div>
+        <div id="seguranca" class="section-card"><h2 class="section-title">Segurança</h2><div class="stat-card"><div class="stat-title">Status da Conexão</div><div class="stat-value" id="status-conexao" style="font-size: 1rem;">Conectado ao Supabase</div></div></div>
     </main>
 
-    <div id="modalOS" class="modal">
-        <div class="modal-content">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                <h3>Detalhes</h3>
-                <button onclick="fecharModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button>
-            </div>
-            <div id="modal-body"></div>
-        </div>
-    </div>
-
+    <div id="modalOS" class="modal"><div class="modal-content"><div style="display: flex; justify-content: space-between; margin-bottom: 20px;"><h3>Detalhes</h3><button onclick="fecharModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button></div><div id="modal-body"></div></div></div>
     <div id="toast" class="toast hidden"></div>
 
     <script>
@@ -857,7 +222,6 @@
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZja3l4d29uYnBrZGVxZW9zd3hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwMTY5NjMsImV4cCI6MjA5MTU5Mjk2M30.b5ni_vnIETHVuOs5Cy4982UUBq9Icm-Zc12W1FwQyvI';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Dados globais
         let clientes = [];
         let manutencoes = [];
         let osClientes = [];
@@ -866,7 +230,6 @@
         let osSelecionadaFatura = null;
         let clienteSelecionadoId = null;
 
-        // FUNÇÕES AUXILIARES
         function mostrarNotificacao(msg, tipo = 'sucesso') {
             const toast = document.getElementById('toast');
             toast.textContent = msg;
@@ -875,52 +238,38 @@
             setTimeout(() => toast.classList.add('hidden'), 3000);
         }
 
-        function fecharModal() {
-            document.getElementById('modalOS').classList.remove('active');
-        }
-
+        function fecharModal() { document.getElementById('modalOS').classList.remove('active'); }
+        
         function togglePixCampo() {
             const pixRadio = document.querySelector('input[name="pagamento-tipo"][value="pix"]');
             const campoPix = document.getElementById('campo-pix-container');
-            if (pixRadio && pixRadio.checked) {
-                campoPix.style.display = 'block';
-            } else {
-                campoPix.style.display = 'none';
-            }
+            if (pixRadio && pixRadio.checked) campoPix.style.display = 'block';
+            else campoPix.style.display = 'none';
             atualizarDocumento();
         }
 
-        // DADOS LOCAIS
         function carregarDadosLocais() {
             const clientesSalvos = localStorage.getItem('ons_clientes');
             const manutencoesSalvas = localStorage.getItem('ons_manutencoes');
             if (clientesSalvos) clientes = JSON.parse(clientesSalvos);
             if (manutencoesSalvas) manutencoes = JSON.parse(manutencoesSalvas);
         }
-
         function salvarClientes() { localStorage.setItem('ons_clientes', JSON.stringify(clientes)); }
         function salvarManutencoes() { localStorage.setItem('ons_manutencoes', JSON.stringify(manutencoes)); }
 
-        // LOGO
         function carregarLogoSaved() {
             const logoSalva = localStorage.getItem('ons_logo');
             if (logoSalva) {
                 const logoDiv = document.getElementById('logoDisplay');
                 logoDiv.innerHTML = `<img src="${logoSalva}" class="logo-imagem">`;
-                logoDiv.style.background = 'transparent';
             }
         }
-
         window.restaurarLogoPadrao = function() {
             const logoDiv = document.getElementById('logoDisplay');
-            logoDiv.innerHTML = `
-                <div class="logo-icon"><i class="fas fa-tooth"></i></div>
-                <div class="logo-text"><h1>ONS Odontotecnica</h1><p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p></div>
-            `;
+            logoDiv.innerHTML = `<div class="logo-icon"><i class="fas fa-tooth"></i></div><div class="logo-text"><h1>ONS Odontotecnica</h1><p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p></div>`;
             localStorage.removeItem('ons_logo');
             mostrarNotificacao('Logo restaurada!', 'sucesso');
         }
-
         document.getElementById('logoUpload')?.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -935,7 +284,6 @@
             }
         });
 
-        // MENU
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -943,7 +291,6 @@
                 this.classList.add('active');
                 const telaId = this.getAttribute('data-tela');
                 document.getElementById(telaId).classList.add('active');
-                
                 if (telaId === 'dashboard') atualizarDashboard();
                 if (telaId === 'clientes') carregarListaClientes();
                 if (telaId === 'equipamentos') mostrarEquipamentos();
@@ -955,7 +302,6 @@
             });
         });
 
-        // GERENCIAMENTO DE EQUIPAMENTOS DO CLIENTE
         function mostrarSecaoEquipamentos(clienteId) {
             const secao = document.getElementById('secao-equipamentos');
             const cliente = clientes.find(c => c.id === clienteId);
@@ -964,11 +310,8 @@
                 secao.style.display = 'block';
                 atualizarListaEquipamentos();
                 secao.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } else {
-                secao.style.display = 'none';
-            }
+            } else { secao.style.display = 'none'; }
         }
-
         function atualizarListaEquipamentos() {
             const cliente = clientes.find(c => c.id === clienteSelecionadoId);
             const tbody = document.getElementById('lista-equipamentos');
@@ -978,38 +321,16 @@
             }
             tbody.innerHTML = '';
             cliente.equipamentos.forEach((equip, index) => {
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${equip.nome || '-'}</td>
-                        <td>${equip.fabricante || '-'}</td>
-                        <td>${equip.modelo || '-'}</td>
-                        <td>${equip.serie || '-'}</td>
-                        <td>${equip.dataFab || '-'}</td>
-                        <td><button class="btn-sm btn-danger" onclick="removerEquipamento(${index})">Remover</button></td>
-                    </tr>
-                `;
+                tbody.innerHTML += `<tr><td>${equip.nome || '-'}</td><td>${equip.fabricante || '-'}</td><td>${equip.modelo || '-'}</td><td>${equip.serie || '-'}</td><td>${equip.dataFab || '-'}</td><td><button class="btn-sm btn-danger" onclick="removerEquipamento(${index})">Remover</button></td></tr>`;
             });
         }
-
         window.adicionarEquipamento = function() {
-            if (!clienteSelecionadoId) {
-                mostrarNotificacao('Selecione um cliente primeiro!', 'erro');
-                return;
-            }
+            if (!clienteSelecionadoId) { mostrarNotificacao('Selecione um cliente primeiro!', 'erro'); return; }
             const nome = document.getElementById('equip-nome').value.trim();
-            if (!nome) {
-                mostrarNotificacao('Informe o nome do equipamento!', 'erro');
-                return;
-            }
+            if (!nome) { mostrarNotificacao('Informe o nome do equipamento!', 'erro'); return; }
             const cliente = clientes.find(c => c.id === clienteSelecionadoId);
             if (!cliente.equipamentos) cliente.equipamentos = [];
-            cliente.equipamentos.push({
-                nome: nome,
-                fabricante: document.getElementById('equip-fabricante').value,
-                modelo: document.getElementById('equip-modelo').value,
-                serie: document.getElementById('equip-serie').value,
-                dataFab: document.getElementById('equip-data-fab').value
-            });
+            cliente.equipamentos.push({ nome: nome, fabricante: document.getElementById('equip-fabricante').value, modelo: document.getElementById('equip-modelo').value, serie: document.getElementById('equip-serie').value, dataFab: document.getElementById('equip-data-fab').value });
             salvarClientes();
             document.getElementById('equip-nome').value = '';
             document.getElementById('equip-fabricante').value = '';
@@ -1020,7 +341,6 @@
             carregarListaClientes();
             mostrarNotificacao('Equipamento adicionado!', 'sucesso');
         }
-
         window.removerEquipamento = function(index) {
             const cliente = clientes.find(c => c.id === clienteSelecionadoId);
             if (cliente && cliente.equipamentos) {
@@ -1032,21 +352,11 @@
             }
         }
 
-        // CLIENTES
         window.salvarCliente = function() {
             const nome = document.getElementById('cliente-nome').value.trim();
             const telefone = document.getElementById('cliente-telefone').value.trim();
             if (!nome || !telefone) { mostrarNotificacao('Nome e telefone são obrigatórios!', 'erro'); return; }
-            
-            const novoCliente = { 
-                id: Date.now(), 
-                nome, 
-                telefone, 
-                email: document.getElementById('cliente-email').value, 
-                endereco: document.getElementById('cliente-endereco').value, 
-                data: new Date().toISOString(),
-                equipamentos: [] 
-            };
+            const novoCliente = { id: Date.now(), nome, telefone, email: document.getElementById('cliente-email').value, endereco: document.getElementById('cliente-endereco').value, data: new Date().toISOString(), equipamentos: [] };
             clientes.push(novoCliente);
             salvarClientes();
             mostrarNotificacao('Cliente salvo!', 'sucesso');
@@ -1058,7 +368,6 @@
             clienteSelecionadoId = novoCliente.id;
             mostrarSecaoEquipamentos(clienteSelecionadoId);
         }
-
         window.limparFormCliente = function() {
             document.getElementById('cliente-nome').value = '';
             document.getElementById('cliente-telefone').value = '';
@@ -1067,7 +376,6 @@
             document.getElementById('secao-equipamentos').style.display = 'none';
             clienteSelecionadoId = null;
         }
-
         function carregarListaClientes() {
             const container = document.getElementById('lista-clientes');
             if (!container) return;
@@ -1076,46 +384,21 @@
             clientes.forEach(c => {
                 const qtdEquip = c.equipamentos ? c.equipamentos.length : 0;
                 const badge = qtdEquip > 0 ? `<span class="badge-equip">${qtdEquip} equip.</span>` : '';
-                container.innerHTML += `
-                    <div class="list-item">
-                        <div>
-                            <div class="list-item-title">${c.nome} ${badge}</div>
-                            <div class="list-item-sub">${c.telefone}</div>
-                        </div>
-                        <div class="action-buttons">
-                            <button class="btn-sm btn-primary" onclick="verClienteCompleto(${c.id})">Ver</button>
-                            <button class="btn-sm btn-outline" onclick="editarCliente(${c.id})">Editar</button>
-                            <button class="btn-sm btn-secondary" onclick="gerenciarEquipamentos(${c.id})">Equipamentos</button>
-                            <button class="btn-sm btn-danger" onclick="excluirCliente(${c.id})">Excluir</button>
-                        </div>
-                    </div>
-                `;
+                container.innerHTML += `<div class="list-item"><div><div class="list-item-title">${c.nome} ${badge}</div><div class="list-item-sub">${c.telefone}</div></div><div class="action-buttons"><button class="btn-sm btn-primary" onclick="verClienteCompleto(${c.id})">Ver</button><button class="btn-sm btn-outline" onclick="editarCliente(${c.id})">Editar</button><button class="btn-sm btn-secondary" onclick="gerenciarEquipamentos(${c.id})">Equipamentos</button><button class="btn-sm btn-danger" onclick="excluirCliente(${c.id})">Excluir</button></div></div>`;
             });
         }
-
         window.verClienteCompleto = function(id) {
             const cliente = clientes.find(c => c.id === id);
             if (!cliente) return;
             let equipamentosHtml = '<p><strong>Nenhum equipamento cadastrado</strong></p>';
             if (cliente.equipamentos && cliente.equipamentos.length > 0) {
                 equipamentosHtml = '<table class="tabela-equipamentos" style="width:100%; margin-top:10px;"><thead><tr><th>Equipamento</th><th>Fabricante</th><th>Modelo</th><th>Nº Série</th><th>Data Fab.</th></tr></thead><tbody>';
-                cliente.equipamentos.forEach(eq => {
-                    equipamentosHtml += `<tr><td>${eq.nome || '-'}</td><td>${eq.fabricante || '-'}</td><td>${eq.modelo || '-'}</td><td>${eq.serie || '-'}</td><td>${eq.dataFab || '-'}</td></tr>`;
-                });
+                cliente.equipamentos.forEach(eq => { equipamentosHtml += `<tr><td>${eq.nome || '-'}</td><td>${eq.fabricante || '-'}</td><td>${eq.modelo || '-'}</td><td>${eq.serie || '-'}</td><td>${eq.dataFab || '-'}</td></tr>`; });
                 equipamentosHtml += '</tbody></table>';
             }
-            document.getElementById('modal-body').innerHTML = `
-                <p><strong>Cliente:</strong> ${cliente.nome}</p>
-                <p><strong>Telefone:</strong> ${cliente.telefone}</p>
-                <p><strong>E-mail:</strong> ${cliente.email || 'N/A'}</p>
-                <p><strong>Endereço:</strong> ${cliente.endereco || 'N/A'}</p>
-                <hr>
-                <h4>Equipamentos do Consultório</h4>
-                ${equipamentosHtml}
-            `;
+            document.getElementById('modal-body').innerHTML = `<p><strong>Cliente:</strong> ${cliente.nome}</p><p><strong>Telefone:</strong> ${cliente.telefone}</p><p><strong>E-mail:</strong> ${cliente.email || 'N/A'}</p><p><strong>Endereço:</strong> ${cliente.endereco || 'N/A'}</p><hr><h4>Equipamentos do Consultório</h4>${equipamentosHtml}`;
             document.getElementById('modalOS').classList.add('active');
         }
-
         window.editarCliente = function(id) {
             const cliente = clientes.find(c => c.id === id);
             if (!cliente) return;
@@ -1129,14 +412,12 @@
             carregarListaClientes();
             carregarClientesSelect();
         }
-
         window.gerenciarEquipamentos = function(id) {
             clienteSelecionadoId = id;
             mostrarSecaoEquipamentos(id);
             window.scrollTo({ top: 0, behavior: 'smooth' });
             mostrarNotificacao('Adicione os equipamentos do consultório', 'info');
         }
-
         window.excluirCliente = function(id) {
             if (!confirm('Excluir cliente? Todos os equipamentos e OS serão perdidos!')) return;
             clientes = clientes.filter(c => c.id !== id);
@@ -1153,14 +434,12 @@
             }
             mostrarNotificacao('Cliente excluído!', 'sucesso');
         }
-
         function carregarClientesSelect() {
             const select = document.getElementById('os-cliente');
             if (!select) return;
             select.innerHTML = '<option value="">Selecione um cliente</option>';
             clientes.forEach(c => select.innerHTML += `<option value="${c.id}">${c.nome}</option>`);
         }
-
         function carregarEquipamentosCliente() {
             const clienteId = parseInt(document.getElementById('os-cliente').value);
             const selectEquip = document.getElementById('os-equipamento-select');
@@ -1170,10 +449,7 @@
                 selectEquip.style.display = 'block';
                 inputEquip.style.display = 'none';
                 selectEquip.innerHTML = '<option value="">Selecione um equipamento</option>';
-                cliente.equipamentos.forEach(eq => {
-                    const nomeEquip = eq.nome;
-                    selectEquip.innerHTML += `<option value="${nomeEquip}">${nomeEquip} ${eq.modelo ? `(${eq.modelo})` : ''}</option>`;
-                });
+                cliente.equipamentos.forEach(eq => { selectEquip.innerHTML += `<option value="${eq.nome}">${eq.nome} ${eq.modelo ? `(${eq.modelo})` : ''}</option>`; });
                 selectEquip.innerHTML += '<option value="outro">Outro equipamento (digitar)</option>';
             } else {
                 selectEquip.style.display = 'none';
@@ -1181,7 +457,6 @@
                 inputEquip.value = '';
             }
         }
-
         function selecionarEquipamentoOS() {
             const selectEquip = document.getElementById('os-equipamento-select');
             const inputEquip = document.getElementById('os-equipamento');
@@ -1194,52 +469,22 @@
                 inputEquip.value = selectEquip.value;
             }
         }
-
-        // EQUIPAMENTOS RÁPIDOS
         function mostrarEquipamentos() {
             const container = document.getElementById('lista-equipamentos-pre');
             if (!container) return;
             container.innerHTML = '';
-            equipamentosLista.forEach(eq => {
-                container.innerHTML += `<div class="equip-card" onclick="selecionarEquipamentoRapido('${eq}')">${eq}</div>`;
-            });
+            equipamentosLista.forEach(eq => { container.innerHTML += `<div class="equip-card" onclick="selecionarEquipamentoRapido('${eq}')">${eq}</div>`; });
         }
-
-        function selecionarEquipamentoRapido(equipamento) {
-            document.getElementById('os-equipamento').value = equipamento;
-            document.querySelector('[data-tela="novaos"]').click();
-        }
-
-        window.usarEquipamentoManual = function() {
-            const eq = document.getElementById('equip-manual').value.trim();
-            if (eq) { 
-                document.getElementById('os-equipamento').value = eq; 
-                document.querySelector('[data-tela="novaos"]').click(); 
-            } else {
-                mostrarNotificacao('Digite um equipamento!', 'erro');
-            }
-        }
-
-        // OS LOCAL
+        function selecionarEquipamentoRapido(equipamento) { document.getElementById('os-equipamento').value = equipamento; document.querySelector('[data-tela="novaos"]').click(); }
+        window.usarEquipamentoManual = function() { const eq = document.getElementById('equip-manual').value.trim(); if (eq) { document.getElementById('os-equipamento').value = eq; document.querySelector('[data-tela="novaos"]').click(); } else { mostrarNotificacao('Digite um equipamento!', 'erro'); } }
+        
         window.salvarOS = function() {
             const clienteId = document.getElementById('os-cliente').value;
             let equipamento = document.getElementById('os-equipamento').value.trim();
             const selectEquip = document.getElementById('os-equipamento-select');
-            if (selectEquip.style.display !== 'none' && selectEquip.value && selectEquip.value !== 'outro') {
-                equipamento = selectEquip.value;
-            }
-            if (!clienteId || !equipamento) { 
-                mostrarNotificacao('Preencha todos os campos!', 'erro'); 
-                return; 
-            }
-            manutencoes.push({ 
-                id: Date.now(), 
-                clienteId: parseInt(clienteId), 
-                equipamento, 
-                defeitos: document.getElementById('os-defeitos').value, 
-                solucoes: document.getElementById('os-solucoes').value, 
-                data: new Date().toISOString() 
-            });
+            if (selectEquip.style.display !== 'none' && selectEquip.value && selectEquip.value !== 'outro') equipamento = selectEquip.value;
+            if (!clienteId || !equipamento) { mostrarNotificacao('Preencha todos os campos!', 'erro'); return; }
+            manutencoes.push({ id: Date.now(), clienteId: parseInt(clienteId), equipamento, defeitos: document.getElementById('os-defeitos').value, solucoes: document.getElementById('os-solucoes').value, data: new Date().toISOString() });
             salvarManutencoes();
             mostrarNotificacao('OS salva!', 'sucesso');
             limparOS();
@@ -1247,7 +492,6 @@
             carregarHistorico();
             carregarSelectOSFaturamento();
         }
-
         window.limparOS = function() {
             document.getElementById('os-cliente').value = '';
             document.getElementById('os-equipamento-select').style.display = 'none';
@@ -1256,7 +500,6 @@
             document.getElementById('os-defeitos').value = '';
             document.getElementById('os-solucoes').value = '';
         }
-
         function carregarHistorico() {
             const container = document.getElementById('lista-historico');
             if (!container) return;
@@ -1264,26 +507,15 @@
             container.innerHTML = '';
             [...manutencoes].reverse().forEach(os => {
                 const cliente = clientes.find(c => c.id === os.clienteId);
-                container.innerHTML += `
-                    <div class="list-item">
-                        <div><div class="list-item-title">${cliente?.nome || 'N/A'} - ${os.equipamento}</div><div class="list-item-sub">${new Date(os.data).toLocaleDateString()}</div></div>
-                        <div class="action-buttons">
-                            <button class="btn-sm btn-primary" onclick="verOSDetalhes(${os.id})">Ver</button>
-                            <button class="btn-sm btn-secondary" onclick="irParaFaturamentoComOS(${os.id})">Faturamento</button>
-                            <button class="btn-sm btn-danger" onclick="excluirOSLocal(${os.id})">Excluir</button>
-                        </div>
-                    </div>
-                `;
+                container.innerHTML += `<div class="list-item"><div><div class="list-item-title">${cliente?.nome || 'N/A'} - ${os.equipamento}</div><div class="list-item-sub">${new Date(os.data).toLocaleDateString()}</div></div><div class="action-buttons"><button class="btn-sm btn-primary" onclick="verOSDetalhes(${os.id})">Ver</button><button class="btn-sm btn-secondary" onclick="irParaFaturamentoComOS(${os.id})">Faturamento</button><button class="btn-sm btn-danger" onclick="excluirOSLocal(${os.id})">Excluir</button></div></div>`;
             });
         }
-
         window.verOSDetalhes = function(id) {
             const os = manutencoes.find(m => m.id === id);
             const cliente = clientes.find(c => c.id === os?.clienteId);
             document.getElementById('modal-body').innerHTML = `<p><strong>Cliente:</strong> ${cliente?.nome}</p><p><strong>Equipamento:</strong> ${os?.equipamento}</p><p><strong>Defeito:</strong> ${os?.defeitos || 'N/A'}</p><p><strong>Solução:</strong> ${os?.solucoes || 'N/A'}</p>`;
             document.getElementById('modalOS').classList.add('active');
         }
-
         window.excluirOSLocal = function(id) {
             if (!confirm('Excluir OS?')) return;
             manutencoes = manutencoes.filter(m => m.id !== id);
@@ -1292,16 +524,7 @@
             atualizarDashboard();
             carregarSelectOSFaturamento();
         }
-
-        window.irParaFaturamentoComOS = function(id) {
-            const select = document.getElementById('faturamento-os-select');
-            if (select) {
-                select.value = id;
-                carregarDadosOSFaturamento();
-                document.querySelector('[data-tela="faturamento"]').click();
-            }
-        }
-
+        window.irParaFaturamentoComOS = function(id) { const select = document.getElementById('faturamento-os-select'); if (select) { select.value = id; carregarDadosOSFaturamento(); document.querySelector('[data-tela="faturamento"]').click(); } }
         function listarTodasOS() {
             const container = document.getElementById('lista-todas-os');
             if (!container) return;
@@ -1312,25 +535,18 @@
                 container.innerHTML += `<div class="list-item"><div><div class="list-item-title">${cliente?.nome} - ${os.equipamento}</div><div class="list-item-sub">${new Date(os.data).toLocaleString()}</div></div><div class="action-buttons"><button class="btn-sm btn-primary" onclick="verOSDetalhes(${os.id})">Ver</button><button class="btn-sm btn-secondary" onclick="irParaFaturamentoComOS(${os.id})">Faturamento</button></div></div>`;
             });
         }
-
-        // FATURAMENTO
         function carregarSelectOSFaturamento() {
             const select = document.getElementById('faturamento-os-select');
             if (!select) return;
             select.innerHTML = '<option value="">Selecione uma OS</option>';
             manutencoes.forEach(os => {
                 const cliente = clientes.find(c => c.id === os.clienteId);
-                const nomeCliente = cliente ? cliente.nome : 'Cliente não encontrado';
-                select.innerHTML += `<option value="${os.id}">${nomeCliente} - ${os.equipamento} (${new Date(os.data).toLocaleDateString()})</option>`;
+                select.innerHTML += `<option value="${os.id}">${cliente?.nome || 'Cliente não encontrado'} - ${os.equipamento} (${new Date(os.data).toLocaleDateString()})</option>`;
             });
         }
-
         window.carregarDadosOSFaturamento = function() {
             const osId = parseInt(document.getElementById('faturamento-os-select').value);
-            if (!osId) {
-                document.getElementById('dados-faturamento').style.display = 'none';
-                return;
-            }
+            if (!osId) { document.getElementById('dados-faturamento').style.display = 'none'; return; }
             osSelecionadaFatura = manutencoes.find(m => m.id === osId);
             if (!osSelecionadaFatura) return;
             document.getElementById('num-documento').value = `OS-${osId}-${new Date().getFullYear()}`;
@@ -1339,13 +555,11 @@
             document.getElementById('dados-faturamento').style.display = 'block';
             atualizarDocumento();
         }
-
         window.adicionarPeca = function() {
             const nome = document.getElementById('peca-nome').value.trim();
             const valor = parseFloat(document.getElementById('peca-valor').value);
             const quantidade = parseInt(document.getElementById('peca-quantidade').value) || 1;
-            if (!nome) { mostrarNotificacao('Digite o nome da peça!', 'erro'); return; }
-            if (isNaN(valor) || valor <= 0) { mostrarNotificacao('Digite um valor válido!', 'erro'); return; }
+            if (!nome || isNaN(valor) || valor <= 0) { mostrarNotificacao('Preencha os dados da peça!', 'erro'); return; }
             pecasUtilizadas.push({ nome, valor, quantidade, subtotal: valor * quantidade });
             atualizarTabelaPecas();
             document.getElementById('peca-nome').value = '';
@@ -1353,29 +567,16 @@
             document.getElementById('peca-quantidade').value = '1';
             atualizarDocumento();
         }
-
-        window.removerPeca = function(index) {
-            pecasUtilizadas.splice(index, 1);
-            atualizarTabelaPecas();
-            atualizarDocumento();
-        }
-
+        window.removerPeca = function(index) { pecasUtilizadas.splice(index, 1); atualizarTabelaPecas(); atualizarDocumento(); }
         function atualizarTabelaPecas() {
             const tbody = document.getElementById('lista-pecas-body');
             if (!tbody) return;
-            if (pecasUtilizadas.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhuma peça adicionada</td></tr>';
-                return;
-            }
+            if (pecasUtilizadas.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhuma peça adicionada</td></tr>'; return; }
             tbody.innerHTML = '';
-            pecasUtilizadas.forEach((peca, index) => {
-                tbody.innerHTML += `<tr><td>${peca.nome}</td><td>${peca.quantidade}</td><td>R$ ${peca.valor.toFixed(2)}</td><td>R$ ${peca.subtotal.toFixed(2)}</td><td><button class="btn-sm btn-danger" onclick="removerPeca(${index})">Remover</button></td></tr>`;
-            });
+            pecasUtilizadas.forEach((peca, index) => { tbody.innerHTML += `<tr><td>${peca.nome}</td><td>${peca.quantidade}</td><td>R$ ${peca.valor.toFixed(2)}</td><td>R$ ${peca.subtotal.toFixed(2)}</td><td><button class="btn-sm btn-danger" onclick="removerPeca(${index})">Remover</button></td></tr>`; });
         }
-
         function calcularTotalPecas() { return pecasUtilizadas.reduce((sum, p) => sum + p.subtotal, 0); }
         function calcularMaoObra() { return (parseFloat(document.getElementById('valor-hora').value) || 0) * (parseFloat(document.getElementById('horas-trabalhadas').value) || 0); }
-
         function getFormaPagamentoTexto() {
             const pagamentoTipo = document.querySelector('input[name="pagamento-tipo"]:checked').value;
             const obsPagamento = document.getElementById('obs-pagamento').value;
@@ -1390,7 +591,6 @@
             if (obsPagamento) texto += `\nObservação: ${obsPagamento}`;
             return texto;
         }
-
         function gerarDocumentoHTML() {
             if (!osSelecionadaFatura) return '';
             const cliente = clientes.find(c => c.id === osSelecionadaFatura.clienteId);
@@ -1398,83 +598,14 @@
             const maoObra = calcularMaoObra();
             const valorTotal = totalPecas + maoObra;
             const formaExibicao = document.querySelector('input[name="forma-exibicao"]:checked').value;
-            let tabelaPecasHTML = pecasUtilizadas.length > 0 ? 
-                `<table class="data-table"><thead><tr><th>Descrição</th><th>Qtd</th><th>Valor Unit.</th><th>Subtotal</th></tr></thead><tbody>${pecasUtilizadas.map(p => `<tr><td>${p.nome}</td><td>${p.quantidade}</td><td>R$ ${p.valor.toFixed(2)}</td><td>R$ ${p.subtotal.toFixed(2)}</td></tr>`).join('')}</tbody></table>` :
-                '<p>Nenhuma peça utilizada</p>';
-            let valoresHTML = formaExibicao === 'somado' ?
-                `<div style="background: #f8f9fa; padding: 15px; text-align: right; margin: 20px 0;"><p>Total de Peças: R$ ${totalPecas.toFixed(2)}</p><p>Mão de Obra: R$ ${maoObra.toFixed(2)}</p><div style="font-size: 18px; font-weight: bold; color: #0a2b3e; border-top: 2px solid #c6a43f; padding-top: 8px; margin-top: 8px;">VALOR TOTAL: R$ ${valorTotal.toFixed(2)}</div></div>` :
-                `<div style="background: #f8f9fa; padding: 15px; text-align: right; margin: 20px 0;"><p>Total de Peças: R$ ${totalPecas.toFixed(2)}</p><p>Mão de Obra: R$ ${maoObra.toFixed(2)}</p><div style="font-size: 18px; font-weight: bold; color: #0a2b3e;">TOTAL: R$ ${valorTotal.toFixed(2)}</div></div>`;
-            return `
-                <div class="documento-empresarial">
-                    <div class="doc-header">
-                        <h1 style="color: #0a2b3e;">ONS ODONTOTECNICA</h1>
-                        <div style="color: #6c757d;">Manutenção de Equipamentos Odontológicos</div>
-                        <div style="color: #6c757d; font-size: 12px;">CNPJ: 00.000.000/0001-00 | Telefone: (35) 9 2000-4813</div>
-                    </div>
-                    <div class="doc-titulo">ORDEM DE SERVIÇO / ORÇAMENTO</div>
-                    <div style="display: flex; justify-content: space-between; margin: 15px 0; padding: 10px; background: #f5f5f5;">
-                        <div><strong>Documento:</strong> ${document.getElementById('num-documento').value}</div>
-                        <div><strong>Data:</strong> ${new Date().toLocaleDateString()}</div>
-                    </div>
-                    <div style="background: #f8f9fa; padding: 15px; margin-bottom: 20px; border-left: 3px solid #0a2b3e;">
-                        <h3>DADOS DO CLIENTE</h3>
-                        <p><strong>Nome:</strong> ${cliente?.nome || 'N/A'}</p>
-                        <p><strong>Telefone:</strong> ${cliente?.telefone || 'N/A'}</p>
-                        <p><strong>Endereço:</strong> ${cliente?.endereco || 'N/A'}</p>
-                    </div>
-                    <div style="background: #f8f9fa; padding: 15px; margin-bottom: 20px; border-left: 3px solid #1864ab;">
-                        <h3>EQUIPAMENTO</h3>
-                        <p><strong>Equipamento:</strong> ${osSelecionadaFatura.equipamento}</p>
-                        <p><strong>Defeito:</strong> ${osSelecionadaFatura.defeitos || 'N/A'}</p>
-                        <p><strong>Serviço:</strong> ${osSelecionadaFatura.solucoes || 'N/A'}</p>
-                    </div>
-                    <h3>PEÇAS UTILIZADAS</h3>
-                    ${tabelaPecasHTML}
-                    ${valoresHTML}
-                    <div style="background: #f0f7ff; padding: 15px; margin: 20px 0; border: 1px solid #d0e0f0;">
-                        <h3>FORMA DE PAGAMENTO</h3>
-                        <p>${getFormaPagamentoTexto().replace(/\n/g, '<br>')}</p>
-                    </div>
-                    <div style="background: #e8f5e9; padding: 12px; margin: 20px 0; border-left: 3px solid #2b8c4e;">
-                        <strong>ATESTADO TÉCNICO:</strong> O equipamento ${osSelecionadaFatura.equipamento} foi submetido a testes de funcionamento e está apto para uso.
-                    </div>
-                    <div style="text-align: center; margin-top: 30px;">
-                        <p>___________________________________</p>
-                        <p>Assinatura do Cliente</p>
-                    </div>
-                    <div style="text-align: center; font-size: 9px; color: #888; margin-top: 25px; padding-top: 15px; border-top: 1px solid #ddd;">
-                        Este documento é um comprovante de serviço prestado.<br>
-                        ELABORADO POR ONS SOLUÇÕES E ELETROTÉCNICA - ${new Date().getFullYear()}
-                    </div>
-                </div>
-            `;
+            let tabelaPecasHTML = pecasUtilizadas.length > 0 ? `<table class="data-table"><thead><tr><th>Descrição</th><th>Qtd</th><th>Valor Unit.</th><th>Subtotal</th></tr></thead><tbody>${pecasUtilizadas.map(p => `<tr><td>${p.nome}</td><td>${p.quantidade}</td><td>R$ ${p.valor.toFixed(2)}</td><td>R$ ${p.subtotal.toFixed(2)}</td></tr>`).join('')}</tbody></table>` : '<p>Nenhuma peça utilizada</p>';
+            let valoresHTML = formaExibicao === 'somado' ? `<div style="background: #f8f9fa; padding: 15px; text-align: right; margin: 20px 0;"><p>Total de Peças: R$ ${totalPecas.toFixed(2)}</p><p>Mão de Obra: R$ ${maoObra.toFixed(2)}</p><div style="font-size: 18px; font-weight: bold; color: #0a2b3e; border-top: 2px solid #c6a43f; padding-top: 8px; margin-top: 8px;">VALOR TOTAL: R$ ${valorTotal.toFixed(2)}</div></div>` : `<div style="background: #f8f9fa; padding: 15px; text-align: right; margin: 20px 0;"><p>Total de Peças: R$ ${totalPecas.toFixed(2)}</p><p>Mão de Obra: R$ ${maoObra.toFixed(2)}</p><div style="font-size: 18px; font-weight: bold; color: #0a2b3e;">TOTAL: R$ ${valorTotal.toFixed(2)}</div></div>`;
+            return `<div class="documento-empresarial"><div class="doc-header"><h1 style="color: #0a2b3e;">ONS ODONTOTECNICA</h1><div style="color: #6c757d;">Manutenção de Equipamentos Odontológicos</div><div style="color: #6c757d; font-size: 12px;">CNPJ: 00.000.000/0001-00 | Telefone: (35) 9 2000-4813</div></div><div class="doc-titulo">ORDEM DE SERVIÇO / ORÇAMENTO</div><div style="display: flex; justify-content: space-between; margin: 15px 0; padding: 10px; background: #f5f5f5;"><div><strong>Documento:</strong> ${document.getElementById('num-documento').value}</div><div><strong>Data:</strong> ${new Date().toLocaleDateString()}</div></div><div style="background: #f8f9fa; padding: 15px; margin-bottom: 20px; border-left: 3px solid #0a2b3e;"><h3>DADOS DO CLIENTE</h3><p><strong>Nome:</strong> ${cliente?.nome || 'N/A'}</p><p><strong>Telefone:</strong> ${cliente?.telefone || 'N/A'}</p><p><strong>Endereço:</strong> ${cliente?.endereco || 'N/A'}</p></div><div style="background: #f8f9fa; padding: 15px; margin-bottom: 20px; border-left: 3px solid #1864ab;"><h3>EQUIPAMENTO</h3><p><strong>Equipamento:</strong> ${osSelecionadaFatura.equipamento}</p><p><strong>Defeito:</strong> ${osSelecionadaFatura.defeitos || 'N/A'}</p><p><strong>Serviço:</strong> ${osSelecionadaFatura.solucoes || 'N/A'}</p></div><h3>PEÇAS UTILIZADAS</h3>${tabelaPecasHTML}${valoresHTML}<div style="background: #f0f7ff; padding: 15px; margin: 20px 0; border: 1px solid #d0e0f0;"><h3>FORMA DE PAGAMENTO</h3><p>${getFormaPagamentoTexto().replace(/\n/g, '<br>')}</p></div><div style="background: #e8f5e9; padding: 12px; margin: 20px 0; border-left: 3px solid #2b8c4e;"><strong>ATESTADO TÉCNICO:</strong> O equipamento ${osSelecionadaFatura.equipamento} foi submetido a testes de funcionamento e está apto para uso.</div><div style="text-align: center; margin-top: 30px;"><p>___________________________________</p><p>Assinatura do Cliente</p></div><div style="text-align: center; font-size: 9px; color: #888; margin-top: 25px; padding-top: 15px; border-top: 1px solid #ddd;">Este documento é um comprovante de serviço prestado.<br>ELABORADO POR ONS SOLUÇÕES E ELETROTÉCNICA - ${new Date().getFullYear()}</div></div>`;
         }
-
-        function atualizarDocumento() {
-            if (!osSelecionadaFatura) return;
-            const html = gerarDocumentoHTML();
-            document.getElementById('preview-documento').innerHTML = html;
-            document.getElementById('documento-impressao').innerHTML = html;
-        }
-
-        window.imprimirDocumento = function() {
-            if (!osSelecionadaFatura) { mostrarNotificacao('Selecione uma OS!', 'erro'); return; }
-            const html = gerarDocumentoHTML();
-            const win = window.open('', '_blank');
-            win.document.write(html);
-            win.print();
-        }
-
-        window.enviarPorWhatsApp = function() {
-            if (!osSelecionadaFatura) { mostrarNotificacao('Selecione uma OS!', 'erro'); return; }
-            const cliente = clientes.find(c => c.id === osSelecionadaFatura.clienteId);
-            if (!cliente || !cliente.telefone) { mostrarNotificacao('Cliente sem telefone!', 'erro'); return; }
-            const texto = gerarDocumentoHTML().replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-            const telefone = cliente.telefone.replace(/\D/g, '');
-            window.open(`https://wa.me/55${telefone}?text=${encodeURIComponent(texto)}`, '_blank');
-        }
-
-        // OS CLIENTES (SUPABASE)
+        function atualizarDocumento() { if (!osSelecionadaFatura) return; const html = gerarDocumentoHTML(); document.getElementById('preview-documento').innerHTML = html; document.getElementById('documento-impressao').innerHTML = html; }
+        window.imprimirDocumento = function() { if (!osSelecionadaFatura) { mostrarNotificacao('Selecione uma OS!', 'erro'); return; } const html = gerarDocumentoHTML(); const win = window.open('', '_blank'); win.document.write(html); win.print(); }
+        window.enviarPorWhatsApp = function() { if (!osSelecionadaFatura) return; const cliente = clientes.find(c => c.id === osSelecionadaFatura.clienteId); if (!cliente?.telefone) { mostrarNotificacao('Cliente sem telefone!', 'erro'); return; } const texto = gerarDocumentoHTML().replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); const telefone = cliente.telefone.replace(/\D/g, ''); window.open(`https://wa.me/55${telefone}?text=${encodeURIComponent(texto)}`, '_blank'); }
+        
         window.carregarOSClientes = async function() {
             try {
                 const { data, error } = await supabaseClient.from('chamados').select('*').order('created_at', { ascending: false });
@@ -1486,38 +617,20 @@
                 const container = document.getElementById('lista-os-clientes');
                 if (osClientes.length === 0) { container.innerHTML = '<div class="list-item">Nenhuma OS</div>'; return; }
                 container.innerHTML = '';
-                osClientes.forEach(os => {
-                    container.innerHTML += `<div class="list-item"><div><div class="list-item-title">${os.clinica} <span class="badge ${os.status === 'Finalizado' ? 'badge-success' : 'badge-warning'}">${os.status || 'Em andamento'}</span></div><div class="list-item-sub">${os.equipamento}</div><div class="list-item-sub">${new Date(os.created_at).toLocaleString()}</div></div><div class="action-buttons"><button class="btn-sm btn-primary" onclick="visualizarOSCliente(${os.id})">Ver</button><button class="btn-sm btn-secondary" onclick="enviarWhatsAppOS(${os.id})">WhatsApp</button></div></div>`;
-                });
+                osClientes.forEach(os => { container.innerHTML += `<div class="list-item"><div><div class="list-item-title">${os.clinica} <span class="badge ${os.status === 'Finalizado' ? 'badge-success' : 'badge-warning'}">${os.status || 'Em andamento'}</span></div><div class="list-item-sub">${os.equipamento}</div><div class="list-item-sub">${new Date(os.created_at).toLocaleString()}</div></div><div class="action-buttons"><button class="btn-sm btn-primary" onclick="visualizarOSCliente(${os.id})">Ver</button><button class="btn-sm btn-secondary" onclick="enviarWhatsAppOS(${os.id})">WhatsApp</button></div></div>`; });
             } catch(err) { mostrarNotificacao('Erro: ' + err.message, 'erro'); }
         }
-
-        window.visualizarOSCliente = function(id) {
-            const os = osClientes.find(o => o.id === id);
-            document.getElementById('modal-body').innerHTML = `<p><strong>Clínica:</strong> ${os?.clinica}</p><p><strong>Telefone:</strong> ${os?.telefone_cliente}</p><p><strong>Equipamento:</strong> ${os?.equipamento}</p><p><strong>Status:</strong> ${os?.status}</p>`;
-            document.getElementById('modalOS').classList.add('active');
-        }
-
-        window.enviarWhatsAppOS = function(id) {
-            const os = osClientes.find(o => o.id === id);
-            const telefone = os?.telefone_cliente?.replace(/\D/g, '');
-            if (telefone) window.open(`https://wa.me/55${telefone}?text=OS%20${os.id}`, '_blank');
-        }
-
-        window.enviarMsgParaTodos = function() {
-            const msg = prompt('Mensagem para todos:', 'ONS Odontotecnica - Estamos à disposição!');
-            if (msg) osClientes.forEach(os => { if (os.telefone_cliente) window.open(`https://wa.me/55${os.telefone_cliente.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`, '_blank'); });
-        }
-
-        // INSTALAÇÕES
+        window.visualizarOSCliente = function(id) { const os = osClientes.find(o => o.id === id); document.getElementById('modal-body').innerHTML = `<p><strong>Clínica:</strong> ${os?.clinica}</p><p><strong>Telefone:</strong> ${os?.telefone_cliente}</p><p><strong>Equipamento:</strong> ${os?.equipamento}</p><p><strong>Status:</strong> ${os?.status}</p>`; document.getElementById('modalOS').classList.add('active'); }
+        window.enviarWhatsAppOS = function(id) { const os = osClientes.find(o => o.id === id); const telefone = os?.telefone_cliente?.replace(/\D/g, ''); if (telefone) window.open(`https://wa.me/55${telefone}?text=OS%20${os.id}`, '_blank'); }
+        window.enviarMsgParaTodos = function() { const msg = prompt('Mensagem para todos:', 'ONS Odontotecnica - Estamos à disposição!'); if (msg) osClientes.forEach(os => { if (os.telefone_cliente) window.open(`https://wa.me/55${os.telefone_cliente.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`, '_blank'); }); }
+        
         window.carregarInstalacoes = function() {
             document.getElementById('total-instalacoes').textContent = '0';
             document.getElementById('total-ativos').textContent = '0';
             document.getElementById('total-unicos').textContent = '0';
             document.getElementById('lista-instalacoes').innerHTML = '<div class="list-item" style="text-align:center;">Módulo de Instalações - Configure no Supabase</div>';
         }
-
-        // DASHBOARD
+        
         function atualizarDashboard() {
             document.getElementById('total-clientes').textContent = clientes.length;
             document.getElementById('total-os-dash').textContent = manutencoes.length + osClientes.length;
@@ -1525,22 +638,27 @@
             const container = document.getElementById('lista-recentes');
             const recentes = [...osClientes].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0,5);
             if (recentes.length === 0) container.innerHTML = '<div class="list-item">Nenhuma OS recente</div>';
-            else {
-                container.innerHTML = '';
-                recentes.forEach(os => { container.innerHTML += `<div class="list-item"><div><div class="list-item-title">${os.clinica} - ${os.equipamento}</div><div class="list-item-sub">${new Date(os.created_at).toLocaleString()}</div></div><div class="action-buttons"><button class="btn-sm btn-primary" onclick="visualizarOSCliente(${os.id})">Ver</button></div></div>`; });
-            }
+            else { container.innerHTML = ''; recentes.forEach(os => { container.innerHTML += `<div class="list-item"><div><div class="list-item-title">${os.clinica} - ${os.equipamento}</div><div class="list-item-sub">${new Date(os.created_at).toLocaleString()}</div></div><div class="action-buttons"><button class="btn-sm btn-primary" onclick="visualizarOSCliente(${os.id})">Ver</button></div></div>`; }); }
         }
 
-        // SERVICE WORKER (PWA)
+        // PWA - Registrar Service Worker DINAMICAMENTE
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(() => {
-                console.log('Service Worker registrado');
+            navigator.serviceWorker.register('/ONS-Sistema/sw.js').then(reg => {
+                console.log('Service Worker registrado com sucesso!', reg);
+                mostrarNotificacao('✅ App pronto para instalar!', 'sucesso');
             }).catch(err => {
-                console.log('Erro SW:', err);
+                console.log('Erro no Service Worker:', err);
             });
         }
 
-        // INIT
+        // Mostrar botão de instalação
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            mostrarNotificacao('📱 Clique em "Instalar App" no menu do navegador', 'info');
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             carregarDadosLocais();
             carregarLogoSaved();
@@ -1558,9 +676,7 @@
             document.getElementById('pix-chave')?.addEventListener('input', () => atualizarDocumento());
             document.getElementById('obs-pagamento')?.addEventListener('input', () => atualizarDocumento());
             document.getElementById('num-documento')?.addEventListener('input', () => atualizarDocumento());
-            document.querySelectorAll('input[name="forma-exibicao"], input[name="pagamento-tipo"]').forEach(radio => 
-                radio.addEventListener('change', () => { togglePixCampo(); atualizarDocumento(); })
-            );
+            document.querySelectorAll('input[name="forma-exibicao"], input[name="pagamento-tipo"]').forEach(radio => radio.addEventListener('change', () => { togglePixCampo(); atualizarDocumento(); }));
             document.getElementById('modalOS').addEventListener('click', e => { if (e.target === document.getElementById('modalOS')) fecharModal(); });
         });
     </script>
