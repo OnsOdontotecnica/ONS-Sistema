@@ -2,683 +2,1672 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#093d5c">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="ONS Odonto">
-    
-    <!-- PWA manifest inline via JavaScript -->
-    <title>ONS Odontotecnica - Sistema Técnico de Manutenção</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>ONS-ADM-V2 | Sistema de Gestão Odontológica</title>
+    <meta name="theme-color" content="#0c3f5a">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
     <style>
-        /* SEU CSS EXISTENTE - COLE AQUI O CSS COMPLETO */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --primary: #0a2b3e;
-            --primary-dark: #061e2c;
-            --secondary: #c6a43f;
-            --gray-100: #f1f3f5;
-            --gray-200: #e9ecef;
-            --gray-600: #6c757d;
-            --success: #2b8c4e;
-            --danger: #c92a2a;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--gray-100); }
-        .app-header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; padding: 20px 24px; position: sticky; top: 0; z-index: 100; }
-        .header-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-        .logo-area { display: flex; align-items: center; gap: 16px; cursor: pointer; }
-        .logo-icon { width: 48px; height: 48px; background: var(--secondary); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--primary); }
-        .logo-text h1 { font-size: 1.25rem; font-weight: 600; }
-        .logo-text p { font-size: 0.7rem; opacity: 0.8; }
-        .header-contact { background: rgba(255,255,255,0.1); padding: 8px 18px; border-radius: 40px; font-size: 0.85rem; }
-        .nav-menu { background: white; padding: 12px 20px; border-bottom: 1px solid var(--gray-200); position: sticky; top: 88px; z-index: 99; overflow-x: auto; white-space: nowrap; }
-        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; gap: 8px; }
-        .nav-btn { background: transparent; border: none; padding: 10px 20px; border-radius: 40px; font-weight: 500; font-size: 0.85rem; color: var(--gray-600); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-        .nav-btn:hover { background: var(--gray-100); color: var(--primary); }
-        .nav-btn.active { background: var(--primary); color: white; }
-        .main-container { max-width: 1400px; margin: 24px auto; padding: 0 20px; }
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 32px; }
-        .stat-card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); border: 1px solid var(--gray-200); }
-        .stat-title { font-size: 0.85rem; text-transform: uppercase; color: var(--gray-600); margin-bottom: 8px; }
-        .stat-value { font-size: 2.5rem; font-weight: 700; color: var(--primary); line-height: 1; }
-        .section-card { background: white; border-radius: 20px; padding: 28px; margin-bottom: 32px; border: 1px solid var(--gray-200); display: none; }
-        .section-card.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .section-title { font-size: 1.25rem; font-weight: 600; color: var(--primary); border-left: 4px solid var(--secondary); padding-left: 16px; margin-bottom: 24px; }
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--gray-600); margin-bottom: 6px; text-transform: uppercase; }
-        input, select, textarea { width: 100%; padding: 12px 16px; border: 1.5px solid var(--gray-200); border-radius: 12px; font-size: 0.9rem; background: white; }
-        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--secondary); }
-        .btn { padding: 12px 24px; border: none; border-radius: 12px; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-secondary { background: var(--secondary); color: var(--primary); }
-        .btn-outline { background: transparent; border: 1.5px solid var(--gray-200); color: var(--gray-600); }
-        .btn-danger { background: var(--danger); color: white; }
-        .list-container { max-height: 500px; overflow-y: auto; border-radius: 12px; }
-        .list-item { padding: 16px; border-bottom: 1px solid var(--gray-200); }
-        .list-item-title { font-weight: 600; color: var(--primary); margin-bottom: 4px; }
-        .list-item-sub { font-size: 0.8rem; color: var(--gray-600); }
-        .action-buttons { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-        .btn-sm { padding: 6px 14px; font-size: 0.75rem; border-radius: 20px; border: none; cursor: pointer; font-weight: 500; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-        .modal.active { display: flex; }
-        .modal-content { background: white; border-radius: 20px; max-width: 600px; width: 90%; max-height: 85vh; overflow-y: auto; padding: 28px; }
-        .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #343a40; color: white; padding: 12px 24px; border-radius: 40px; font-size: 0.85rem; z-index: 1100; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { transform: translateX(-50%) translateY(100%); opacity: 0; } to { transform: translateX(-50%) translateY(0); opacity: 1; } }
-        .hidden { display: none; }
-        .equip-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px; }
-        .equip-card { background: var(--gray-100); border: 1px solid var(--gray-200); border-radius: 12px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; }
-        .equip-card:hover { border-color: var(--secondary); background: white; transform: translateY(-2px); }
-        .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        .data-table th { text-align: left; padding: 12px; background: var(--gray-100); font-weight: 600; border-bottom: 2px solid var(--gray-200); }
-        .data-table td { padding: 12px; border-bottom: 1px solid var(--gray-200); }
-        .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; }
-        .badge-success { background: #d3f9d8; color: #2b8c4e; }
-        .badge-warning { background: #fff3bf; color: #e67700; }
-        .subsecao { background: #f0f4f8; padding: 20px; border-radius: 16px; margin: 20px 0; border: 1px solid var(--gray-200); }
-        .grid-equipamento { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 15px; }
-        .tabela-equipamentos { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.85rem; }
-        .tabela-equipamentos th, .tabela-equipamentos td { border: 1px solid var(--gray-200); padding: 8px; text-align: left; }
-        .tabela-equipamentos th { background: var(--primary); color: white; }
-        .badge-equip { background: var(--success); color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 10px; }
-        @media print { .app-header, .nav-menu, .btn, .action-buttons, .no-print { display: none !important; } }
-        @media (max-width: 768px) { .header-container { flex-direction: column; text-align: center; } .logo-area { justify-content: center; } .nav-menu { top: 120px; } .section-card { padding: 20px; } }
-        
-        .documento-empresarial { max-width: 100%; background: white; font-family: 'Segoe UI', sans-serif; line-height: 1.4; }
-        .doc-header { text-align: center; padding: 20px 0; border-bottom: 2px solid var(--primary); margin-bottom: 25px; }
-        .doc-titulo { background: var(--primary); color: white; padding: 8px; text-align: center; font-size: 16px; font-weight: bold; margin: 20px 0; }
-        .logo-imagem { height: 50px; width: auto; object-fit: contain; }
+
+        :root {
+            --bg-primary: #f5f7fa;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #5a6a7a;
+            --border-color: #e8edf2;
+            --card-bg: #ffffff;
+            --azul-ons: #0c3f5a;
+            --dourado-ons: #d4a017;
+            --sucesso: #28a745;
+            --perigo: #e74c3c;
+            --aviso: #f39c12;
+            --info: #3498db;
+            --sombra: 0 2px 12px rgba(0,0,0,0.08);
+            --sombra-suave: 0 1px 4px rgba(0,0,0,0.05);
+        }
+
+        body.dark-mode {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e2e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --border-color: #2d2d3a;
+            --card-bg: #2a2a3a;
+        }
+
+        body {
+            background: var(--bg-primary);
+            padding: 16px;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            box-shadow: var(--sombra);
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, var(--azul-ons) 0%, #0a4d72 100%);
+            color: white;
+            padding: 20px 32px;
+            border-bottom: 3px solid var(--dourado-ons);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .logo-ons {
+            background: var(--dourado-ons);
+            color: var(--azul-ons);
+            padding: 8px 18px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .logo-imagem {
+            height: 40px;
+            width: auto;
+        }
+
+        .title-section h1 {
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .title-section p {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        /* TABS - Estilo BlackRock */
+        .tabs {
+            display: flex;
+            gap: 2px;
+            background: var(--border-color);
+            padding: 0 24px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            padding: 12px 18px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .tab-btn i {
+            font-size: 13px;
+        }
+
+        .tab-btn:hover {
+            color: var(--azul-ons);
+            background: rgba(12, 63, 90, 0.04);
+        }
+
+        .tab-btn.active {
+            color: var(--dourado-ons);
+            border-bottom: 2px solid var(--dourado-ons);
+            background: var(--bg-secondary);
+        }
+
+        /* CONTEÚDO */
+        .tab-content {
+            display: none;
+            padding: 28px;
+            animation: fadeIn 0.2s ease;
+            color: var(--text-primary);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .tab-content h2 {
+            color: var(--azul-ons);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--dourado-ons);
+            display: inline-block;
+        }
+
+        /* CARDS - Estilo elegante */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.2s;
+            border-top: 3px solid var(--dourado-ons);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--sombra);
+        }
+
+        .card i {
+            font-size: 28px;
+            color: var(--dourado-ons);
+            margin-bottom: 10px;
+        }
+
+        .card h3 {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card p {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--azul-ons);
+        }
+
+        /* FORMULÁRIOS - Design refinado */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: var(--azul-ons);
+            margin-bottom: 4px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--dourado-ons);
+            box-shadow: 0 0 0 2px rgba(212, 160, 23, 0.1);
+        }
+
+        /* BOTÕES - Estilo BlackRock (discreto e elegante) */
+        .botoes {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-primario {
+            background: var(--azul-ons);
+            color: white;
+        }
+
+        .btn-primario:hover {
+            background: var(--dourado-ons);
+            color: var(--azul-ons);
+            transform: translateY(-1px);
+        }
+
+        .btn-dourado {
+            background: var(--dourado-ons);
+            color: var(--azul-ons);
+        }
+
+        .btn-dourado:hover {
+            background: var(--azul-ons);
+            color: var(--dourado-ons);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--azul-ons);
+            color: var(--azul-ons);
+        }
+
+        .btn-outline:hover {
+            background: var(--azul-ons);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .btn-perigo {
+            background: transparent;
+            color: var(--perigo);
+            border: 1px solid var(--perigo);
+        }
+
+        .btn-perigo:hover {
+            background: var(--perigo);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* AÇÕES - Discretas */
+        .btn-acao {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .btn-acao:hover {
+            background: var(--dourado-ons);
+            color: var(--azul-ons);
+            transform: translateY(-1px);
+        }
+
+        .btn-acao.excluir:hover {
+            background: var(--perigo);
+            color: white;
+        }
+
+        /* EQUIPAMENTOS DO CLIENTE - Design delicado */
+        .equipamentos-grid-delicado {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .equipamento-item-delicado {
+            background: var(--border-color);
+            padding: 10px 12px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .equipamento-item-delicado input, 
+        .equipamento-item-delicado select {
+            flex: 1;
+            min-width: 120px;
+            padding: 6px 10px;
+            font-size: 0.8rem;
+            margin: 0;
+        }
+
+        .equipamento-item-delicado .btn-remove {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .equipamento-item-delicado .btn-remove:hover {
+            background: var(--perigo);
+            color: white;
+        }
+
+        /* PEÇAS - Design refinado */
+        .peca-item {
+            background: var(--border-color);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .peca-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .peca-header input {
+            margin: 0;
+            padding: 8px;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 768px) {
+            .peca-header {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+        }
+
+        /* LISTAS */
+        .lista-container {
+            max-height: 500px;
+            overflow-y: auto;
+            border-radius: 12px;
+            margin-top: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .item-lista {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .item-lista:hover {
+            background: var(--border-color);
+        }
+
+        .item-lista-info h4 {
+            color: var(--azul-ons);
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .item-lista-info p {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+        }
+
+        .item-lista-acoes {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        /* STATUS BADGES */
+        .status-badge {
+            font-size: 0.65rem;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .status-aguardando { background: #fff3cd; color: #856404; }
+        .status-finalizado { background: #d4edda; color: #155724; }
+        .status-agendado { background: #cce5ff; color: #004085; }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            max-width: 550px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--dourado-ons);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--perigo);
+        }
+
+        /* CHECKBOX */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 12px 0;
+        }
+
+        .checkbox-group input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-size: 0.8rem;
+        }
+
+        /* NOTIFICAÇÃO */
+        .notificacao {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            font-size: 0.8rem;
+            z-index: 9999;
+            animation: slideIn 0.3s ease;
+        }
+
+        .notificacao.sucesso { background: var(--sucesso); }
+        .notificacao.erro { background: var(--perigo); }
+        .notificacao.info { background: var(--azul-ons); }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .hidden { display: none !important; }
+        .mt-20 { margin-top: 20px; }
+        .mb-20 { margin-bottom: 20px; }
+        .text-center { text-align: center; }
+
+        /* IMPRESSÃO - Formato A4 igual ao PDF */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-area, .print-area * {
+                visibility: visible;
+            }
+            .print-area {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                padding: 20px;
+                background: white;
+                font-family: 'Segoe UI', Arial, sans-serif;
+            }
+        }
+
+        .print-area {
+            max-width: 210mm;
+            margin: 0 auto;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .print-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--dourado-ons);
+            padding-bottom: 10px;
+        }
+
+        .print-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--azul-ons);
+        }
+
+        .print-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .print-section {
+            margin-bottom: 16px;
+        }
+
+        .print-section h4 {
+            background: var(--azul-ons);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+        }
+
+        .print-row {
+            display: flex;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
+        }
+
+        .print-label {
+            width: 120px;
+            font-weight: 600;
+            color: var(--azul-ons);
+        }
+
+        .print-value {
+            flex: 1;
+        }
+
+        .print-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 0.75rem;
+        }
+
+        .print-table th, .print-table td {
+            border: 1px solid #ddd;
+            padding: 6px;
+            text-align: left;
+        }
+
+        .print-table th {
+            background: var(--azul-ons);
+            color: white;
+        }
+
+        .print-total {
+            text-align: right;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 16px;
+            padding-top: 10px;
+            border-top: 2px solid var(--dourado-ons);
+        }
+
+        /* LOADING */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 30000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--dourado-ons);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-    <header class="app-header">
-        <div class="header-container">
-            <div class="logo-area" id="logoDisplay" onclick="document.getElementById('logoUpload').click()">
-                <div class="logo-icon"><i class="fas fa-tooth"></i></div>
-                <div class="logo-text"><h1>ONS Odontotecnica</h1><p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p></div>
-            </div>
-            <div class="header-contact"><i class="fas fa-phone-alt"></i> (35) 9 2000-4813</div>
-            <input type="file" id="logoUpload" accept="image/*" style="display: none;">
-            <button class="btn-sm" onclick="restaurarLogoPadrao()" style="background: rgba(255,255,255,0.2); color: white;">Logo Padrão</button>
-        </div>
-    </header>
-
-    <nav class="nav-menu">
-        <div class="nav-container">
-            <button class="nav-btn active" data-tela="dashboard"><i class="fas fa-chart-line"></i> Dashboard</button>
-            <button class="nav-btn" data-tela="clientes"><i class="fas fa-users"></i> Clientes</button>
-            <button class="nav-btn" data-tela="equipamentos"><i class="fas fa-microscope"></i> Equipamentos</button>
-            <button class="nav-btn" data-tela="novaos"><i class="fas fa-file-alt"></i> Nova OS</button>
-            <button class="nav-btn" data-tela="faturamento"><i class="fas fa-dollar-sign"></i> Faturamento</button>
-            <button class="nav-btn" data-tela="historico"><i class="fas fa-history"></i> Histórico</button>
-            <button class="nav-btn" data-tela="relatorios"><i class="fas fa-chart-bar"></i> Relatórios</button>
-            <button class="nav-btn" data-tela="osclientes"><i class="fas fa-mobile-alt"></i> OS Clientes</button>
-            <button class="nav-btn" data-tela="instalacoes"><i class="fas fa-download"></i> Instalações</button>
-            <button class="nav-btn" data-tela="seguranca"><i class="fas fa-shield-alt"></i> Segurança</button>
-        </div>
-    </nav>
-
-    <main class="main-container">
-        <div id="dashboard" class="section-card active">
-            <h2 class="section-title">Dashboard</h2>
-            <div class="dashboard-grid">
-                <div class="stat-card"><div class="stat-title">Clientes Ativos</div><div class="stat-value" id="total-clientes">0</div></div>
-                <div class="stat-card"><div class="stat-title">Ordens de Serviço</div><div class="stat-value" id="total-os-dash">0</div></div>
-                <div class="stat-card"><div class="stat-title">OS em Andamento</div><div class="stat-value" id="total-andamento-dash">0</div></div>
-            </div>
-            <h2 class="section-title" style="margin-top: 24px;">Últimas Ordens de Serviço</h2>
-            <div class="list-container" id="lista-recentes"></div>
-        </div>
-
-        <div id="clientes" class="section-card">
-            <h2 class="section-title">Cadastro de Clientes</h2>
-            <div class="form-group"><label class="form-label">Nome do Cliente / Consultório *</label><input type="text" id="cliente-nome" placeholder="Digite o nome completo"></div>
-            <div class="form-group"><label class="form-label">Telefone *</label><input type="text" id="cliente-telefone" placeholder="(35) 9 2000-4813"></div>
-            <div class="form-group"><label class="form-label">E-mail</label><input type="email" id="cliente-email" placeholder="cliente@email.com"></div>
-            <div class="form-group"><label class="form-label">Endereço</label><input type="text" id="cliente-endereco" placeholder="Rua, número, bairro, cidade"></div>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                <button class="btn btn-primary" onclick="salvarCliente()">Salvar Cliente</button>
-                <button class="btn btn-outline" onclick="limparFormCliente()">Limpar</button>
-            </div>
-            <div class="subsecao" id="secao-equipamentos" style="display: none; margin-top: 24px;">
-                <h3>Equipamentos do Consultório</h3>
-                <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Cadastre os equipamentos deste cliente</p>
-                <div class="grid-equipamento">
-                    <input type="text" id="equip-nome" placeholder="Nome do Equipamento">
-                    <input type="text" id="equip-fabricante" placeholder="Fabricante">
-                    <input type="text" id="equip-modelo" placeholder="Modelo">
-                    <input type="text" id="equip-serie" placeholder="Nº de Série">
-                    <input type="date" id="equip-data-fab" placeholder="Data Fab.">
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-ons" id="logoDisplay" onclick="document.getElementById('logoUpload').click()">
+                        <i class="fas fa-tooth"></i> ONS
+                    </div>
+                    <div class="title-section">
+                        <h1>SISTEMA DE GESTÃO ODONTOLÓGICA</h1>
+                        <p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p>
+                    </div>
                 </div>
-                <button class="btn btn-primary" onclick="adicionarEquipamento()">+ Adicionar Equipamento</button>
-                <table class="tabela-equipamentos"><thead><tr><th>Equipamento</th><th>Fabricante</th><th>Modelo</th><th>Nº Série</th><th>Data Fab.</th><th>Ação</th></tr></thead><tbody id="lista-equipamentos"></tbody></table>
+                <div class="header-actions" style="display: flex; gap: 8px; align-items: center;">
+                    <button class="btn-outline" onclick="toggleDarkMode()" style="padding: 6px 12px;"><i class="fas fa-moon"></i></button>
+                    <input type="file" id="logoUpload" accept="image/*" style="display: none;">
+                    <div style="background: rgba(212,160,23,0.15); padding: 6px 14px; border-radius: 8px; font-size: 0.75rem;">
+                        <i class="fas fa-phone-alt"></i> 35 9 2000-4813
+                    </div>
+                </div>
             </div>
-            <h2 class="section-title" style="margin-top: 32px;">Clientes Cadastrados</h2>
-            <div class="list-container" id="lista-clientes"></div>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="dashboard"><i class="fas fa-chart-line"></i> Dashboard</button>
+            <button class="tab-btn" data-tab="clientes"><i class="fas fa-users"></i> Clientes</button>
+            <button class="tab-btn" data-tab="equipamentos"><i class="fas fa-tooth"></i> Equipamentos</button>
+            <button class="tab-btn" data-tab="nova-os"><i class="fas fa-file-alt"></i> Nova OS</button>
+            <button class="tab-btn" data-tab="historico"><i class="fas fa-history"></i> Histórico</button>
+            <button class="tab-btn" data-tab="relatorios"><i class="fas fa-chart-bar"></i> Relatórios</button>
+            <button class="tab-btn" data-tab="os-clientes"><i class="fas fa-mobile-alt"></i> OS Cliente</button>
+            <button class="tab-btn" data-tab="auditoria"><i class="fas fa-chart-pie"></i> Auditoria</button>
+            <button class="tab-btn" data-tab="seguranca"><i class="fas fa-shield-alt"></i> Segurança</button>
         </div>
 
-        <div id="equipamentos" class="section-card">
-            <h2 class="section-title">Equipamentos Odontológicos</h2>
-            <div class="equip-grid" id="lista-equipamentos-pre"></div>
-            <div style="margin-top: 24px;"><label class="form-label">Cadastro Rápido</label><div style="display: flex; gap: 12px;"><input type="text" id="equip-manual" placeholder="Digite o nome do equipamento" style="flex: 1;"><button class="btn btn-primary" onclick="usarEquipamentoManual()">Iniciar OS</button></div></div>
+        <!-- DASHBOARD -->
+        <div id="tab-dashboard" class="tab-content active">
+            <h2><i class="fas fa-chart-line"></i> Dashboard</h2>
+            <div class="cards-grid">
+                <div class="card"><i class="fas fa-user-friends"></i><h3>Clientes</h3><p id="total-clientes">0</p></div>
+                <div class="card"><i class="fas fa-clipboard-list"></i><h3>Total OS</h3><p id="total-os-dash">0</p></div>
+                <div class="card"><i class="fas fa-clock"></i><h3>Em Andamento</h3><p id="total-andamento-dash">0</p></div>
+                <div class="card"><i class="fas fa-dollar-sign"></i><h3>Faturamento</h3><p id="total-faturado-dash">R$ 0</p></div>
+            </div>
+            <h3 style="color:var(--azul-ons); font-size:0.9rem; margin-bottom:12px;">Últimas Ordens de Serviço</h3>
+            <div class="lista-container" id="lista-recentes"></div>
         </div>
 
-        <div id="novaos" class="section-card">
-            <h2 class="section-title">Nova Ordem de Serviço</h2>
-            <div class="form-group"><label class="form-label">Cliente</label><select id="os-cliente" onchange="carregarEquipamentosCliente()"><option value="">Selecione um cliente</option></select></div>
-            <div class="form-group"><label class="form-label">Equipamento</label><select id="os-equipamento-select" style="display: none;" onchange="selecionarEquipamentoOS()"><option value="">Selecione um equipamento cadastrado</option></select><input type="text" id="os-equipamento" placeholder="Digite o equipamento"></div>
-            <div class="form-group"><label class="form-label">Defeito / Problema</label><textarea id="os-defeitos" rows="3"></textarea></div>
-            <div class="form-group"><label class="form-label">Solução / Serviço Executado</label><textarea id="os-solucoes" rows="3"></textarea></div>
-            <div style="display: flex; gap: 12px;"><button class="btn btn-primary" onclick="salvarOS()">Salvar OS</button><button class="btn btn-outline" onclick="limparOS()">Limpar</button></div>
+        <!-- CLIENTES -->
+        <div id="tab-clientes" class="tab-content">
+            <h2><i class="fas fa-user-plus"></i> Clientes</h2>
+            <div class="form-group">
+                <label>Nome Completo</label>
+                <input type="text" id="cliente-nome" placeholder="Nome completo">
+            </div>
+            <div class="form-group">
+                <label>Telefone</label>
+                <input type="text" id="cliente-telefone" placeholder="(35) 9 2000-4813">
+            </div>
+            <div class="form-group">
+                <label>E-mail</label>
+                <input type="email" id="cliente-email" placeholder="cliente@email.com">
+            </div>
+            <div class="form-group">
+                <label>Endereço</label>
+                <input type="text" id="cliente-endereco" placeholder="Rua, número, cidade">
+            </div>
+            
+            <h3 style="color:var(--azul-ons); font-size:0.85rem; margin:16px 0 8px 0;">Equipamentos do Cliente</h3>
+            <div id="equipamentos-cliente-list" class="equipamentos-grid-delicado"></div>
+            <button class="btn-outline" onclick="adicionarEquipamentoCliente()" style="padding: 6px 12px; font-size:0.7rem; margin-bottom:12px;"><i class="fas fa-plus"></i> Adicionar Equipamento</button>
+            
+            <div class="botoes">
+                <button class="btn-primario" onclick="salvarCliente()"><i class="fas fa-save"></i> Salvar</button>
+                <button class="btn-outline" onclick="limparFormCliente()"><i class="fas fa-eraser"></i> Limpar</button>
+            </div>
+            <h3 class="mt-20" style="color:var(--azul-ons); font-size:0.85rem;">Clientes Cadastrados</h3>
+            <div class="lista-container" id="lista-clientes"></div>
         </div>
 
-        <div id="faturamento" class="section-card">
-            <h2 class="section-title">Faturamento</h2>
-            <div class="form-group"><label class="form-label">Selecione a Ordem de Serviço</label><select id="faturamento-os-select" onchange="carregarDadosOSFaturamento()"><option value="">Selecione uma OS</option></select></div>
-            <div id="dados-faturamento" style="display: none;">
-                <div class="form-group"><label class="form-label">Número do Documento</label><input type="text" id="num-documento" placeholder="Ex: OS-001/2026"></div>
-                <h3 class="section-title" style="font-size: 1rem;">Peças Utilizadas</h3>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;"><input type="text" id="peca-nome" placeholder="Nome da peça" style="flex: 2;"><input type="number" id="peca-valor" placeholder="Valor R$" style="flex: 1;"><input type="number" id="peca-quantidade" placeholder="Qtd" style="flex: 0.5;" value="1"><button class="btn btn-primary" onclick="adicionarPeca()">Adicionar</button></div>
-                <table class="data-table"><thead><tr><th>Peça</th><th>Qtd</th><th>Valor Unit.</th><th>Subtotal</th><th>Ação</th></tr></thead><tbody id="lista-pecas-body"></tbody></table>
-                <div class="form-group" style="margin-top: 20px;"><label class="form-label">Mão de Obra</label><div style="display: flex; gap: 12px;"><input type="number" id="valor-hora" value="80.00" step="0.01" placeholder="Valor da Hora"><input type="number" id="horas-trabalhadas" value="2" step="0.5" placeholder="Horas Trabalhadas"></div></div>
-                <div class="form-group"><label class="form-label">Forma de Exibição</label><div style="display: flex; gap: 20px; flex-wrap: wrap;"><label><input type="radio" name="forma-exibicao" value="somado" checked onchange="atualizarDocumento()"> Valor Único</label><label><input type="radio" name="forma-exibicao" value="discriminado" onchange="atualizarDocumento()"> Valores Discriminados</label></div></div>
-                <div class="form-group"><label class="form-label">Forma de Pagamento</label><div style="display: flex; gap: 15px; flex-wrap: wrap;"><label><input type="radio" name="pagamento-tipo" value="vista" checked onchange="atualizarDocumento()"> À Vista</label><label><input type="radio" name="pagamento-tipo" value="cartao" onchange="atualizarDocumento()"> Cartão</label><label><input type="radio" name="pagamento-tipo" value="pix" onchange="togglePixCampo()"> PIX</label><label><input type="radio" name="pagamento-tipo" value="boleto" onchange="atualizarDocumento()"> Boleto</label></div></div>
-                <div id="campo-pix-container" style="display: none;"><div class="form-group"><label class="form-label">Chave PIX</label><input type="text" id="pix-chave" placeholder="CPF, CNPJ, E-mail ou Telefone"></div></div>
-                <div class="form-group"><label class="form-label">Observações</label><textarea id="obs-pagamento" rows="2"></textarea></div>
-                <div class="no-print" style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;"><button class="btn btn-primary" onclick="imprimirDocumento()">Imprimir</button><button class="btn btn-secondary" onclick="enviarPorWhatsApp()">Enviar WhatsApp</button></div>
-                <div id="preview-documento" style="margin-top: 24px; padding: 20px; background: var(--gray-100); border-radius: 12px;"></div>
-                <div id="documento-impressao" style="display: none;"></div>
+        <!-- EQUIPAMENTOS -->
+        <div id="tab-equipamentos" class="tab-content">
+            <h2><i class="fas fa-tooth"></i> Equipamentos</h2>
+            <div class="equipamentos-grid" id="lista-equipamentos-pre" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:8px; margin-bottom:20px;"></div>
+            
+            <div class="form-group">
+                <label>Ou digite manualmente</label>
+                <input type="text" id="equip-manual" placeholder="Nome do equipamento">
+            </div>
+            <div class="botoes">
+                <button class="btn-primario" onclick="registrarDefeitoEquipamento()"><i class="fas fa-exclamation-triangle"></i> Registrar Defeito</button>
+                <button class="btn-dourado" onclick="usarEquipamentoManual()"><i class="fas fa-file-alt"></i> Abrir Nova OS</button>
             </div>
         </div>
 
-        <div id="historico" class="section-card"><h2 class="section-title">Histórico de OS</h2><div class="list-container" id="lista-historico"></div></div>
-        <div id="relatorios" class="section-card"><h2 class="section-title">Relatórios</h2><div class="list-container" id="lista-todas-os"></div></div>
-        
-        <div id="osclientes" class="section-card">
-            <h2 class="section-title">Ordens de Serviço - App Cliente</h2>
-            <div class="dashboard-grid"><div class="stat-card"><div class="stat-title">Total de OS</div><div class="stat-value" id="total-os-clientes">0</div></div><div class="stat-card"><div class="stat-title">Em Andamento</div><div class="stat-value" id="total-os-andamento">0</div></div><div class="stat-card"><div class="stat-title">Finalizadas</div><div class="stat-value" id="total-os-finalizadas">0</div></div></div>
-            <div style="display: flex; gap: 12px; margin-bottom: 20px;"><button class="btn btn-primary" onclick="carregarOSClientes()">Atualizar</button><button class="btn btn-secondary" onclick="enviarMsgParaTodos()">Mensagem em Massa</button></div>
-            <div class="list-container" id="lista-os-clientes"></div>
+        <!-- NOVA OS -->
+        <div id="tab-nova-os" class="tab-content">
+            <h2><i class="fas fa-file-alt"></i> Nova Ordem de Serviço</h2>
+            <div class="form-group">
+                <label>Cliente</label>
+                <select id="os-cliente">
+                    <option value="">Selecione um cliente</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Equipamento</label>
+                <select id="os-equipamento-select">
+                    <option value="">Selecione um equipamento do cliente</option>
+                </select>
+                <input type="text" id="os-equipamento-manual" placeholder="Ou digite manualmente" style="margin-top: 6px;">
+            </div>
+            <div class="form-group">
+                <label>Defeito / Problema</label>
+                <textarea id="os-defeitos" rows="3" placeholder="Descreva o problema..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Solução / Serviço Executado</label>
+                <textarea id="os-solucoes" rows="3" placeholder="Descreva a solução..."></textarea>
+            </div>
+            
+            <h3 style="color:var(--azul-ons); font-size:0.85rem; margin:16px 0 8px 0;">Peças Utilizadas</h3>
+            <div id="pecas-list"></div>
+            <button class="btn-outline" onclick="adicionarPeca()" style="padding: 6px 12px; font-size:0.7rem;"><i class="fas fa-plus"></i> Adicionar Peça</button>
+            
+            <div class="form-group mt-20">
+                <label>Hora Técnica (R$)</label>
+                <input type="text" id="hora-tecnica" placeholder="0,00">
+            </div>
+            
+            <div class="checkbox-group">
+                <input type="checkbox" id="incluir-pecas" checked>
+                <label>Incluir valor das peças no total</label>
+            </div>
+            
+            <div class="form-group">
+                <label>Valor Total</label>
+                <input type="text" id="total-os" readonly style="background: var(--border-color); font-weight: bold;">
+            </div>
+            
+            <div class="botoes">
+                <button class="btn-primario" onclick="salvarOS()"><i class="fas fa-save"></i> Salvar OS</button>
+                <button class="btn-outline" onclick="limparOS()"><i class="fas fa-eraser"></i> Limpar</button>
+            </div>
         </div>
 
-        <div id="instalacoes" class="section-card">
-            <h2 class="section-title">Instalações do App Cliente</h2>
-            <div class="dashboard-grid"><div class="stat-card"><div class="stat-title">Total</div><div class="stat-value" id="total-instalacoes">0</div></div><div class="stat-card"><div class="stat-title">Ativos</div><div class="stat-value" id="total-ativos">0</div></div><div class="stat-card"><div class="stat-title">Clientes</div><div class="stat-value" id="total-unicos">0</div></div></div>
-            <div class="list-container" id="lista-instalacoes"></div>
+        <!-- HISTÓRICO -->
+        <div id="tab-historico" class="tab-content">
+            <h2><i class="fas fa-history"></i> Histórico de OS</h2>
+            <div class="lista-container" id="lista-historico"></div>
         </div>
 
-        <div id="seguranca" class="section-card"><h2 class="section-title">Segurança</h2><div class="stat-card"><div class="stat-title">Status da Conexão</div><div class="stat-value" id="status-conexao" style="font-size: 1rem;">Conectado ao Supabase</div></div></div>
-    </main>
+        <!-- RELATÓRIOS -->
+        <div id="tab-relatorios" class="tab-content">
+            <h2><i class="fas fa-chart-bar"></i> Relatórios</h2>
+            <div class="botoes" style="margin-bottom: 16px;">
+                <button class="btn-primario" onclick="imprimirRelatorioGeral()"><i class="fas fa-print"></i> Imprimir Relatório Geral</button>
+                <button class="btn-outline" onclick="listarTodasOS()"><i class="fas fa-list"></i> Todas OS</button>
+            </div>
+            <div class="lista-container" id="lista-todas-os"></div>
+        </div>
 
-    <div id="modalOS" class="modal"><div class="modal-content"><div style="display: flex; justify-content: space-between; margin-bottom: 20px;"><h3>Detalhes</h3><button onclick="fecharModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">&times;</button></div><div id="modal-body"></div></div></div>
-    <div id="toast" class="toast hidden"></div>
+        <!-- OS CLIENTES -->
+        <div id="tab-os-clientes" class="tab-content">
+            <h2><i class="fas fa-mobile-alt"></i> OS - App Cliente</h2>
+            <div class="cards-grid">
+                <div class="card"><i class="fas fa-inbox"></i><h3>Total</h3><p id="total-os-clientes">0</p></div>
+                <div class="card"><i class="fas fa-clock"></i><h3>Andamento</h3><p id="total-os-andamento">0</p></div>
+                <div class="card"><i class="fas fa-check-circle"></i><h3>Finalizadas</h3><p id="total-os-finalizadas">0</p></div>
+            </div>
+            <div class="botoes">
+                <button class="btn-primario" onclick="carregarOSClientesDemo()"><i class="fas fa-sync-alt"></i> Atualizar</button>
+                <button class="btn-dourado" onclick="enviarMsgParaTodos()"><i class="fas fa-envelope"></i> Mensagem em Massa</button>
+            </div>
+            <div class="lista-container" id="lista-os-clientes"></div>
+        </div>
+
+        <!-- AUDITORIA -->
+        <div id="tab-auditoria" class="tab-content">
+            <h2><i class="fas fa-chart-pie"></i> Auditoria</h2>
+            <div class="cards-grid">
+                <div class="card"><i class="fas fa-users"></i><h3>Total Clientes</h3><p id="audit-clientes">0</p></div>
+                <div class="card"><i class="fas fa-tools"></i><h3>Total Equipamentos</h3><p id="audit-equipamentos">0</p></div>
+                <div class="card"><i class="fas fa-cogs"></i><h3>Total Peças</h3><p id="audit-pecas">0</p></div>
+                <div class="card"><i class="fas fa-dollar-sign"></i><h3>Volume Financeiro</h3><p id="audit-financeiro">R$ 0</p></div>
+                <div class="card"><i class="fas fa-clipboard-list"></i><h3>OS Realizadas</h3><p id="audit-os">0</p></div>
+                <div class="card"><i class="fas fa-clock"></i><h3>OS em Andamento</h3><p id="audit-andamento">0</p></div>
+            </div>
+            <button class="btn-primario" onclick="atualizarAuditoria()"><i class="fas fa-sync-alt"></i> Atualizar</button>
+        </div>
+
+        <!-- SEGURANÇA -->
+        <div id="tab-seguranca" class="tab-content">
+            <h2><i class="fas fa-shield-alt"></i> Segurança</h2>
+            <div class="card" style="text-align: left;">
+                <h3>Status do Sistema</h3>
+                <p>✅ Sistema operacional - Dados locais</p>
+                <div class="botoes mt-20">
+                    <button class="btn-primario" onclick="exportarDados()"><i class="fas fa-download"></i> Backup</button>
+                    <button class="btn-outline" onclick="importarDados()"><i class="fas fa-upload"></i> Restaurar</button>
+                    <button class="btn-perigo" onclick="limparTodosDados()"><i class="fas fa-trash"></i> Limpar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL -->
+        <div id="modalOS" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Detalhes da OS</h3>
+                    <button class="close-modal" onclick="fecharModal()">&times;</button>
+                </div>
+                <div id="modal-body"></div>
+                <div class="botoes" style="margin-top: 16px;">
+                    <button class="btn-dourado" id="modal-wpp-btn" onclick="enviarWhatsAppDoModal()"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                    <button class="btn-primario" id="modal-imprimir-btn" onclick="imprimirOSDoModal()"><i class="fas fa-print"></i> Imprimir</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="notificacao" class="notificacao hidden"></div>
+    </div>
 
     <script>
-        // CONFIGURAÇÕES
-        const SUPABASE_URL = 'https://vckyxwonbpkdeqeoswxc.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZja3l4d29uYnBrZGVxZW9zd3hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwMTY5NjMsImV4cCI6MjA5MTU5Mjk2M30.b5ni_vnIETHVuOs5Cy4982UUBq9Icm-Zc12W1FwQyvI';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        let clientes = [];
-        let manutencoes = [];
-        let osClientes = [];
-        let equipamentosLista = ['Cadeira Odontológica', 'Compressor', 'Autoclave', 'Raio-X', 'Caneta Alta Rotação', 'Ultrassom', 'Fotopolimerizadora'];
-        let pecasUtilizadas = [];
-        let osSelecionadaFatura = null;
-        let clienteSelecionadoId = null;
-
-        function mostrarNotificacao(msg, tipo = 'sucesso') {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.style.background = tipo === 'erro' ? '#c92a2a' : '#2b8c4e';
-            toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 3000);
-        }
-
-        function fecharModal() { document.getElementById('modalOS').classList.remove('active'); }
+        // ==================== DADOS GLOBAIS ====================
+        let clientes = JSON.parse(localStorage.getItem('ons_clientes') || '[]');
+        let manutencoes = JSON.parse(localStorage.getItem('ons_manutencoes') || '[]');
+        let osClientes = JSON.parse(localStorage.getItem('ons_os_clientes') || '[]');
+        let currentModalOSId = null;
+        let currentModalOSType = null;
         
-        function togglePixCampo() {
-            const pixRadio = document.querySelector('input[name="pagamento-tipo"][value="pix"]');
-            const campoPix = document.getElementById('campo-pix-container');
-            if (pixRadio && pixRadio.checked) campoPix.style.display = 'block';
-            else campoPix.style.display = 'none';
-            atualizarDocumento();
+        const equipamentosLista = [
+            'Cadeira Odontológica', 'Compressor', 'Autoclave', 'Raio-X Panorâmico', 
+            'Caneta Alta Rotação', 'Ultrassom', 'Fotopolimerizadora', 'Motor Elétrico',
+            'Micromotor', 'Seladora', 'Aspirador Cirúrgico', 'Bomba a Vácuo'
+        ];
+        
+        // ==================== FUNÇÕES AUXILIARES ====================
+        function salvarDados() {
+            localStorage.setItem('ons_clientes', JSON.stringify(clientes));
+            localStorage.setItem('ons_manutencoes', JSON.stringify(manutencoes));
+            localStorage.setItem('ons_os_clientes', JSON.stringify(osClientes));
         }
-
-        function carregarDadosLocais() {
-            const clientesSalvos = localStorage.getItem('ons_clientes');
-            const manutencoesSalvas = localStorage.getItem('ons_manutencoes');
-            if (clientesSalvos) clientes = JSON.parse(clientesSalvos);
-            if (manutencoesSalvas) manutencoes = JSON.parse(manutencoesSalvas);
+        
+        function mostrarNotificacao(msg, tipo = 'sucesso') {
+            const n = document.getElementById('notificacao');
+            n.textContent = msg;
+            n.className = `notificacao ${tipo}`;
+            n.classList.remove('hidden');
+            setTimeout(() => n.classList.add('hidden'), 2500);
         }
-        function salvarClientes() { localStorage.setItem('ons_clientes', JSON.stringify(clientes)); }
-        function salvarManutencoes() { localStorage.setItem('ons_manutencoes', JSON.stringify(manutencoes)); }
-
-        function carregarLogoSaved() {
-            const logoSalva = localStorage.getItem('ons_logo');
-            if (logoSalva) {
-                const logoDiv = document.getElementById('logoDisplay');
-                logoDiv.innerHTML = `<img src="${logoSalva}" class="logo-imagem">`;
-            }
+        
+        function fecharModal() {
+            document.getElementById('modalOS').classList.remove('active');
         }
-        window.restaurarLogoPadrao = function() {
-            const logoDiv = document.getElementById('logoDisplay');
-            logoDiv.innerHTML = `<div class="logo-icon"><i class="fas fa-tooth"></i></div><div class="logo-text"><h1>ONS Odontotecnica</h1><p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p></div>`;
-            localStorage.removeItem('ons_logo');
-            mostrarNotificacao('Logo restaurada!', 'sucesso');
+        
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('ons_darkmode', document.body.classList.contains('dark-mode'));
         }
+        
+        // ==================== LOGO ====================
         document.getElementById('logoUpload')?.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
                     const logoDiv = document.getElementById('logoDisplay');
-                    logoDiv.innerHTML = `<img src="${event.target.result}" class="logo-imagem">`;
+                    logoDiv.innerHTML = `<img src="${event.target.result}" style="height:35px;">`;
+                    logoDiv.style.background = 'transparent';
                     localStorage.setItem('ons_logo', event.target.result);
                     mostrarNotificacao('Logo alterada!', 'sucesso');
                 };
                 reader.readAsDataURL(file);
             }
         });
-
-        document.querySelectorAll('.nav-btn').forEach(btn => {
+        
+        // ==================== MENU ====================
+        document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.section-card').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
-                const telaId = this.getAttribute('data-tela');
-                document.getElementById(telaId).classList.add('active');
-                if (telaId === 'dashboard') atualizarDashboard();
-                if (telaId === 'clientes') carregarListaClientes();
-                if (telaId === 'equipamentos') mostrarEquipamentos();
-                if (telaId === 'historico') carregarHistorico();
-                if (telaId === 'relatorios') listarTodasOS();
-                if (telaId === 'osclientes') carregarOSClientes();
-                if (telaId === 'instalacoes') carregarInstalacoes();
-                if (telaId === 'faturamento') carregarSelectOSFaturamento();
+                const tabId = `tab-${this.getAttribute('data-tab')}`;
+                document.getElementById(tabId).classList.add('active');
+                
+                const tab = this.getAttribute('data-tab');
+                if (tab === 'dashboard') atualizarDashboard();
+                if (tab === 'clientes') carregarListaClientes();
+                if (tab === 'equipamentos') mostrarEquipamentos();
+                if (tab === 'historico') carregarHistorico();
+                if (tab === 'relatorios') listarTodasOS();
+                if (tab === 'os-clientes') carregarOSClientesDemo();
+                if (tab === 'auditoria') atualizarAuditoria();
             });
         });
-
-        function mostrarSecaoEquipamentos(clienteId) {
-            const secao = document.getElementById('secao-equipamentos');
-            const cliente = clientes.find(c => c.id === clienteId);
-            if (cliente) {
-                clienteSelecionadoId = clienteId;
-                secao.style.display = 'block';
-                atualizarListaEquipamentos();
-                secao.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } else { secao.style.display = 'none'; }
+        
+        // ==================== CLIENTES ====================
+        function adicionarEquipamentoCliente() {
+            const container = document.getElementById('equipamentos-cliente-list');
+            const div = document.createElement('div');
+            div.className = 'equipamento-item-delicado';
+            div.innerHTML = `
+                <select class="eq-nome" style="flex:2;">
+                    <option value="">Selecione</option>
+                    ${equipamentosLista.map(e => `<option value="${e}">${e}</option>`).join('')}
+                </select>
+                <input type="text" class="eq-fabricante" placeholder="Fabricante" style="flex:1.5;">
+                <input type="text" class="eq-modelo" placeholder="Modelo" style="flex:1.5;">
+                <input type="text" class="eq-serie" placeholder="Nº Série" style="flex:1.5;">
+                <button class="btn-remove" onclick="this.closest('.equipamento-item-delicado').remove()"><i class="fas fa-times"></i></button>
+            `;
+            container.appendChild(div);
         }
-        function atualizarListaEquipamentos() {
-            const cliente = clientes.find(c => c.id === clienteSelecionadoId);
-            const tbody = document.getElementById('lista-equipamentos');
-            if (!cliente || !cliente.equipamentos || cliente.equipamentos.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhum equipamento cadastrado</td></tr>';
-                return;
-            }
-            tbody.innerHTML = '';
-            cliente.equipamentos.forEach((equip, index) => {
-                tbody.innerHTML += `<tr><td>${equip.nome || '-'}</td><td>${equip.fabricante || '-'}</td><td>${equip.modelo || '-'}</td><td>${equip.serie || '-'}</td><td>${equip.dataFab || '-'}</td><td><button class="btn-sm btn-danger" onclick="removerEquipamento(${index})">Remover</button></td></tr>`;
-            });
-        }
-        window.adicionarEquipamento = function() {
-            if (!clienteSelecionadoId) { mostrarNotificacao('Selecione um cliente primeiro!', 'erro'); return; }
-            const nome = document.getElementById('equip-nome').value.trim();
-            if (!nome) { mostrarNotificacao('Informe o nome do equipamento!', 'erro'); return; }
-            const cliente = clientes.find(c => c.id === clienteSelecionadoId);
-            if (!cliente.equipamentos) cliente.equipamentos = [];
-            cliente.equipamentos.push({ nome: nome, fabricante: document.getElementById('equip-fabricante').value, modelo: document.getElementById('equip-modelo').value, serie: document.getElementById('equip-serie').value, dataFab: document.getElementById('equip-data-fab').value });
-            salvarClientes();
-            document.getElementById('equip-nome').value = '';
-            document.getElementById('equip-fabricante').value = '';
-            document.getElementById('equip-modelo').value = '';
-            document.getElementById('equip-serie').value = '';
-            document.getElementById('equip-data-fab').value = '';
-            atualizarListaEquipamentos();
-            carregarListaClientes();
-            mostrarNotificacao('Equipamento adicionado!', 'sucesso');
-        }
-        window.removerEquipamento = function(index) {
-            const cliente = clientes.find(c => c.id === clienteSelecionadoId);
-            if (cliente && cliente.equipamentos) {
-                cliente.equipamentos.splice(index, 1);
-                salvarClientes();
-                atualizarListaEquipamentos();
-                carregarListaClientes();
-                mostrarNotificacao('Equipamento removido!', 'sucesso');
-            }
-        }
-
+        
         window.salvarCliente = function() {
             const nome = document.getElementById('cliente-nome').value.trim();
             const telefone = document.getElementById('cliente-telefone').value.trim();
-            if (!nome || !telefone) { mostrarNotificacao('Nome e telefone são obrigatórios!', 'erro'); return; }
-            const novoCliente = { id: Date.now(), nome, telefone, email: document.getElementById('cliente-email').value, endereco: document.getElementById('cliente-endereco').value, data: new Date().toISOString(), equipamentos: [] };
-            clientes.push(novoCliente);
-            salvarClientes();
+            if (!nome) { mostrarNotificacao('Nome é obrigatório!', 'erro'); return; }
+            
+            const equipamentos = [];
+            document.querySelectorAll('#equipamentos-cliente-list .equipamento-item-delicado').forEach(eqDiv => {
+                const nomeEq = eqDiv.querySelector('.eq-nome')?.value;
+                if (nomeEq) {
+                    equipamentos.push({
+                        nome: nomeEq,
+                        fabricante: eqDiv.querySelector('.eq-fabricante')?.value || '',
+                        modelo: eqDiv.querySelector('.eq-modelo')?.value || '',
+                        serie: eqDiv.querySelector('.eq-serie')?.value || ''
+                    });
+                }
+            });
+            
+            clientes.push({ 
+                id: Date.now(), 
+                nome, 
+                telefone, 
+                email: document.getElementById('cliente-email').value,
+                endereco: document.getElementById('cliente-endereco').value,
+                equipamentos: equipamentos,
+                data: new Date().toISOString() 
+            });
+            salvarDados();
             mostrarNotificacao('Cliente salvo!', 'sucesso');
             limparFormCliente();
             carregarListaClientes();
             carregarClientesSelect();
             atualizarDashboard();
-            carregarSelectOSFaturamento();
-            clienteSelecionadoId = novoCliente.id;
-            mostrarSecaoEquipamentos(clienteSelecionadoId);
         }
-        window.limparFormCliente = function() {
+        
+        function limparFormCliente() {
             document.getElementById('cliente-nome').value = '';
             document.getElementById('cliente-telefone').value = '';
             document.getElementById('cliente-email').value = '';
             document.getElementById('cliente-endereco').value = '';
-            document.getElementById('secao-equipamentos').style.display = 'none';
-            clienteSelecionadoId = null;
+            document.getElementById('equipamentos-cliente-list').innerHTML = '';
         }
+        
         function carregarListaClientes() {
             const container = document.getElementById('lista-clientes');
             if (!container) return;
-            if (clientes.length === 0) { container.innerHTML = '<div class="list-item">Nenhum cliente cadastrado</div>'; return; }
+            if (clientes.length === 0) { container.innerHTML = '<div class="item-lista" style="text-align:center;">Nenhum cliente</div>'; return; }
+            
             container.innerHTML = '';
             clientes.forEach(c => {
-                const qtdEquip = c.equipamentos ? c.equipamentos.length : 0;
-                const badge = qtdEquip > 0 ? `<span class="badge-equip">${qtdEquip} equip.</span>` : '';
-                container.innerHTML += `<div class="list-item"><div><div class="list-item-title">${c.nome} ${badge}</div><div class="list-item-sub">${c.telefone}</div></div><div class="action-buttons"><button class="btn-sm btn-primary" onclick="verClienteCompleto(${c.id})">Ver</button><button class="btn-sm btn-outline" onclick="editarCliente(${c.id})">Editar</button><button class="btn-sm btn-secondary" onclick="gerenciarEquipamentos(${c.id})">Equipamentos</button><button class="btn-sm btn-danger" onclick="excluirCliente(${c.id})">Excluir</button></div></div>`;
+                container.innerHTML += `
+                    <div class="item-lista">
+                        <div class="item-lista-info">
+                            <h4><i class="fas fa-user"></i> ${c.nome}</h4>
+                            <p><i class="fas fa-phone"></i> ${c.telefone}</p>
+                            <p><i class="fas fa-tools"></i> ${c.equipamentos?.length || 0} equipamento(s)</p>
+                        </div>
+                        <div class="item-lista-acoes">
+                            <button class="btn-acao" onclick="usarClienteOS(${c.id})"><i class="fas fa-clipboard-list"></i> OS</button>
+                            <button class="btn-acao excluir" onclick="excluirCliente(${c.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
             });
         }
-        window.verClienteCompleto = function(id) {
-            const cliente = clientes.find(c => c.id === id);
-            if (!cliente) return;
-            let equipamentosHtml = '<p><strong>Nenhum equipamento cadastrado</strong></p>';
-            if (cliente.equipamentos && cliente.equipamentos.length > 0) {
-                equipamentosHtml = '<table class="tabela-equipamentos" style="width:100%; margin-top:10px;"><thead><tr><th>Equipamento</th><th>Fabricante</th><th>Modelo</th><th>Nº Série</th><th>Data Fab.</th></tr></thead><tbody>';
-                cliente.equipamentos.forEach(eq => { equipamentosHtml += `<tr><td>${eq.nome || '-'}</td><td>${eq.fabricante || '-'}</td><td>${eq.modelo || '-'}</td><td>${eq.serie || '-'}</td><td>${eq.dataFab || '-'}</td></tr>`; });
-                equipamentosHtml += '</tbody></table>';
-            }
-            document.getElementById('modal-body').innerHTML = `<p><strong>Cliente:</strong> ${cliente.nome}</p><p><strong>Telefone:</strong> ${cliente.telefone}</p><p><strong>E-mail:</strong> ${cliente.email || 'N/A'}</p><p><strong>Endereço:</strong> ${cliente.endereco || 'N/A'}</p><hr><h4>Equipamentos do Consultório</h4>${equipamentosHtml}`;
-            document.getElementById('modalOS').classList.add('active');
-        }
-        window.editarCliente = function(id) {
-            const cliente = clientes.find(c => c.id === id);
-            if (!cliente) return;
-            document.getElementById('cliente-nome').value = cliente.nome;
-            document.getElementById('cliente-telefone').value = cliente.telefone;
-            document.getElementById('cliente-email').value = cliente.email || '';
-            document.getElementById('cliente-endereco').value = cliente.endereco || '';
-            clientes = clientes.filter(c => c.id !== id);
-            salvarClientes();
-            mostrarNotificacao('Edite os dados e clique em Salvar Cliente', 'info');
-            carregarListaClientes();
-            carregarClientesSelect();
-        }
-        window.gerenciarEquipamentos = function(id) {
-            clienteSelecionadoId = id;
-            mostrarSecaoEquipamentos(id);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            mostrarNotificacao('Adicione os equipamentos do consultório', 'info');
-        }
+        
         window.excluirCliente = function(id) {
-            if (!confirm('Excluir cliente? Todos os equipamentos e OS serão perdidos!')) return;
+            if (!confirm('Excluir cliente?')) return;
             clientes = clientes.filter(c => c.id !== id);
-            manutencoes = manutencoes.filter(m => m.clienteId !== id);
-            salvarClientes();
-            salvarManutencoes();
+            salvarDados();
             carregarListaClientes();
             carregarClientesSelect();
             atualizarDashboard();
-            carregarSelectOSFaturamento();
-            if (clienteSelecionadoId === id) {
-                document.getElementById('secao-equipamentos').style.display = 'none';
-                clienteSelecionadoId = null;
-            }
             mostrarNotificacao('Cliente excluído!', 'sucesso');
         }
+        
         function carregarClientesSelect() {
             const select = document.getElementById('os-cliente');
             if (!select) return;
-            select.innerHTML = '<option value="">Selecione um cliente</option>';
+            select.innerHTML = '<option value="">Selecione</option>';
             clientes.forEach(c => select.innerHTML += `<option value="${c.id}">${c.nome}</option>`);
         }
-        function carregarEquipamentosCliente() {
-            const clienteId = parseInt(document.getElementById('os-cliente').value);
-            const selectEquip = document.getElementById('os-equipamento-select');
-            const inputEquip = document.getElementById('os-equipamento');
-            const cliente = clientes.find(c => c.id === clienteId);
-            if (cliente && cliente.equipamentos && cliente.equipamentos.length > 0) {
-                selectEquip.style.display = 'block';
-                inputEquip.style.display = 'none';
-                selectEquip.innerHTML = '<option value="">Selecione um equipamento</option>';
-                cliente.equipamentos.forEach(eq => { selectEquip.innerHTML += `<option value="${eq.nome}">${eq.nome} ${eq.modelo ? `(${eq.modelo})` : ''}</option>`; });
-                selectEquip.innerHTML += '<option value="outro">Outro equipamento (digitar)</option>';
-            } else {
-                selectEquip.style.display = 'none';
-                inputEquip.style.display = 'block';
-                inputEquip.value = '';
+        
+        window.usarClienteOS = function(id) {
+            document.getElementById('os-cliente').value = id;
+            carregarEquipamentosDoCliente(id);
+            document.querySelector('[data-tab="nova-os"]').click();
+        }
+        
+        function carregarEquipamentosDoCliente(clienteId) {
+            const cliente = clientes.find(c => c.id == clienteId);
+            const select = document.getElementById('os-equipamento-select');
+            select.innerHTML = '<option value="">Selecione</option>';
+            if (cliente?.equipamentos) {
+                cliente.equipamentos.forEach(eq => {
+                    select.innerHTML += `<option value="${eq.nome}">${eq.nome} ${eq.modelo ? `- ${eq.modelo}` : ''}</option>`;
+                });
             }
         }
-        function selecionarEquipamentoOS() {
-            const selectEquip = document.getElementById('os-equipamento-select');
-            const inputEquip = document.getElementById('os-equipamento');
-            if (selectEquip.value === 'outro') {
-                inputEquip.style.display = 'block';
-                inputEquip.value = '';
-                inputEquip.focus();
-            } else if (selectEquip.value) {
-                inputEquip.style.display = 'none';
-                inputEquip.value = selectEquip.value;
-            }
-        }
+        
+        document.getElementById('os-cliente')?.addEventListener('change', (e) => {
+            if (e.target.value) carregarEquipamentosDoCliente(e.target.value);
+        });
+        
+        // ==================== EQUIPAMENTOS ====================
         function mostrarEquipamentos() {
             const container = document.getElementById('lista-equipamentos-pre');
             if (!container) return;
             container.innerHTML = '';
-            equipamentosLista.forEach(eq => { container.innerHTML += `<div class="equip-card" onclick="selecionarEquipamentoRapido('${eq}')">${eq}</div>`; });
+            equipamentosLista.forEach(eq => {
+                container.innerHTML += `<div class="equip-item" onclick="selecionarEquipamento('${eq.replace(/'/g, "\\'")}')" style="background:var(--border-color); padding:10px; border-radius:10px; cursor:pointer; text-align:center; font-size:0.8rem;"><i class="fas fa-tools"></i> ${eq}</div>`;
+            });
         }
-        function selecionarEquipamentoRapido(equipamento) { document.getElementById('os-equipamento').value = equipamento; document.querySelector('[data-tela="novaos"]').click(); }
-        window.usarEquipamentoManual = function() { const eq = document.getElementById('equip-manual').value.trim(); if (eq) { document.getElementById('os-equipamento').value = eq; document.querySelector('[data-tela="novaos"]').click(); } else { mostrarNotificacao('Digite um equipamento!', 'erro'); } }
         
+        window.selecionarEquipamento = function(eq) {
+            document.getElementById('os-equipamento-manual').value = eq;
+            document.querySelector('[data-tab="nova-os"]').click();
+        }
+        
+        window.usarEquipamentoManual = function() {
+            const eq = document.getElementById('equip-manual').value.trim();
+            if (eq) { 
+                document.getElementById('os-equipamento-manual').value = eq; 
+                document.querySelector('[data-tab="nova-os"]').click();
+            } else {
+                mostrarNotificacao('Digite um equipamento!', 'erro');
+            }
+        }
+        
+        window.registrarDefeitoEquipamento = function() {
+            const eq = document.getElementById('equip-manual').value.trim();
+            if (!eq) { mostrarNotificacao('Digite o equipamento!', 'erro'); return; }
+            const defeito = prompt('Descreva o defeito:');
+            if (defeito) {
+                mostrarNotificacao(`Defeito registrado para ${eq}: ${defeito}`, 'info');
+            }
+        }
+        
+        // ==================== PEÇAS ====================
+        function adicionarPeca() {
+            const container = document.getElementById('pecas-list');
+            const div = document.createElement('div');
+            div.className = 'peca-item';
+            div.innerHTML = `
+                <div class="peca-header">
+                    <input type="text" class="peca-nome" placeholder="Nome da peça">
+                    <input type="number" class="peca-qtd" placeholder="Qtd" value="1" step="0.01">
+                    <input type="text" class="peca-unit" placeholder="Valor unitário" value="0,00">
+                    <input type="text" class="peca-subtotal" placeholder="Subtotal" readonly style="background:var(--border-color);">
+                    <button class="btn-remove" onclick="this.closest('.peca-item').remove(); recalcularTotalOS()" style="background:none; border:none; cursor:pointer;"><i class="fas fa-times"></i></button>
+                </div>
+            `;
+            
+            const qtdInput = div.querySelector('.peca-qtd');
+            const unitInput = div.querySelector('.peca-unit');
+            const subtotalInput = div.querySelector('.peca-subtotal');
+            
+            function recalcular() {
+                let qtd = parseFloat(qtdInput.value) || 0;
+                let unit = parseFloat(unitInput.value.replace(',', '.')) || 0;
+                let total = qtd * unit;
+                subtotalInput.value = total.toFixed(2).replace('.', ',');
+                recalcularTotalOS();
+            }
+            
+            qtdInput.addEventListener('input', recalcular);
+            unitInput.addEventListener('input', function(e) {
+                let v = e.target.value.replace(/\D/g, '');
+                v = (parseInt(v) / 100).toFixed(2);
+                e.target.value = v.replace('.', ',');
+                recalcular();
+            });
+            
+            container.appendChild(div);
+        }
+        
+        function recalcularTotalOS() {
+            let totalPecas = 0;
+            document.querySelectorAll('.peca-item').forEach(pecaDiv => {
+                const subtotal = pecaDiv.querySelector('.peca-subtotal')?.value || '0';
+                totalPecas += parseFloat(subtotal.replace(',', '.')) || 0;
+            });
+            const horaTecnica = parseFloat(document.getElementById('hora-tecnica').value.replace(',', '.')) || 0;
+            const incluirPecas = document.getElementById('incluir-pecas').checked;
+            const total = horaTecnica + (incluirPecas ? totalPecas : 0);
+            document.getElementById('total-os').value = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        }
+        
+        document.getElementById('hora-tecnica')?.addEventListener('input', () => recalcularTotalOS());
+        document.getElementById('incluir-pecas')?.addEventListener('change', () => recalcularTotalOS());
+        
+        // ==================== OS ====================
         window.salvarOS = function() {
             const clienteId = document.getElementById('os-cliente').value;
-            let equipamento = document.getElementById('os-equipamento').value.trim();
-            const selectEquip = document.getElementById('os-equipamento-select');
-            if (selectEquip.style.display !== 'none' && selectEquip.value && selectEquip.value !== 'outro') equipamento = selectEquip.value;
-            if (!clienteId || !equipamento) { mostrarNotificacao('Preencha todos os campos!', 'erro'); return; }
-            manutencoes.push({ id: Date.now(), clienteId: parseInt(clienteId), equipamento, defeitos: document.getElementById('os-defeitos').value, solucoes: document.getElementById('os-solucoes').value, data: new Date().toISOString() });
-            salvarManutencoes();
+            const equipamento = document.getElementById('os-equipamento-select').value || document.getElementById('os-equipamento-manual').value;
+            if (!clienteId || !equipamento) { mostrarNotificacao('Preencha cliente e equipamento!', 'erro'); return; }
+            
+            const pecas = [];
+            document.querySelectorAll('.peca-item').forEach(pecaDiv => {
+                const nome = pecaDiv.querySelector('.peca-nome')?.value;
+                if (nome) {
+                    pecas.push({
+                        nome: nome,
+                        quantidade: parseFloat(pecaDiv.querySelector('.peca-qtd')?.value) || 0,
+                        valor_unitario: parseFloat(pecaDiv.querySelector('.peca-unit')?.value.replace(',', '.')) || 0,
+                        subtotal: parseFloat(pecaDiv.querySelector('.peca-subtotal')?.value.replace(',', '.')) || 0
+                    });
+                }
+            });
+            
+            const horaTecnica = parseFloat(document.getElementById('hora-tecnica').value.replace(',', '.')) || 0;
+            const incluirPecas = document.getElementById('incluir-pecas').checked;
+            const totalPecas = pecas.reduce((acc, p) => acc + p.subtotal, 0);
+            const valorTotal = horaTecnica + (incluirPecas ? totalPecas : 0);
+            
+            manutencoes.push({ 
+                id: Date.now(), 
+                clienteId: parseInt(clienteId), 
+                equipamento: equipamento,
+                defeitos: document.getElementById('os-defeitos').value, 
+                solucoes: document.getElementById('os-solucoes').value,
+                pecas: pecas,
+                hora_tecnica: horaTecnica,
+                incluir_pecas: incluirPecas,
+                valor_total: valorTotal,
+                status: 'aguardando',
+                data: new Date().toISOString() 
+            });
+            salvarDados();
             mostrarNotificacao('OS salva!', 'sucesso');
             limparOS();
             atualizarDashboard();
             carregarHistorico();
-            carregarSelectOSFaturamento();
         }
-        window.limparOS = function() {
+        
+        function limparOS() {
             document.getElementById('os-cliente').value = '';
-            document.getElementById('os-equipamento-select').style.display = 'none';
-            document.getElementById('os-equipamento').style.display = 'block';
-            document.getElementById('os-equipamento').value = '';
+            document.getElementById('os-equipamento-select').innerHTML = '<option value="">Selecione</option>';
+            document.getElementById('os-equipamento-manual').value = '';
             document.getElementById('os-defeitos').value = '';
             document.getElementById('os-solucoes').value = '';
+            document.getElementById('hora-tecnica').value = '';
+            document.getElementById('pecas-list').innerHTML = '';
+            document.getElementById('total-os').value = '';
+            document.getElementById('incluir-pecas').checked = true;
         }
+        
         function carregarHistorico() {
             const container = document.getElementById('lista-historico');
             if (!container) return;
-            if (manutencoes.length === 0) { container.innerHTML = '<div class="list-item">Nenhuma OS</div>'; return; }
+            if (manutencoes.length === 0) { container.innerHTML = '<div class="item-lista" style="text-align:center;">Nenhuma OS</div>'; return; }
+            
             container.innerHTML = '';
             [...manutencoes].reverse().forEach(os => {
                 const cliente = clientes.find(c => c.id === os.clienteId);
-                container.innerHTML += `<div class="list-item"><div><div class="list-item-title">${cliente?.nome || 'N/A'} - ${os.equipamento}</div><div class="list-item-sub">${new Date(os.data).toLocaleDateString()}</div></div><div class="action-buttons"><button class="btn-sm btn-primary" onclick="verOSDetalhes(${os.id})">Ver</button><button class="btn-sm btn-secondary" onclick="irParaFaturamentoComOS(${os.id})">Faturamento</button><button class="btn-sm btn-danger" onclick="excluirOSLocal(${os.id})">Excluir</button></div></div>`;
+                container.innerHTML += `
+                    <div class="item-lista">
+                        <div class="item-lista-info">
+                            <h4><i class="fas fa-user"></i> ${cliente?.nome || 'N/A'} - ${os.equipamento}</h4>
+                            <p><i class="fas fa-calendar"></i> ${new Date(os.data).toLocaleDateString()} | R$ ${os.valor_total?.toFixed(2) || '0,00'}</p>
+                            <p><span class="status-badge status-${os.status}">${os.status === 'aguardando' ? 'Aguardando' : os.status === 'finalizado' ? 'Finalizado' : 'Agendado'}</span></p>
+                        </div>
+                        <div class="item-lista-acoes">
+                            <button class="btn-acao" onclick="verOSDetalhes(${os.id})"><i class="fas fa-eye"></i> Ver</button>
+                            <select class="btn-acao" onchange="alterarStatusOS(${os.id}, this.value)" style="padding:4px 8px;">
+                                <option value="aguardando" ${os.status === 'aguardando' ? 'selected' : ''}>Aguardando</option>
+                                <option value="finalizado" ${os.status === 'finalizado' ? 'selected' : ''}>Finalizado</option>
+                                <option value="agendado" ${os.status === 'agendado' ? 'selected' : ''}>Agendado</option>
+                            </select>
+                            <button class="btn-acao excluir" onclick="excluirOS(${os.id})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
             });
         }
+        
+        window.alterarStatusOS = function(id, novoStatus) {
+            const os = manutencoes.find(m => m.id === id);
+            if (os) {
+                os.status = novoStatus;
+                salvarDados();
+                mostrarNotificacao(`Status alterado para ${novoStatus}`, 'sucesso');
+                carregarHistorico();
+                atualizarDashboard();
+            }
+        }
+        
+        window.excluirOS = function(id) {
+            if (!confirm('Excluir esta OS?')) return;
+            manutencoes = manutencoes.filter(m => m.id !== id);
+            salvarDados();
+            carregarHistorico();
+            atualizarDashboard();
+            mostrarNotificacao('OS excluída!', 'sucesso');
+        }
+        
         window.verOSDetalhes = function(id) {
             const os = manutencoes.find(m => m.id === id);
             const cliente = clientes.find(c => c.id === os?.clienteId);
-            document.getElementById('modal-body').innerHTML = `<p><strong>Cliente:</strong> ${cliente?.nome}</p><p><strong>Equipamento:</strong> ${os?.equipamento}</p><p><strong>Defeito:</strong> ${os?.defeitos || 'N/A'}</p><p><strong>Solução:</strong> ${os?.solucoes || 'N/A'}</p>`;
+            currentModalOSId = id;
+            currentModalOSType = 'local';
+            
+            let pecasHtml = '';
+            if (os?.pecas && os.pecas.length > 0) {
+                pecasHtml = '<p><strong>Peças:</strong></p><ul>';
+                os.pecas.forEach(p => {
+                    pecasHtml += `<li>${p.nome}: ${p.quantidade}x R$ ${p.valor_unitario?.toFixed(2)} = R$ ${p.subtotal?.toFixed(2)}</li>`;
+                });
+                pecasHtml += '</ul>';
+            }
+            
+            document.getElementById('modal-body').innerHTML = `
+                <p><strong>Cliente:</strong> ${cliente?.nome || 'N/A'}</p>
+                <p><strong>Telefone:</strong> ${cliente?.telefone || 'N/A'}</p>
+                <p><strong>Equipamento:</strong> ${os?.equipamento}</p>
+                <p><strong>Defeito:</strong> ${os?.defeitos || 'N/A'}</p>
+                <p><strong>Solução:</strong> ${os?.solucoes || 'N/A'}</p>
+                ${pecasHtml}
+                <p><strong>Hora Técnica:</strong> R$ ${os?.hora_tecnica?.toFixed(2) || '0,00'}</p>
+                <p><strong>Valor Total:</strong> R$ ${os?.valor_total?.toFixed(2) || '0,00'}</p>
+                <p><strong>Data:</strong> ${new Date(os?.data).toLocaleString()}</p>
+                <p><strong>Status:</strong> ${os?.status}</p>
+            `;
             document.getElementById('modalOS').classList.add('active');
         }
-        window.excluirOSLocal = function(id) {
-            if (!confirm('Excluir OS?')) return;
-            manutencoes = manutencoes.filter(m => m.id !== id);
-            salvarManutencoes();
-            carregarHistorico();
-            atualizarDashboard();
-            carregarSelectOSFaturamento();
-        }
-        window.irParaFaturamentoComOS = function(id) { const select = document.getElementById('faturamento-os-select'); if (select) { select.value = id; carregarDadosOSFaturamento(); document.querySelector('[data-tela="faturamento"]').click(); } }
+        
+        // ==================== RELATÓRIOS ====================
         function listarTodasOS() {
             const container = document.getElementById('lista-todas-os');
             if (!container) return;
-            if (manutencoes.length === 0) { container.innerHTML = '<div class="list-item">Nenhuma OS</div>'; return; }
+            if (manutencoes.length === 0) { container.innerHTML = '<div class="item-lista" style="text-align:center;">Nenhuma OS</div>'; return; }
+            
             container.innerHTML = '';
             [...manutencoes].reverse().forEach(os => {
                 const cliente = clientes.find(c => c.id === os.clienteId);
-                container.innerHTML += `<div class="list-item"><div><div class="list-item-title">${cliente?.nome} - ${os.equipamento}</div><div class="list-item-sub">${new Date(os.data).toLocaleString()}</div></div><div class="action-buttons"><button class="btn-sm btn-primary" onclick="verOSDetalhes(${os.id})">Ver</button><button class="btn-sm btn-secondary" onclick="irParaFaturamentoComOS(${os.id})">Faturamento</button></div></div>`;
+                container.innerHTML += `
+                    <div class="item-lista">
+                        <div><h4>${cliente?.nome || 'N/A'} - ${os.equipamento}</h4>
+                        <p>${new Date(os.data).toLocaleString()} - R$ ${os.valor_total?.toFixed(2) || '0,00'}</p></div>
+                        <div class="item-lista-acoes"><button class="btn-acao" onclick="imprimirOSUnica(${os.id})"><i class="fas fa-print"></i> Imprimir</button></div>
+                    </div>
+                `;
             });
         }
-        function carregarSelectOSFaturamento() {
-            const select = document.getElementById('faturamento-os-select');
-            if (!select) return;
-            select.innerHTML = '<option value="">Selecione uma OS</option>';
+        
+        window.imprimirOSUnica = function(id) {
+            const os = manutencoes.find(m => m.id === id);
+            const cliente = clientes.find(c => c.id === os?.clienteId);
+            gerarImpressaoOS(os, cliente);
+        }
+        
+        window.imprimirRelatorioGeral = function() {
+            let html = `
+                <div class="print-area">
+                    <div class="print-header">
+                        <div class="print-title">ONS ODONTOTECNICA</div>
+                        <div class="print-subtitle">Relatório Geral de Ordens de Serviço</div>
+                        <div>Data: ${new Date().toLocaleDateString()}</div>
+                    </div>
+                    <table class="print-table">
+                        <thead><tr><th>OS</th><th>Cliente</th><th>Equipamento</th><th>Data</th><th>Valor</th><th>Status</th></tr></thead>
+                        <tbody>
+            `;
             manutencoes.forEach(os => {
                 const cliente = clientes.find(c => c.id === os.clienteId);
-                select.innerHTML += `<option value="${os.id}">${cliente?.nome || 'Cliente não encontrado'} - ${os.equipamento} (${new Date(os.data).toLocaleDateString()})</option>`;
+                html += `<tr><td>${os.id}</td><td>${cliente?.nome || 'N/A'}</td><td>${os.equipamento}</td><td>${new Date(os.data).toLocaleDateString()}</td><td>R$ ${os.valor_total?.toFixed(2)}</td><td>${os.status}</td></tr>`;
+            });
+            html += `</tbody></table><div class="print-total">Total de OS: ${manutencoes.length}</div></div>`;
+            
+            const win = window.open('', '_blank');
+            win.document.write(`<html><head><title>Relatório Geral</title><style>${getPrintStyles()}</style></head><body>${html}<script>window.print();<\/script></body></html>`);
+            win.document.close();
+        }
+        
+        function gerarImpressaoOS(os, cliente) {
+            let pecasHtml = '';
+            if (os.pecas && os.pecas.length > 0) {
+                pecasHtml = '<table class="print-table"><thead><tr><th>Descrição</th><th>Qtde</th><th>Valor Unit.</th><th>Total</th></tr></thead><tbody>';
+                os.pecas.forEach(p => {
+                    pecasHtml += `<tr><td>${p.nome}</td><td>${p.quantidade}</td><td>R$ ${p.valor_unitario?.toFixed(2)}</td><td>R$ ${p.subtotal?.toFixed(2)}</td></tr>`;
+                });
+                pecasHtml += '</tbody></table>';
+            }
+            
+            const html = `
+                <div class="print-area">
+                    <div class="print-header">
+                        <div class="print-title">ONS ODONTOTECNICA</div>
+                        <div class="print-subtitle">Ordem de Serviço / Fatura</div>
+                        <div>Nº OS-${os.id}</div>
+                        <div>Data: ${new Date(os.data).toLocaleDateString()}</div>
+                    </div>
+                    <div class="print-section">
+                        <h4>DADOS DO CLIENTE</h4>
+                        <div class="print-row"><div class="print-label">Cliente:</div><div class="print-value">${cliente?.nome || 'N/A'}</div></div>
+                        <div class="print-row"><div class="print-label">Telefone:</div><div class="print-value">${cliente?.telefone || 'N/A'}</div></div>
+                        <div class="print-row"><div class="print-label">Endereço:</div><div class="print-value">${cliente?.endereco || 'N/A'}</div></div>
+                        <div class="print-row"><div class="print-label">Equipamento:</div><div class="print-value">${os.equipamento}</div></div>
+                    </div>
+                    <div class="print-section">
+                        <h4>SERVIÇOS REALIZADOS</h4>
+                        ${pecasHtml || '<p>Nenhuma peça registrada</p>'}
+                    </div>
+                    <div class="print-section">
+                        <h4>HORAS TÉCNICAS</h4>
+                        <div class="print-row"><div class="print-label">Horas:</div><div class="print-value">1</div></div>
+                        <div class="print-row"><div class="print-label">Valor Hora:</div><div class="print-value">R$ ${os.hora_tecnica?.toFixed(2) || '0,00'}</div></div>
+                        <div class="print-row"><div class="print-label">Total MO:</div><div class="print-value">R$ ${os.hora_tecnica?.toFixed(2) || '0,00'}</div></div>
+                    </div>
+                    <div class="print-section">
+                        <h4>OBSERVAÇÕES</h4>
+                        <p>${os.defeitos || 'N/A'}</p>
+                        <p>Solução: ${os.solucoes || 'N/A'}</p>
+                    </div>
+                    <div class="print-total">
+                        <div>TOTAL: R$ ${os.valor_total?.toFixed(2) || '0,00'}</div>
+                    </div>
+                    <div style="margin-top:30px; font-size:10px; text-align:center; border-top:1px solid #ddd; padding-top:10px;">
+                        ONS ODONTOTECNICA • 35 9 2000 4813 • ons01odontotecnica@gmail.com
+                    </div>
+                </div>
+            `;
+            
+            const win = window.open('', '_blank');
+            win.document.write(`<html><head><title>OS-${os.id}</title><style>${getPrintStyles()}</style></head><body>${html}<script>window.print();<\/script></body></html>`);
+            win.document.close();
+        }
+        
+        function getPrintStyles() {
+            return `
+                * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
+                body { padding:20px; }
+                .print-area { max-width:210mm; margin:0 auto; }
+                .print-header { text-align:center; margin-bottom:20px; border-bottom:2px solid #d4a017; padding-bottom:10px; }
+                .print-title { font-size:1.4rem; font-weight:bold; color:#0c3f5a; }
+                .print-subtitle { font-size:0.8rem; color:#666; }
+                .print-section { margin-bottom:16px; }
+                .print-section h4 { background:#0c3f5a; color:white; padding:6px 12px; border-radius:6px; font-size:0.85rem; margin-bottom:10px; }
+                .print-row { display:flex; margin-bottom:6px; font-size:0.8rem; }
+                .print-label { width:120px; font-weight:600; color:#0c3f5a; }
+                .print-value { flex:1; }
+                .print-table { width:100%; border-collapse:collapse; margin:10px 0; font-size:0.75rem; }
+                .print-table th, .print-table td { border:1px solid #ddd; padding:6px; text-align:left; }
+                .print-table th { background:#0c3f5a; color:white; }
+                .print-total { text-align:right; font-weight:bold; font-size:1rem; margin-top:16px; padding-top:10px; border-top:2px solid #d4a017; }
+            `;
+        }
+        
+        window.imprimirOSDoModal = function() {
+            if (currentModalOSType === 'local') {
+                const os = manutencoes.find(m => m.id === currentModalOSId);
+                const cliente = clientes.find(c => c.id === os?.clienteId);
+                gerarImpressaoOS(os, cliente);
+            }
+        }
+        
+        // ==================== OS CLIENTES ====================
+        window.carregarOSClientesDemo = function() {
+            if (osClientes.length === 0) {
+                osClientes = [
+                    { id: 1001, clinica: 'Sorriso Odonto', telefone_cliente: '11912345678', equipamento: 'Cadeira Odontológica', prioridade: 'Alta', detalhe: 'Motor não liga', status: 'aguardando', created_at: new Date().toISOString() },
+                    { id: 1002, clinica: 'Dental Care', telefone_cliente: '11987654321', equipamento: 'Compressor', prioridade: 'Média', detalhe: 'Vazamento de ar', status: 'aguardando', created_at: new Date(Date.now() - 86400000).toISOString() },
+                    { id: 1003, clinica: 'Odonto Excellence', telefone_cliente: '11955557777', equipamento: 'Autoclave', prioridade: 'Alta', detalhe: 'Não atinge temperatura', status: 'finalizado', created_at: new Date(Date.now() - 172800000).toISOString() }
+                ];
+                salvarDados();
+            }
+            atualizarOSClientesUI();
+        }
+        
+        function atualizarOSClientesUI() {
+            document.getElementById('total-os-clientes').textContent = osClientes.length;
+            document.getElementById('total-os-andamento').textContent = osClientes.filter(os => os.status !== 'finalizado').length;
+            document.getElementById('total-os-finalizadas').textContent = osClientes.filter(os => os.status === 'finalizado').length;
+            
+            const container = document.getElementById('lista-os-clientes');
+            if (osClientes.length === 0) { container.innerHTML = '<div class="item-lista" style="text-align:center;">Nenhuma OS</div>'; return; }
+            
+            container.innerHTML = '';
+            osClientes.forEach(os => {
+                container.innerHTML += `
+                    <div class="item-lista">
+                        <div class="item-lista-info">
+                            <h4><i class="fas fa-hospital"></i> ${os.clinica} <span class="status-badge status-${os.status}">${os.status === 'aguardando' ? 'Aguardando' : 'Finalizado'}</span></h4>
+                            <p><i class="fas fa-tools"></i> ${os.equipamento} | Prioridade: ${os.prioridade}</p>
+                            <p><i class="fas fa-calendar"></i> ${new Date(os.created_at).toLocaleString()}</p>
+                        </div>
+                        <div class="item-lista-acoes">
+                            <button class="btn-acao" onclick="visualizarOSCliente(${os.id})"><i class="fas fa-eye"></i></button>
+                            <button class="btn-acao" onclick="enviarWhatsAppOSCliente(${os.id})"><i class="fab fa-whatsapp"></i></button>
+                            <button class="btn-acao" onclick="imprimirOSCliente(${os.id})"><i class="fas fa-print"></i></button>
+                            <select class="btn-acao" onchange="alterarStatusOSCliente(${os.id}, this.value)" style="padding:4px 8px;">
+                                <option value="aguardando" ${os.status === 'aguardando' ? 'selected' : ''}>Aguardando</option>
+                                <option value="finalizado" ${os.status === 'finalizado' ? 'selected' : ''}>Finalizado</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
             });
         }
-        window.carregarDadosOSFaturamento = function() {
-            const osId = parseInt(document.getElementById('faturamento-os-select').value);
-            if (!osId) { document.getElementById('dados-faturamento').style.display = 'none'; return; }
-            osSelecionadaFatura = manutencoes.find(m => m.id === osId);
-            if (!osSelecionadaFatura) return;
-            document.getElementById('num-documento').value = `OS-${osId}-${new Date().getFullYear()}`;
-            pecasUtilizadas = [];
-            atualizarTabelaPecas();
-            document.getElementById('dados-faturamento').style.display = 'block';
-            atualizarDocumento();
-        }
-        window.adicionarPeca = function() {
-            const nome = document.getElementById('peca-nome').value.trim();
-            const valor = parseFloat(document.getElementById('peca-valor').value);
-            const quantidade = parseInt(document.getElementById('peca-quantidade').value) || 1;
-            if (!nome || isNaN(valor) || valor <= 0) { mostrarNotificacao('Preencha os dados da peça!', 'erro'); return; }
-            pecasUtilizadas.push({ nome, valor, quantidade, subtotal: valor * quantidade });
-            atualizarTabelaPecas();
-            document.getElementById('peca-nome').value = '';
-            document.getElementById('peca-valor').value = '';
-            document.getElementById('peca-quantidade').value = '1';
-            atualizarDocumento();
-        }
-        window.removerPeca = function(index) { pecasUtilizadas.splice(index, 1); atualizarTabelaPecas(); atualizarDocumento(); }
-        function atualizarTabelaPecas() {
-            const tbody = document.getElementById('lista-pecas-body');
-            if (!tbody) return;
-            if (pecasUtilizadas.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhuma peça adicionada</td></tr>'; return; }
-            tbody.innerHTML = '';
-            pecasUtilizadas.forEach((peca, index) => { tbody.innerHTML += `<tr><td>${peca.nome}</td><td>${peca.quantidade}</td><td>R$ ${peca.valor.toFixed(2)}</td><td>R$ ${peca.subtotal.toFixed(2)}</td><td><button class="btn-sm btn-danger" onclick="removerPeca(${index})">Remover</button></td></tr>`; });
-        }
-        function calcularTotalPecas() { return pecasUtilizadas.reduce((sum, p) => sum + p.subtotal, 0); }
-        function calcularMaoObra() { return (parseFloat(document.getElementById('valor-hora').value) || 0) * (parseFloat(document.getElementById('horas-trabalhadas').value) || 0); }
-        function getFormaPagamentoTexto() {
-            const pagamentoTipo = document.querySelector('input[name="pagamento-tipo"]:checked').value;
-            const obsPagamento = document.getElementById('obs-pagamento').value;
-            let texto = '';
-            switch(pagamentoTipo) {
-                case 'vista': texto = 'Pagamento à vista'; break;
-                case 'cartao': texto = 'Pagamento com Cartão de Crédito'; break;
-                case 'pix': texto = `Pagamento via PIX\nChave PIX: ${document.getElementById('pix-chave').value}`; break;
-                case 'boleto': texto = 'Pagamento via Boleto Bancário'; break;
-                default: texto = 'Pagamento à vista';
+        
+        window.alterarStatusOSCliente = function(id, novoStatus) {
+            const os = osClientes.find(o => o.id === id);
+            if (os) {
+                os.status = novoStatus;
+                salvarDados();
+                atualizarOSClientesUI();
+                mostrarNotificacao(`Status alterado para ${novoStatus}`, 'sucesso');
             }
-            if (obsPagamento) texto += `\nObservação: ${obsPagamento}`;
-            return texto;
-        }
-        function gerarDocumentoHTML() {
-            if (!osSelecionadaFatura) return '';
-            const cliente = clientes.find(c => c.id === osSelecionadaFatura.clienteId);
-            const totalPecas = calcularTotalPecas();
-            const maoObra = calcularMaoObra();
-            const valorTotal = totalPecas + maoObra;
-            const formaExibicao = document.querySelector('input[name="forma-exibicao"]:checked').value;
-            let tabelaPecasHTML = pecasUtilizadas.length > 0 ? `<table class="data-table"><thead><tr><th>Descrição</th><th>Qtd</th><th>Valor Unit.</th><th>Subtotal</th></tr></thead><tbody>${pecasUtilizadas.map(p => `<tr><td>${p.nome}</td><td>${p.quantidade}</td><td>R$ ${p.valor.toFixed(2)}</td><td>R$ ${p.subtotal.toFixed(2)}</td></tr>`).join('')}</tbody></table>` : '<p>Nenhuma peça utilizada</p>';
-            let valoresHTML = formaExibicao === 'somado' ? `<div style="background: #f8f9fa; padding: 15px; text-align: right; margin: 20px 0;"><p>Total de Peças: R$ ${totalPecas.toFixed(2)}</p><p>Mão de Obra: R$ ${maoObra.toFixed(2)}</p><div style="font-size: 18px; font-weight: bold; color: #0a2b3e; border-top: 2px solid #c6a43f; padding-top: 8px; margin-top: 8px;">VALOR TOTAL: R$ ${valorTotal.toFixed(2)}</div></div>` : `<div style="background: #f8f9fa; padding: 15px; text-align: right; margin: 20px 0;"><p>Total de Peças: R$ ${totalPecas.toFixed(2)}</p><p>Mão de Obra: R$ ${maoObra.toFixed(2)}</p><div style="font-size: 18px; font-weight: bold; color: #0a2b3e;">TOTAL: R$ ${valorTotal.toFixed(2)}</div></div>`;
-            return `<div class="documento-empresarial"><div class="doc-header"><h1 style="color: #0a2b3e;">ONS ODONTOTECNICA</h1><div style="color: #6c757d;">Manutenção de Equipamentos Odontológicos</div><div style="color: #6c757d; font-size: 12px;">CNPJ: 00.000.000/0001-00 | Telefone: (35) 9 2000-4813</div></div><div class="doc-titulo">ORDEM DE SERVIÇO / ORÇAMENTO</div><div style="display: flex; justify-content: space-between; margin: 15px 0; padding: 10px; background: #f5f5f5;"><div><strong>Documento:</strong> ${document.getElementById('num-documento').value}</div><div><strong>Data:</strong> ${new Date().toLocaleDateString()}</div></div><div style="background: #f8f9fa; padding: 15px; margin-bottom: 20px; border-left: 3px solid #0a2b3e;"><h3>DADOS DO CLIENTE</h3><p><strong>Nome:</strong> ${cliente?.nome || 'N/A'}</p><p><strong>Telefone:</strong> ${cliente?.telefone || 'N/A'}</p><p><strong>Endereço:</strong> ${cliente?.endereco || 'N/A'}</p></div><div style="background: #f8f9fa; padding: 15px; margin-bottom: 20px; border-left: 3px solid #1864ab;"><h3>EQUIPAMENTO</h3><p><strong>Equipamento:</strong> ${osSelecionadaFatura.equipamento}</p><p><strong>Defeito:</strong> ${osSelecionadaFatura.defeitos || 'N/A'}</p><p><strong>Serviço:</strong> ${osSelecionadaFatura.solucoes || 'N/A'}</p></div><h3>PEÇAS UTILIZADAS</h3>${tabelaPecasHTML}${valoresHTML}<div style="background: #f0f7ff; padding: 15px; margin: 20px 0; border: 1px solid #d0e0f0;"><h3>FORMA DE PAGAMENTO</h3><p>${getFormaPagamentoTexto().replace(/\n/g, '<br>')}</p></div><div style="background: #e8f5e9; padding: 12px; margin: 20px 0; border-left: 3px solid #2b8c4e;"><strong>ATESTADO TÉCNICO:</strong> O equipamento ${osSelecionadaFatura.equipamento} foi submetido a testes de funcionamento e está apto para uso.</div><div style="text-align: center; margin-top: 30px;"><p>___________________________________</p><p>Assinatura do Cliente</p></div><div style="text-align: center; font-size: 9px; color: #888; margin-top: 25px; padding-top: 15px; border-top: 1px solid #ddd;">Este documento é um comprovante de serviço prestado.<br>ELABORADO POR ONS SOLUÇÕES E ELETROTÉCNICA - ${new Date().getFullYear()}</div></div>`;
-        }
-        function atualizarDocumento() { if (!osSelecionadaFatura) return; const html = gerarDocumentoHTML(); document.getElementById('preview-documento').innerHTML = html; document.getElementById('documento-impressao').innerHTML = html; }
-        window.imprimirDocumento = function() { if (!osSelecionadaFatura) { mostrarNotificacao('Selecione uma OS!', 'erro'); return; } const html = gerarDocumentoHTML(); const win = window.open('', '_blank'); win.document.write(html); win.print(); }
-        window.enviarPorWhatsApp = function() { if (!osSelecionadaFatura) return; const cliente = clientes.find(c => c.id === osSelecionadaFatura.clienteId); if (!cliente?.telefone) { mostrarNotificacao('Cliente sem telefone!', 'erro'); return; } const texto = gerarDocumentoHTML().replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(); const telefone = cliente.telefone.replace(/\D/g, ''); window.open(`https://wa.me/55${telefone}?text=${encodeURIComponent(texto)}`, '_blank'); }
-        
-        window.carregarOSClientes = async function() {
-            try {
-                const { data, error } = await supabaseClient.from('chamados').select('*').order('created_at', { ascending: false });
-                if (error) throw error;
-                osClientes = data || [];
-                document.getElementById('total-os-clientes').textContent = osClientes.length;
-                document.getElementById('total-os-andamento').textContent = osClientes.filter(os => os.status !== 'Finalizado').length;
-                document.getElementById('total-os-finalizadas').textContent = osClientes.filter(os => os.status === 'Finalizado').length;
-                const container = document.getElementById('lista-os-clientes');
-                if (osClientes.length === 0) { container.innerHTML = '<div class="list-item">Nenhuma OS</div>'; return; }
-                container.innerHTML = '';
-                osClientes.forEach(os => { container.innerHTML += `<div class="list-item"><div><div class="list-item-title">${os.clinica} <span class="badge ${os.status === 'Finalizado' ? 'badge-success' : 'badge-warning'}">${os.status || 'Em andamento'}</span></div><div class="list-item-sub">${os.equipamento}</div><div class="list-item-sub">${new Date(os.created_at).toLocaleString()}</div></div><div class="action-buttons"><button class="btn-sm btn-primary" onclick="visualizarOSCliente(${os.id})">Ver</button><button class="btn-sm btn-secondary" onclick="enviarWhatsAppOS(${os.id})">WhatsApp</button></div></div>`; });
-            } catch(err) { mostrarNotificacao('Erro: ' + err.message, 'erro'); }
-        }
-        window.visualizarOSCliente = function(id) { const os = osClientes.find(o => o.id === id); document.getElementById('modal-body').innerHTML = `<p><strong>Clínica:</strong> ${os?.clinica}</p><p><strong>Telefone:</strong> ${os?.telefone_cliente}</p><p><strong>Equipamento:</strong> ${os?.equipamento}</p><p><strong>Status:</strong> ${os?.status}</p>`; document.getElementById('modalOS').classList.add('active'); }
-        window.enviarWhatsAppOS = function(id) { const os = osClientes.find(o => o.id === id); const telefone = os?.telefone_cliente?.replace(/\D/g, ''); if (telefone) window.open(`https://wa.me/55${telefone}?text=OS%20${os.id}`, '_blank'); }
-        window.enviarMsgParaTodos = function() { const msg = prompt('Mensagem para todos:', 'ONS Odontotecnica - Estamos à disposição!'); if (msg) osClientes.forEach(os => { if (os.telefone_cliente) window.open(`https://wa.me/55${os.telefone_cliente.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`, '_blank'); }); }
-        
-        window.carregarInstalacoes = function() {
-            document.getElementById('total-instalacoes').textContent = '0';
-            document.getElementById('total-ativos').textContent = '0';
-            document.getElementById('total-unicos').textContent = '0';
-            document.getElementById('lista-instalacoes').innerHTML = '<div class="list-item" style="text-align:center;">Módulo de Instalações - Configure no Supabase</div>';
         }
         
+        window.visualizarOSCliente = function(id) {
+            const os = osClientes.find(o => o.id === id);
+            document.getElementById('modal-body').innerHTML = `
+                <p><strong>Clínica:</strong> ${os.clinica}</p>
+                <p><strong>Telefone:</strong> ${os.telefone_cliente}</p>
+                <p><strong>Equipamento:</strong> ${os.equipamento}</p>
+                <p><strong>Prioridade:</strong> ${os.prioridade}</p>
+                <p><strong>Detalhe:</strong> ${os.detalhe}</p>
+                <p><strong>Status:</strong> ${os.status}</p>
+                <p><strong>Data:</strong> ${new Date(os.created_at).toLocaleString()}</p>
+            `;
+            document.getElementById('modalOS').classList.add('active');
+        }
+        
+        window.enviarWhatsAppOSCliente = function(id) {
+            const os = osClientes.find(o => o.id === id);
+            const telefone = os?.telefone_cliente?.replace(/\D/g, '');
+            if (telefone) {
+                window.open(`https://wa.me/55${telefone}?text=OS%20${os.id}%20-%20${os.equipamento}`, '_blank');
+            }
+        }
+        
+        window.imprimirOSCliente = function(id) {
+            const os = osClientes.find(o => o.id === id);
+            const html = `<div class="print-area"><div class="print-header"><div class="print-title">ONS ODONTOTECNICA</div><div>OS Cliente #${os.id}</div></div><p><strong>Clínica:</strong> ${os.clinica}</p><p><strong>Equipamento:</strong> ${os.equipamento}</p><p><strong>Detalhe:</strong> ${os.detalhe}</p><p><strong>Status:</strong> ${os.status}</p></div>`;
+            const win = window.open('', '_blank');
+            win.document.write(`<html><head><title>OS-${os.id}</title><style>${getPrintStyles()}</style></head><body>${html}<script>window.print();<\/script></body></html>`);
+            win.document.close();
+        }
+        
+        window.enviarWhatsAppDoModal = function() {
+            if (currentModalOSType === 'local') {
+                const os = manutencoes.find(m => m.id === currentModalOSId);
+                const cliente = clientes.find(c => c.id === os?.clienteId);
+                const telefone = cliente?.telefone?.replace(/\D/g, '');
+                if (telefone) {
+                    window.open(`https://wa.me/55${telefone}?text=OS%20${os.id}%20-%20${os.equipamento}`, '_blank');
+                }
+            }
+        }
+        
+        window.enviarMsgParaTodos = function() {
+            const msg = prompt('Mensagem:', 'ONS Odontotecnica - Estamos à disposição!');
+            if (msg) {
+                osClientes.forEach(os => {
+                    const telefone = os.telefone_cliente?.replace(/\D/g, '');
+                    if (telefone) window.open(`https://wa.me/55${telefone}?text=${encodeURIComponent(msg)}`, '_blank');
+                });
+            }
+        }
+        
+        // ==================== AUDITORIA ====================
+        function atualizarAuditoria() {
+            const totalEquipamentos = clientes.reduce((acc, c) => acc + (c.equipamentos?.length || 0), 0);
+            const totalPecas = manutencoes.reduce((acc, os) => acc + (os.pecas?.length || 0), 0);
+            const totalFinanceiro = manutencoes.reduce((acc, os) => acc + (os.valor_total || 0), 0);
+            
+            document.getElementById('audit-clientes').textContent = clientes.length;
+            document.getElementById('audit-equipamentos').textContent = totalEquipamentos;
+            document.getElementById('audit-pecas').textContent = totalPecas;
+            document.getElementById('audit-financeiro').textContent = `R$ ${totalFinanceiro.toFixed(2)}`;
+            document.getElementById('audit-os').textContent = manutencoes.length;
+            document.getElementById('audit-andamento').textContent = manutencoes.filter(os => os.status !== 'finalizado').length;
+        }
+        
+        // ==================== DASHBOARD ====================
         function atualizarDashboard() {
             document.getElementById('total-clientes').textContent = clientes.length;
-            document.getElementById('total-os-dash').textContent = manutencoes.length + osClientes.length;
-            document.getElementById('total-andamento-dash').textContent = osClientes.filter(os => os.status !== 'Finalizado').length;
+            document.getElementById('total-os-dash').textContent = manutencoes.length;
+            document.getElementById('total-andamento-dash').textContent = manutencoes.filter(m => m.status !== 'finalizado').length;
+            const totalFaturado = manutencoes.filter(m => m.status === 'finalizado').reduce((acc, m) => acc + (m.valor_total || 0), 0);
+            document.getElementById('total-faturado-dash').textContent = `R$ ${totalFaturado.toFixed(2)}`;
+            
             const container = document.getElementById('lista-recentes');
-            const recentes = [...osClientes].sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).slice(0,5);
-            if (recentes.length === 0) container.innerHTML = '<div class="list-item">Nenhuma OS recente</div>';
-            else { container.innerHTML = ''; recentes.forEach(os => { container.innerHTML += `<div class="list-item"><div><div class="list-item-title">${os.clinica} - ${os.equipamento}</div><div class="list-item-sub">${new Date(os.created_at).toLocaleString()}</div></div><div class="action-buttons"><button class="btn-sm btn-primary" onclick="visualizarOSCliente(${os.id})">Ver</button></div></div>`; }); }
+            const recentes = [...manutencoes].sort((a,b) => new Date(b.data) - new Date(a.data)).slice(0,5);
+            if (recentes.length === 0) {
+                container.innerHTML = '<div class="item-lista" style="text-align:center;">Nenhuma OS</div>';
+            } else {
+                container.innerHTML = '';
+                recentes.forEach(os => {
+                    const cliente = clientes.find(c => c.id === os.clienteId);
+                    container.innerHTML += `<div class="item-lista"><div><h4>${cliente?.nome || 'N/A'} - ${os.equipamento}</h4><p>${new Date(os.data).toLocaleString()}</p></div><div class="item-lista-acoes"><button class="btn-acao" onclick="verOSDetalhes(${os.id})">Ver</button></div></div>`;
+                });
+            }
         }
-
-        // PWA - Registrar Service Worker DINAMICAMENTE
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/ONS-Sistema/sw.js').then(reg => {
-                console.log('Service Worker registrado com sucesso!', reg);
-                mostrarNotificacao('✅ App pronto para instalar!', 'sucesso');
-            }).catch(err => {
-                console.log('Erro no Service Worker:', err);
-            });
+        
+        // ==================== SEGURANÇA ====================
+        window.exportarDados = function() {
+            const dados = { clientes, manutencoes, osClientes };
+            const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `ons_backup_${new Date().toISOString().slice(0,19)}.json`;
+            link.click();
+            mostrarNotificacao('Backup exportado!', 'sucesso');
         }
-
-        // Mostrar botão de instalação
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            mostrarNotificacao('📱 Clique em "Instalar App" no menu do navegador', 'info');
-        });
-
-        document.addEventListener('DOMContentLoaded', () => {
-            carregarDadosLocais();
-            carregarLogoSaved();
+        
+        window.importarDados = function() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    try {
+                        const dados = JSON.parse(ev.target.result);
+                        if (dados.clientes) clientes = dados.clientes;
+                        if (dados.manutencoes) manutencoes = dados.manutencoes;
+                        if (dados.osClientes) osClientes = dados.osClientes;
+                        salvarDados();
+                        mostrarNotificacao('Dados importados!', 'sucesso');
+                        location.reload();
+                    } catch(err) { mostrarNotificacao('Arquivo inválido!', 'erro'); }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+        
+        window.limparTodosDados = function() {
+            if (confirm('Limpar TODOS os dados?')) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+        
+        // ==================== INICIALIZAÇÃO ====================
+        function init() {
+            const darkMode = localStorage.getItem('ons_darkmode') === 'true';
+            if (darkMode) document.body.classList.add('dark-mode');
+            
+            const logoSalva = localStorage.getItem('ons_logo');
+            if (logoSalva) {
+                document.getElementById('logoDisplay').innerHTML = `<img src="${logoSalva}" style="height:35px;">`;
+                document.getElementById('logoDisplay').style.background = 'transparent';
+            }
+            
             carregarClientesSelect();
             carregarListaClientes();
             mostrarEquipamentos();
             carregarHistorico();
-            carregarOSClientes();
+            carregarOSClientesDemo();
             atualizarDashboard();
-            carregarSelectOSFaturamento();
-            carregarInstalacoes();
+            atualizarAuditoria();
             
-            document.getElementById('valor-hora')?.addEventListener('input', () => atualizarDocumento());
-            document.getElementById('horas-trabalhadas')?.addEventListener('input', () => atualizarDocumento());
-            document.getElementById('pix-chave')?.addEventListener('input', () => atualizarDocumento());
-            document.getElementById('obs-pagamento')?.addEventListener('input', () => atualizarDocumento());
-            document.getElementById('num-documento')?.addEventListener('input', () => atualizarDocumento());
-            document.querySelectorAll('input[name="forma-exibicao"], input[name="pagamento-tipo"]').forEach(radio => radio.addEventListener('change', () => { togglePixCampo(); atualizarDocumento(); }));
             document.getElementById('modalOS').addEventListener('click', e => { if (e.target === document.getElementById('modalOS')) fecharModal(); });
-        });
+        }
+        
+        init();
     </script>
 </body>
 </html>
