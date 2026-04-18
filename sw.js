@@ -1,43 +1,11 @@
-const CACHE_NAME = 'ons-odontotecnica-v1';
-const urlsToCache = [
-  '/ONS-Sistema/',
-  '/ONS-Sistema/index.html',
-  '/ONS-Sistema/manifest.json'
-];
-
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Cache aberto');
-        return cache.addAll(urlsToCache);
-      })
-  );
+self.addEventListener('install', function(event) {
+  console.log('Service Worker instalado');
 });
 
-self.addEventListener('fetch', event => {
+self.addEventListener('fetch', function(event) {
   event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
-  );
-});
-
-self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
+    fetch(event.request).catch(function() {
+      return new Response('Offline');
     })
   );
 });
