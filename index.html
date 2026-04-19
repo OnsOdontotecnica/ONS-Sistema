@@ -56,7 +56,6 @@
             overflow: hidden;
         }
 
-        /* HEADER */
         header {
             background: linear-gradient(135deg, var(--azul-ons) 0%, #0a4d72 100%);
             color: white;
@@ -109,7 +108,6 @@
             opacity: 0.8;
         }
 
-        /* TABS - Estilo BlackRock */
         .tabs {
             display: flex;
             gap: 2px;
@@ -149,7 +147,6 @@
             background: var(--bg-secondary);
         }
 
-        /* CONTEÚDO */
         .tab-content {
             display: none;
             padding: 28px;
@@ -176,7 +173,6 @@
             display: inline-block;
         }
 
-        /* CARDS - Estilo elegante */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -220,7 +216,6 @@
             color: var(--azul-ons);
         }
 
-        /* FORMULÁRIOS - Design refinado */
         .form-group {
             margin-bottom: 16px;
         }
@@ -252,7 +247,6 @@
             box-shadow: 0 0 0 2px rgba(212, 160, 23, 0.1);
         }
 
-        /* BOTÕES - Estilo BlackRock (discreto e elegante) */
         .botoes {
             display: flex;
             gap: 10px;
@@ -320,7 +314,6 @@
             transform: translateY(-1px);
         }
 
-        /* AÇÕES - Discretas */
         .btn-acao {
             padding: 5px 10px;
             border: none;
@@ -347,7 +340,6 @@
             color: white;
         }
 
-        /* EQUIPAMENTOS DO CLIENTE - Design delicado */
         .equipamentos-grid-delicado {
             display: flex;
             flex-direction: column;
@@ -389,7 +381,6 @@
             color: white;
         }
 
-        /* PEÇAS - Design refinado */
         .peca-item {
             background: var(--border-color);
             padding: 12px;
@@ -417,7 +408,6 @@
             }
         }
 
-        /* LISTAS */
         .lista-container {
             max-height: 500px;
             overflow-y: auto;
@@ -459,7 +449,6 @@
             margin-top: 10px;
         }
 
-        /* STATUS BADGES */
         .status-badge {
             font-size: 0.65rem;
             padding: 3px 10px;
@@ -471,7 +460,6 @@
         .status-finalizado { background: #d4edda; color: #155724; }
         .status-agendado { background: #cce5ff; color: #004085; }
 
-        /* MODAL */
         .modal {
             display: none;
             position: fixed;
@@ -516,7 +504,6 @@
             color: var(--perigo);
         }
 
-        /* CHECKBOX */
         .checkbox-group {
             display: flex;
             align-items: center;
@@ -535,7 +522,6 @@
             font-size: 0.8rem;
         }
 
-        /* NOTIFICAÇÃO */
         .notificacao {
             position: fixed;
             bottom: 20px;
@@ -563,134 +549,226 @@
         .mb-20 { margin-bottom: 20px; }
         .text-center { text-align: center; }
 
-        /* IMPRESSÃO - Formato A4 igual ao PDF */
+        /* ESTILOS PARA IMPRESSÃO A4 - FATURAMENTO */
         @media print {
             body * {
                 visibility: hidden;
             }
-            .print-area, .print-area * {
+            .print-fatura, .print-fatura * {
                 visibility: visible;
             }
-            .print-area {
+            .print-fatura {
                 position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
-                padding: 20px;
+                padding: 1.5cm;
                 background: white;
-                font-family: 'Segoe UI', Arial, sans-serif;
+                font-family: 'Times New Roman', 'Segoe UI', Arial, serif;
             }
         }
 
-        .print-area {
+        .print-fatura {
             max-width: 210mm;
             margin: 0 auto;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Times New Roman', 'Segoe UI', Arial, serif;
+            line-height: 1.4;
+            color: #2c3e50;
         }
 
-        .print-header {
+        .fatura-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             border-bottom: 2px solid var(--dourado-ons);
+            padding-bottom: 15px;
+        }
+
+        .fatura-header h1 {
+            color: var(--azul-ons);
+            font-size: 28px;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .fatura-header p {
+            font-size: 12px;
+            color: #555;
+        }
+
+        .fatura-titulo {
+            background: var(--azul-ons);
+            color: white;
+            padding: 8px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin: 20px 0;
+        }
+
+        .fatura-info-documento {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 12px;
+            border-bottom: 1px dashed #ccc;
             padding-bottom: 10px;
         }
 
-        .print-title {
-            font-size: 1.4rem;
-            font-weight: bold;
+        .section-cliente-fatura {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--azul-ons);
+            border-radius: 4px;
+        }
+
+        .section-equipamento-fatura {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--info);
+            border-radius: 4px;
+        }
+
+        .section-cliente-fatura h3, .section-equipamento-fatura h3 {
             color: var(--azul-ons);
-        }
-
-        .print-subtitle {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        .print-section {
-            margin-bottom: 16px;
-        }
-
-        .print-section h4 {
-            background: var(--azul-ons);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
             margin-bottom: 10px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .print-row {
-            display: flex;
-            margin-bottom: 6px;
-            font-size: 0.8rem;
-        }
-
-        .print-label {
-            width: 120px;
-            font-weight: 600;
-            color: var(--azul-ons);
-        }
-
-        .print-value {
-            flex: 1;
-        }
-
-        .print-table {
+        .tabela-pecas-fatura {
             width: 100%;
             border-collapse: collapse;
-            margin: 10px 0;
-            font-size: 0.75rem;
+            margin: 20px 0;
+            font-size: 11px;
         }
 
-        .print-table th, .print-table td {
-            border: 1px solid #ddd;
-            padding: 6px;
-            text-align: left;
-        }
-
-        .print-table th {
+        .tabela-pecas-fatura th {
             background: var(--azul-ons);
             color: white;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
         }
 
-        .print-total {
+        .tabela-pecas-fatura td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        .resumo-valores {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 20px 0;
             text-align: right;
+            border-radius: 4px;
+        }
+
+        .resumo-valores p {
+            margin: 5px 0;
+            font-size: 12px;
+        }
+
+        .total-geral {
+            font-size: 18px;
             font-weight: bold;
-            font-size: 1rem;
-            margin-top: 16px;
-            padding-top: 10px;
+            color: var(--azul-ons);
             border-top: 2px solid var(--dourado-ons);
+            padding-top: 10px;
+            margin-top: 10px;
         }
 
-        /* LOADING */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 30000;
-            display: none;
-            justify-content: center;
-            align-items: center;
+        .section-pagamento {
+            background: #f0f7ff;
+            padding: 15px;
+            margin: 20px 0;
+            border: 1px solid #d0e0f0;
+            border-radius: 4px;
         }
 
-        .loading-overlay.active {
+        .msg-funcionamento {
+            background: #e8f5e9;
+            padding: 12px;
+            margin: 20px 0;
+            border-left: 3px solid var(--sucesso);
+            font-size: 11px;
+            font-style: italic;
+        }
+
+        .assinatura-fatura {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .assinatura-fatura p {
+            margin-top: 40px;
+            border-top: 1px solid #333;
+            display: inline-block;
+            padding: 0 30px;
+            font-size: 11px;
+        }
+
+        .fatura-footer {
+            text-align: center;
+            padding: 15px;
+            margin-top: 25px;
+            border-top: 1px solid #ddd;
+            font-size: 9px;
+            color: #888;
+        }
+
+        .radio-group {
             display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--dourado-ons);
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: normal;
+            cursor: pointer;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .radio-group input[type="radio"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .forma-pagamento-opcoes {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .forma-pagamento-opcoes label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .campo-pix {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f7ff;
+            border-radius: 8px;
+        }
+
+        .preview-fatura {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
         }
     </style>
 </head>
@@ -724,6 +802,7 @@
             <button class="tab-btn" data-tab="nova-os"><i class="fas fa-file-alt"></i> Nova OS</button>
             <button class="tab-btn" data-tab="historico"><i class="fas fa-history"></i> Histórico</button>
             <button class="tab-btn" data-tab="relatorios"><i class="fas fa-chart-bar"></i> Relatórios</button>
+            <button class="tab-btn" data-tab="faturamento"><i class="fas fa-file-invoice-dollar"></i> Faturamento</button>
             <button class="tab-btn" data-tab="os-clientes"><i class="fas fa-mobile-alt"></i> OS Cliente</button>
             <button class="tab-btn" data-tab="auditoria"><i class="fas fa-chart-pie"></i> Auditoria</button>
             <button class="tab-btn" data-tab="seguranca"><i class="fas fa-shield-alt"></i> Segurança</button>
@@ -778,7 +857,6 @@
         <div id="tab-equipamentos" class="tab-content">
             <h2><i class="fas fa-tooth"></i> Equipamentos</h2>
             <div class="equipamentos-grid" id="lista-equipamentos-pre" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:8px; margin-bottom:20px;"></div>
-            
             <div class="form-group">
                 <label>Ou digite manualmente</label>
                 <input type="text" id="equip-manual" placeholder="Nome do equipamento">
@@ -855,6 +933,82 @@
             <div class="lista-container" id="lista-todas-os"></div>
         </div>
 
+        <!-- FATURAMENTO (NOVA ABA) -->
+        <div id="tab-faturamento" class="tab-content">
+            <h2><i class="fas fa-file-invoice-dollar"></i> Faturamento</h2>
+            
+            <div class="form-group">
+                <label>Selecione a Ordem de Serviço</label>
+                <select id="faturamento-os-select" onchange="carregarDadosOSFaturamento()">
+                    <option value="">Selecione uma OS</option>
+                </select>
+            </div>
+            
+            <div id="dados-faturamento" style="display: none;">
+                <div class="form-group">
+                    <label>Número do Documento</label>
+                    <input type="text" id="num-documento" placeholder="Ex: FAT-001/2026">
+                </div>
+                
+                <h3 style="color:var(--azul-ons); font-size:0.85rem;">Peças Utilizadas</h3>
+                <div class="form-group">
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <input type="text" id="peca-nome" placeholder="Nome da peça" style="flex: 2;">
+                        <input type="text" id="peca-valor" placeholder="Valor R$" style="flex: 1;">
+                        <input type="number" id="peca-quantidade" placeholder="Qtd" style="flex: 0.5;" value="1">
+                        <button class="btn-primario" onclick="adicionarPecaFatura()">Adicionar</button>
+                    </div>
+                </div>
+                
+                <table class="tabela-pecas-fatura" style="width:100%; margin:10px 0;">
+                    <thead>
+                        <tr style="background:var(--azul-ons); color:white;">
+                            <th>Peça</th><th>Qtd</th><th>Valor Unit.</th><th>Subtotal</th><th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista-pecas-fatura-body"></tbody>
+                </table>
+                
+                <div class="form-group">
+                    <label>Forma de Exibição</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="forma-exibicao" value="somado" checked onchange="atualizarFaturaPreview()"> Valor Único</label>
+                        <label><input type="radio" name="forma-exibicao" value="discriminado" onchange="atualizarFaturaPreview()"> Valores Discriminados</label>
+                    </div>
+                </div>
+                
+                <h3 style="color:var(--azul-ons); font-size:0.85rem;">Forma de Pagamento</h3>
+                <div class="forma-pagamento-opcoes">
+                    <label><input type="radio" name="pagamento-tipo" value="vista" checked onchange="togglePixCampoFatura(); atualizarFaturaPreview()"> À Vista</label>
+                    <label><input type="radio" name="pagamento-tipo" value="cartao" onchange="atualizarFaturaPreview()"> Cartão</label>
+                    <label><input type="radio" name="pagamento-tipo" value="pix" onchange="togglePixCampoFatura(); atualizarFaturaPreview()"> PIX</label>
+                    <label><input type="radio" name="pagamento-tipo" value="boleto" onchange="atualizarFaturaPreview()"> Boleto</label>
+                </div>
+                
+                <div id="campo-pix-container-fatura" style="display: none;">
+                    <div class="form-group">
+                        <label>Chave PIX</label>
+                        <input type="text" id="pix-chave" placeholder="CPF, CNPJ, E-mail ou Telefone" oninput="atualizarFaturaPreview()">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Observações</label>
+                    <textarea id="obs-pagamento" rows="2" oninput="atualizarFaturaPreview()"></textarea>
+                </div>
+                
+                <div class="botoes">
+                    <button class="btn-primario" onclick="imprimirFatura()"><i class="fas fa-print"></i> Imprimir Fatura</button>
+                    <button class="btn-dourado" onclick="enviarFaturaWhatsApp()"><i class="fab fa-whatsapp"></i> Enviar WhatsApp</button>
+                </div>
+                
+                <div class="preview-fatura">
+                    <h3 style="color:var(--azul-ons); font-size:0.85rem; margin-bottom:10px;">Prévia do Documento</h3>
+                    <div id="preview-fatura"></div>
+                </div>
+            </div>
+        </div>
+
         <!-- OS CLIENTES -->
         <div id="tab-os-clientes" class="tab-content">
             <h2><i class="fas fa-mobile-alt"></i> OS - App Cliente</h2>
@@ -923,6 +1077,8 @@
         let osClientes = JSON.parse(localStorage.getItem('ons_os_clientes') || '[]');
         let currentModalOSId = null;
         let currentModalOSType = null;
+        let pecasFatura = [];
+        let osSelecionadaFatura = null;
         
         const equipamentosLista = [
             'Cadeira Odontológica', 'Compressor', 'Autoclave', 'Raio-X Panorâmico', 
@@ -985,6 +1141,7 @@
                 if (tab === 'equipamentos') mostrarEquipamentos();
                 if (tab === 'historico') carregarHistorico();
                 if (tab === 'relatorios') listarTodasOS();
+                if (tab === 'faturamento') carregarSelectOSFaturamento();
                 if (tab === 'os-clientes') carregarOSClientesDemo();
                 if (tab === 'auditoria') atualizarAuditoria();
             });
@@ -1241,6 +1398,7 @@
             limparOS();
             atualizarDashboard();
             carregarHistorico();
+            carregarSelectOSFaturamento();
         }
         
         function limparOS() {
@@ -1301,6 +1459,7 @@
             salvarDados();
             carregarHistorico();
             atualizarDashboard();
+            carregarSelectOSFaturamento();
             mostrarNotificacao('OS excluída!', 'sucesso');
         }
         
@@ -1332,6 +1491,230 @@
                 <p><strong>Status:</strong> ${os?.status}</p>
             `;
             document.getElementById('modalOS').classList.add('active');
+        }
+        
+        // ==================== FATURAMENTO ====================
+        function carregarSelectOSFaturamento() {
+            const select = document.getElementById('faturamento-os-select');
+            if (!select) return;
+            select.innerHTML = '<option value="">Selecione uma OS</option>';
+            manutencoes.forEach(os => {
+                const cliente = clientes.find(c => c.id === os.clienteId);
+                const nomeCliente = cliente ? cliente.nome : 'Cliente não encontrado';
+                select.innerHTML += `<option value="${os.id}">${nomeCliente} - ${os.equipamento} (${new Date(os.data).toLocaleDateString()})</option>`;
+            });
+        }
+        
+        window.carregarDadosOSFaturamento = function() {
+            const osId = parseInt(document.getElementById('faturamento-os-select').value);
+            if (!osId) {
+                document.getElementById('dados-faturamento').style.display = 'none';
+                return;
+            }
+            
+            osSelecionadaFatura = manutencoes.find(m => m.id === osId);
+            if (!osSelecionadaFatura) return;
+            
+            document.getElementById('num-documento').value = `FAT-${osId}-${new Date().getFullYear()}`;
+            pecasFatura = [...(osSelecionadaFatura.pecas || [])];
+            atualizarTabelaPecasFatura();
+            document.getElementById('dados-faturamento').style.display = 'block';
+            atualizarFaturaPreview();
+        }
+        
+        window.adicionarPecaFatura = function() {
+            const nome = document.getElementById('peca-nome').value.trim();
+            const valor = parseFloat(document.getElementById('peca-valor').value.replace(',', '.')) || 0;
+            const quantidade = parseInt(document.getElementById('peca-quantidade').value) || 1;
+            
+            if (!nome) { mostrarNotificacao('Digite o nome da peça!', 'erro'); return; }
+            if (valor <= 0) { mostrarNotificacao('Digite um valor válido!', 'erro'); return; }
+            
+            pecasFatura.push({ nome, valor, quantidade, subtotal: valor * quantidade });
+            atualizarTabelaPecasFatura();
+            document.getElementById('peca-nome').value = '';
+            document.getElementById('peca-valor').value = '';
+            document.getElementById('peca-quantidade').value = '1';
+            atualizarFaturaPreview();
+        }
+        
+        function removerPecaFatura(index) {
+            pecasFatura.splice(index, 1);
+            atualizarTabelaPecasFatura();
+            atualizarFaturaPreview();
+        }
+        
+        function atualizarTabelaPecasFatura() {
+            const tbody = document.getElementById('lista-pecas-fatura-body');
+            if (!tbody) return;
+            if (pecasFatura.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhuma peça adicionada</td></tr>';
+                return;
+            }
+            tbody.innerHTML = '';
+            pecasFatura.forEach((peca, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${peca.nome}</td>
+                        <td>${peca.quantidade}</td>
+                        <td>R$ ${peca.valor.toFixed(2)}</td>
+                        <td>R$ ${peca.subtotal.toFixed(2)}</td>
+                        <td><button class="btn-perigo" onclick="removerPecaFatura(${index})" style="padding:4px 8px; font-size:0.7rem;">Remover</button></td>
+                    </tr>
+                `;
+            });
+        }
+        
+        function calcularTotalPecasFatura() { return pecasFatura.reduce((sum, p) => sum + p.subtotal, 0); }
+        
+        function getFormaPagamentoTextoFatura() {
+            const pagamentoTipo = document.querySelector('input[name="pagamento-tipo"]:checked').value;
+            const obsPagamento = document.getElementById('obs-pagamento').value;
+            let texto = '';
+            switch(pagamentoTipo) {
+                case 'vista': texto = 'Pagamento à vista'; break;
+                case 'cartao': texto = 'Pagamento com Cartão de Crédito'; break;
+                case 'pix': texto = `Pagamento via PIX\nChave PIX: ${document.getElementById('pix-chave').value}`; break;
+                case 'boleto': texto = 'Pagamento via Boleto Bancário'; break;
+                default: texto = 'Pagamento à vista';
+            }
+            if (obsPagamento) texto += `\nObservação: ${obsPagamento}`;
+            return texto;
+        }
+        
+        function togglePixCampoFatura() {
+            const pixRadio = document.querySelector('input[name="pagamento-tipo"][value="pix"]');
+            const campoPix = document.getElementById('campo-pix-container-fatura');
+            if (pixRadio && pixRadio.checked) {
+                campoPix.style.display = 'block';
+            } else {
+                campoPix.style.display = 'none';
+            }
+            atualizarFaturaPreview();
+        }
+        
+        function gerarFaturaHTML() {
+            if (!osSelecionadaFatura) return '';
+            const cliente = clientes.find(c => c.id === osSelecionadaFatura.clienteId);
+            const totalPecas = calcularTotalPecasFatura();
+            const maoObra = osSelecionadaFatura.hora_tecnica || 0;
+            const incluirPecas = osSelecionadaFatura.incluir_pecas !== false;
+            const valorTotal = maoObra + (incluirPecas ? totalPecas : 0);
+            const formaExibicao = document.querySelector('input[name="forma-exibicao"]:checked').value;
+            
+            let tabelaPecasHTML = pecasFatura.length > 0 ? 
+                `<table class="tabela-pecas-fatura">
+                    <thead><tr><th>Descrição</th><th>Qtd</th><th>Valor Unit.</th><th>Subtotal</th></tr></thead>
+                    <tbody>${pecasFatura.map(p => `<tr><td>${p.nome}</td><td>${p.quantidade}</td><td>R$ ${p.valor.toFixed(2)}</td><td>R$ ${p.subtotal.toFixed(2)}</td></tr>`).join('')}</tbody>
+                 </table>` :
+                '<p style="font-size:11px;">Nenhuma peça utilizada</p>';
+            
+            let valoresHTML = formaExibicao === 'somado' ?
+                `<div class="resumo-valores">
+                    <p>Total de Peças: R$ ${totalPecas.toFixed(2)}</p>
+                    <p>Mão de Obra: R$ ${maoObra.toFixed(2)}</p>
+                    <div class="total-geral">VALOR TOTAL: R$ ${valorTotal.toFixed(2)}</div>
+                </div>` :
+                `<div class="resumo-valores">
+                    <div class="total-geral">TOTAL A PAGAR: R$ ${valorTotal.toFixed(2)}</div>
+                </div>`;
+            
+            return `
+                <div class="print-fatura">
+                    <div class="fatura-header">
+                        <h1>ONS ODONTOTECNICA</h1>
+                        <p>Manutenção de Equipamentos Odontológicos</p>
+                        <p>CNPJ: 00.000.000/0001-00 | Telefone: (35) 9 2000-4813</p>
+                        <p>Rua Exemplo, 123 - Centro - Cidade/UF</p>
+                    </div>
+                    
+                    <div class="fatura-titulo">FATURA / RECIBO DE SERVIÇOS</div>
+                    
+                    <div class="fatura-info-documento">
+                        <span><strong>Documento:</strong> ${document.getElementById('num-documento').value}</span>
+                        <span><strong>Data:</strong> ${new Date().toLocaleDateString()}</span>
+                    </div>
+                    
+                    <div class="section-cliente-fatura">
+                        <h3>DADOS DO CLIENTE</h3>
+                        <p><strong>Nome:</strong> ${cliente?.nome || 'N/A'}</p>
+                        <p><strong>Telefone:</strong> ${cliente?.telefone || 'N/A'}</p>
+                        <p><strong>E-mail:</strong> ${cliente?.email || 'N/A'}</p>
+                        <p><strong>Endereço:</strong> ${cliente?.endereco || 'N/A'}</p>
+                    </div>
+                    
+                    <div class="section-equipamento-fatura">
+                        <h3>EQUIPAMENTO</h3>
+                        <p><strong>Equipamento:</strong> ${osSelecionadaFatura.equipamento}</p>
+                        <p><strong>Defeito / Problema:</strong> ${osSelecionadaFatura.defeitos || 'N/A'}</p>
+                        <p><strong>Serviço Executado:</strong> ${osSelecionadaFatura.solucoes || 'N/A'}</p>
+                    </div>
+                    
+                    <h3 style="color:#0c3f5a; margin:15px 0 10px 0;">PEÇAS UTILIZADAS</h3>
+                    ${tabelaPecasHTML}
+                    ${valoresHTML}
+                    
+                    <div class="section-pagamento">
+                        <h3>FORMA DE PAGAMENTO</h3>
+                        <p style="white-space: pre-line;">${getFormaPagamentoTextoFatura().replace(/\n/g, '<br>')}</p>
+                    </div>
+                    
+                    <div class="msg-funcionamento">
+                        <strong>ATESTADO TÉCNICO:</strong> O equipamento ${osSelecionadaFatura.equipamento} foi submetido a testes de funcionamento e está apto para uso, conforme normas técnicas.
+                    </div>
+                    
+                    <div class="assinatura-fatura">
+                        <p>___________________________________</p>
+                        <p>Assinatura do Cliente</p>
+                    </div>
+                    
+                    <div class="fatura-footer">
+                        Este documento é um comprovante de serviço prestado e vale como recibo.<br>
+                        ONS SOLUÇÕES E ELETROTECNICA - ${new Date().getFullYear()}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function atualizarFaturaPreview() {
+            if (!osSelecionadaFatura) return;
+            const html = gerarFaturaHTML();
+            document.getElementById('preview-fatura').innerHTML = html;
+        }
+        
+        window.imprimirFatura = function() {
+            if (!osSelecionadaFatura) { mostrarNotificacao('Selecione uma OS!', 'erro'); return; }
+            const faturaHTML = gerarFaturaHTML();
+            const win = window.open('', '_blank');
+            win.document.write(`
+                <html>
+                    <head>
+                        <title>Fatura ONS</title>
+                        <style>
+                            * { margin:0; padding:0; box-sizing:border-box; }
+                            body { background:#f0f0f0; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; }
+                            @media print {
+                                body { background:white; padding:0; }
+                            }
+                        </style>
+                    </head>
+                    <body>${faturaHTML}</body>
+                </html>
+            `);
+            win.document.close();
+            win.print();
+        }
+        
+        window.enviarFaturaWhatsApp = function() {
+            if (!osSelecionadaFatura) { mostrarNotificacao('Selecione uma OS!', 'erro'); return; }
+            const cliente = clientes.find(c => c.id === osSelecionadaFatura.clienteId);
+            if (!cliente || !cliente.telefone) { mostrarNotificacao('Cliente sem telefone!', 'erro'); return; }
+            
+            const div = document.createElement('div');
+            div.innerHTML = gerarFaturaHTML();
+            const texto = div.innerText;
+            const telefone = cliente.telefone.replace(/\D/g, '');
+            window.open(`https://wa.me/55${telefone}?text=${encodeURIComponent(texto)}`, '_blank');
         }
         
         // ==================== RELATÓRIOS ====================
@@ -1663,6 +2046,7 @@
             carregarOSClientesDemo();
             atualizarDashboard();
             atualizarAuditoria();
+            carregarSelectOSFaturamento();
             
             document.getElementById('modalOS').addEventListener('click', e => { if (e.target === document.getElementById('modalOS')) fecharModal(); });
         }
