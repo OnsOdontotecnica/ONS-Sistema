@@ -9,8 +9,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ONS Odonto">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description" content="Sistema Técnico de Manutenção de Equipamentos Odontológicos">
     
-    <!-- PWA Manifest -->
+    <!-- PWA Manifest - CAMINHO CORRETO -->
     <link rel="manifest" href="manifest.json">
     
     <!-- Apple Touch Icon -->
@@ -20,6 +21,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png">
     
+    <!-- CSS e Fontes -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
@@ -803,9 +805,33 @@
             font-size: 20px;
             padding: 5px;
         }
+
+        /* OFFLINE INDICATOR */
+        .offline-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #dc3545;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            z-index: 10002;
+            transform: translateY(-100%);
+            transition: transform 0.3s;
+        }
+
+        .offline-indicator.show {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
+    <div class="offline-indicator" id="offlineIndicator">
+        <i class="fas fa-wifi"></i> Você está offline. Os dados serão salvos localmente.
+    </div>
+
     <div class="container">
         <div class="header">
             <div class="header-content">
@@ -2190,6 +2216,27 @@
             }
         }
         
+        // ==================== OFFLINE DETECTION ====================
+        function updateOfflineStatus() {
+            const indicator = document.getElementById('offlineIndicator');
+            if (!navigator.onLine) {
+                indicator.classList.add('show');
+                mostrarNotificacao('Modo offline - dados salvos localmente', 'aviso');
+            } else {
+                indicator.classList.remove('show');
+            }
+        }
+        
+        window.addEventListener('online', () => {
+            updateOfflineStatus();
+            mostrarNotificacao('Conexão restabelecida! ✅', 'sucesso');
+        });
+        
+        window.addEventListener('offline', () => {
+            updateOfflineStatus();
+            mostrarNotificacao('Você está offline. Dados serão salvos localmente.', 'aviso');
+        });
+        
         // ==================== PWA INSTALLATION ====================
         let deferredPrompt;
         const installBanner = document.getElementById('installBanner');
@@ -2220,50 +2267,45 @@
             }
         });
         
-        btnInstalar?.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                installBanner.style.display = 'none';
-                
-                if (outcome === 'accepted') {
-                    mostrarNotificacao('App instalado com sucesso! 🎉', 'sucesso');
+        if (btnInstalar) {
+            btnInstalar.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    deferredPrompt = null;
+                    installBanner.style.display = 'none';
+                    
+                    if (outcome === 'accepted') {
+                        mostrarNotificacao('App instalado com sucesso! 🎉', 'sucesso');
+                    }
                 }
-            }
-        });
+            });
+        }
         
-        btnFecharBanner?.addEventListener('click', () => {
-            installBanner.style.display = 'none';
-            localStorage.setItem('installBannerClosed', 'true');
-        });
+        if (btnFecharBanner) {
+            btnFecharBanner.addEventListener('click', () => {
+                installBanner.style.display = 'none';
+                localStorage.setItem('installBannerClosed', 'true');
+            });
+        }
         
         window.addEventListener('appinstalled', () => {
             mostrarNotificacao('ONS Odontotecnica instalado! 🚀', 'sucesso');
             installBanner.style.display = 'none';
         });
         
-        // ==================== SERVICE WORKER ====================
+        // ==================== SERVICE WORKER REGISTRATION ====================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/ONS-Sistema/sw.js')
+                navigator.serviceWorker.register('sw.js')
                     .then(registration => {
-                        console.log('Service Worker registrado:', registration.scope);
+                        console.log('Service Worker registrado com sucesso:', registration.scope);
                     })
                     .catch(error => {
                         console.log('Falha ao registrar Service Worker:', error);
                     });
             });
         }
-        
-        // ==================== DETECÇÃO DE CONEXÃO ====================
-        window.addEventListener('online', () => {
-            mostrarNotificacao('Conexão restabelecida! ✅', 'sucesso');
-        });
-        
-        window.addEventListener('offline', () => {
-            mostrarNotificacao('Você está offline. Dados serão salvos localmente.', 'aviso');
-        });
         
         // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
@@ -2277,6 +2319,7 @@
             atualizarDashboard();
             carregarSelectOSFaturamento();
             carregarHistoricoFaturas();
+            updateOfflineStatus();
             
             ['valor-hora', 'horas-trabalhadas', 'pix-chave', 'obs-pagamento', 'num-documento'].forEach(id => {
                 const el = document.getElementById(id);
