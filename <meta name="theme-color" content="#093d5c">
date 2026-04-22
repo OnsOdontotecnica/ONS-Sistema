@@ -12,7 +12,8 @@
     <meta name="description" content="Sistema Técnico de Manutenção de Equipamentos Odontológicos">
     
     <!-- PWA Manifest - CAMINHO CORRETO -->
-    <link rel="manifest" href="manifest.json">
+       <!-- PWA Manifest -->
+    <link rel="manifest" href="./manifest.json">            
     
     <!-- Apple Touch Icon -->
     <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -2295,17 +2296,22 @@
         });
         
         // ==================== SERVICE WORKER REGISTRATION ====================
+              // ==================== SERVICE WORKER ====================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
+                navigator.serviceWorker.register('./sw.js')
                     .then(registration => {
-                        console.log('Service Worker registrado com sucesso:', registration.scope);
+                        console.log('✅ Service Worker registrado com sucesso!', registration.scope);
+                        // Verificar se o SW está ativo
+                        if (registration.active) {
+                            console.log('Service Worker ativo!');
+                        }
                     })
                     .catch(error => {
-                        console.log('Falha ao registrar Service Worker:', error);
+                        console.log('❌ Falha ao registrar Service Worker:', error);
                     });
             });
-        }
+        }  
         
         // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
