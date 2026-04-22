@@ -1,7 +1,9 @@
-const CACHE_NAME = 'ons-odontotecnica-v1';
+const CACHE_NAME = 'ons-admin-v1';
 const urlsToCache = [
-  '/ONS-Sistema/',
-  '/ONS-Sistema/index.html'
+  './',
+  './index.html',
+  './manifest.json',
+  './logo-icon.png'
 ];
 
 self.addEventListener('install', event => {
@@ -13,7 +15,7 @@ self.addEventListener('install', event => {
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-    fetch(event.request)
-      .catch(() => caches.match(event.request))
+    caches.match(event.request)
+      .then(response => response || fetch(event.request))
   );
 });
