@@ -1,100 +1,187 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>ONS Odontotecnica - Sistema de Manutenção</title>
+    <meta name="theme-color" content="#093d5c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="ONS Odonto">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+        :root {
+            --azul-ons: #093d5c;
+            --azul-ons-light: #0f5a82;
+            --dourado-ons: #efb505;
+            --dourado-ons-dark: #d4a104;
+            --cinza-fundo: #f0f4f8;
+            --cinza-borda: #dde3e9;
+            --texto-escuro: #2c3e50;
+            --sucesso: #28a745;
+            --perigo: #dc3545;
+            --aviso: #ffc107;
+            --info: #17a2b8;
+            --sombra: 0 4px 20px rgba(0,0,0,0.1);
+            --sombra-suave: 0 2px 8px rgba(0,0,0,0.05);
+            --gradiente-azul: linear-gradient(135deg, #093d5c 0%, #0f5a82 100%);
+            --gradiente-dourado: linear-gradient(135deg, #efb505 0%, #d4a104 100%);
+        }
 
-<meta name="theme-color" content="#093d5c">
-<meta name="application-name" content="ONS">
+        body {
+            background: var(--cinza-fundo);
+            min-height: 100vh;
+            padding: 12px;
+        }
 
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-<link rel="manifest" href="manifest.json">
+        /* HEADER */
+        .header {
+            background: var(--gradiente-azul);
+            color: white;
+            padding: 20px 28px;
+            border-radius: 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--sombra);
+            position: relative;
+            overflow: hidden;
+        }
 
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(239, 181, 5, 0.08);
+            border-radius: 50%;
+            pointer-events: none;
+        }
 
-<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="icons/icon-16.png">
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        .logo-ons {
+            background: var(--gradiente-dourado);
+            color: var(--azul-ons);
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.4rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
 
-<title>ONS Odontotécnica</title>
+        .logo-ons:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
 
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+        .logo-imagem {
+            height: 55px;
+            width: auto;
+            max-width: 200px;
+            object-fit: contain;
+        }
 
-:root {
-    --azul-ons: #093d5c;
-    --azul-ons-light: #0f5a82;
-    --dourado-ons: #efb505;
-    --cinza-fundo: #f0f4f8;
-    --sombra: 0 4px 20px rgba(0,0,0,0.1);
-    --gradiente-azul: linear-gradient(135deg, #093d5c 0%, #0f5a82 100%);
-}
+        .title-section h1 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
 
-body {
-    background: var(--cinza-fundo);
-    min-height: 100vh;
-    padding: 12px;
-}
+        .title-section h1 i {
+            color: var(--dourado-ons);
+            margin-right: 10px;
+        }
 
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-}
+        .title-section p {
+            font-size: 0.8rem;
+            opacity: 0.85;
+        }
 
-/* HEADER */
-.header {
-    background: var(--gradiente-azul);
-    color: white;
-    padding: 20px 28px;
-    border-radius: 28px;
-    margin-bottom: 24px;
-    box-shadow: var(--sombra);
-}
+        .btn-alterar-logo {
+            background: rgba(239, 181, 5, 0.15);
+            border: 1px solid var(--dourado-ons);
+            color: var(--dourado-ons);
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
 
-.header-info {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-}
+        .btn-alterar-logo:hover {
+            background: var(--dourado-ons);
+            color: var(--azul-ons);
+        }
 
-.header-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
+        .header-telefone {
+            background: rgba(239, 181, 5, 0.12);
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(4px);
+        }
 
-.header-telefone {
-    background: rgba(239, 181, 5, 0.12);
-    padding: 10px 22px;
-    border-radius: 40px;
-}
-
-/* STATUS */
-.status-instalado {
-    background: #28a745;
-    color: white;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-}
-</style>
-
-</head>
-
-<body>
-
-<div class="container">
+        .status-instalado {
+            background: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            margin-left: 10px;
+        }
 
         /* MENU */
         .menu {
