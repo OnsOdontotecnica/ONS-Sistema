@@ -600,29 +600,6 @@
             box-shadow: var(--sombra-suave);
         }
 
-        /* CHECKBOX GROUP PARA TENSÃO */
-        .checkbox-group {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            padding: 8px 0;
-        }
-        
-        .checkbox-group label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: normal;
-            cursor: pointer;
-            text-transform: none;
-            font-size: 0.9rem;
-        }
-        
-        .checkbox-group input[type="checkbox"] {
-            width: auto;
-            margin: 0;
-        }
-
         /* DOCUMENTO IMPRESSÃO */
         .documento-empresarial {
             max-width: 100%;
@@ -921,7 +898,7 @@
                 <button class="btn btn-outline" onclick="limparFormCliente()"><i class="fas fa-eraser"></i> Limpar</button>
             </div>
             
-            <!-- SEÇÃO DE EQUIPAMENTOS DO CLIENTE (MELHORADA) -->
+            <!-- SEÇÃO DE EQUIPAMENTOS DO CLIENTE -->
             <div class="subsecao" id="secao-equipamentos-cliente" style="display: none;">
                 <h3><i class="fas fa-tools"></i> Equipamentos do Consultório</h3>
                 <p style="font-size: 12px; color: #666; margin-bottom: 15px;">Cadastre os equipamentos deste cliente com suas informações técnicas</p>
@@ -943,22 +920,13 @@
                     <input type="text" id="equip-fabricante" placeholder="Fabricante" style="flex: 1;">
                     <input type="text" id="equip-modelo" placeholder="Modelo" style="flex: 1;">
                     <input type="text" id="equip-numero-serie" placeholder="Nº Série" style="flex: 1;">
+                    <input type="text" id="equip-voltagem" placeholder="Voltagem (110/220V)" style="flex: 0.8;">
+                    <button class="btn btn-primario" onclick="adicionarEquipamentoCliente()" style="padding: 12px 20px;"><i class="fas fa-plus"></i></button>
                 </div>
-                
-                <!-- NOVO: Checkbox para tensão -->
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">Tensão de Trabalho:</label>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" class="tensao-checkbox" value="127V"> 127V</label>
-                        <label><input type="checkbox" class="tensao-checkbox" value="220V"> 220V</label>
-                    </div>
-                </div>
-                
-                <button class="btn btn-primario" onclick="adicionarEquipamentoCliente()" style="margin-bottom: 15px;"><i class="fas fa-plus"></i> Adicionar Equipamento</button>
                 
                 <table class="tabela-equipamentos">
                     <thead>
-                        <tr><th>Equipamento</th><th>Fabricante</th><th>Modelo</th><th>Nº Série</th><th>Tensão</th><th>Ação</th>
+                        <tr><th>Equipamento</th><th>Fabricante</th><th>Modelo</th><th>Nº Série</th><th>Voltagem</th><th>Ação</th>
                     </thead>
                     <tbody id="lista-equipamentos-cliente"></tbody>
                 </table>
@@ -968,39 +936,32 @@
             <div class="lista-container" id="lista-clientes"></div>
         </div>
 
-        <!-- EQUIPAMENTOS DO CLIENTE (NOVA ABA) -->
+        <!-- EQUIPAMENTOS PRÉ-CARREGADOS -->
         <div id="equipamentos" class="section">
-            <h2 class="titulo-secao"><i class="fas fa-microscope"></i> Equipamentos por Cliente</h2>
-            
-            <div class="form-group">
-                <label>Selecione um Cliente</label>
-                <select id="filtro-cliente-equipamentos" onchange="carregarEquipamentosPorCliente()">
-                    <option value="">Selecione um cliente</option>
-                </select>
-            </div>
-            
-            <div id="lista-equipamentos-por-cliente" style="margin-top: 20px;">
-                <div class="item-lista" style="text-align: center; padding: 40px;">
-                    <i class="fas fa-microscope" style="font-size: 3rem; color: #efb505;"></i>
-                    <h3 style="margin: 15px 0;">Selecione um cliente para ver os equipamentos</h3>
+            <h2 class="titulo-secao"><i class="fas fa-microscope"></i> Equipamentos Odontológicos</h2>
+            <div class="equipamentos-pre-grid" id="lista-equipamentos-pre"></div>
+            <div class="mt-20 subsecao">
+                <h3>Cadastro Rápido</h3>
+                <div class="form-group">
+                    <input type="text" id="equip-manual" placeholder="Digite o nome do equipamento">
                 </div>
+                <button class="btn btn-primario" onclick="usarEquipamentoManual()"><i class="fas fa-play"></i> Iniciar OS</button>
             </div>
         </div>
 
-        <!-- NOVA OS (MELHORADA) -->
+        <!-- NOVA OS -->
         <div id="novaos" class="section">
             <h2 class="titulo-secao"><i class="fas fa-clipboard-list"></i> Nova Ordem de Serviço</h2>
             <div class="form-group">
                 <label>Cliente</label>
-                <select id="os-cliente" onchange="carregarEquipamentosClienteSelect()">
+                <select id="os-cliente">
                     <option value="">Selecione um cliente</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>Equipamento</label>
-                <select id="os-equipamento-select" style="display: none;" onchange="selecionarEquipamentoOS()"></select>
-                <input type="text" id="os-equipamento" placeholder="Digite o equipamento (ou selecione acima)">
-                <small style="color: #666; display: block; margin-top: 5px;">Se o equipamento não estiver na lista, digite manualmente</small>
+                <select id="os-equipamento-select" style="display: none;"></select>
+                <input type="text" id="os-equipamento" placeholder="Digite o equipamento">
             </div>
             <div class="form-group">
                 <label>Defeito / Problema</label>
@@ -1269,7 +1230,7 @@
         function salvarManutencoes() { localStorage.setItem('ons_manutencoes', JSON.stringify(manutencoes)); }
         function salvarFaturas() { localStorage.setItem('ons_faturas', JSON.stringify(faturas)); }
         
-        // ==================== GERENCIAMENTO DE EQUIPAMENTOS DO CLIENTE (MELHORADO) ====================
+        // ==================== GERENCIAMENTO DE EQUIPAMENTOS DO CLIENTE ====================
         function mostrarSecaoEquipamentos(clienteId) {
             const secao = document.getElementById('secao-equipamentos-cliente');
             const cliente = clientes.find(c => c.id === clienteId);
@@ -1301,7 +1262,7 @@
                         <td>${equip.fabricante || '-'}</td>
                         <td>${equip.modelo || '-'}</td>
                         <td>${equip.numeroSerie || '-'}</td>
-                        <td>${equip.tensao || '-'}</td>
+                        <td>${equip.voltagem || '-'}</td>
                         <td><button class="btn-acao excluir" onclick="removerEquipamentoCliente(${index})" style="padding: 5px 12px;">Remover</button></td>
                     </tr>
                 `;
@@ -1318,13 +1279,7 @@
             const fabricante = document.getElementById('equip-fabricante').value.trim();
             const modelo = document.getElementById('equip-modelo').value.trim();
             const numeroSerie = document.getElementById('equip-numero-serie').value.trim();
-            
-            // Pegar tensões selecionadas
-            const tensoes = [];
-            document.querySelectorAll('.tensao-checkbox:checked').forEach(cb => {
-                tensoes.push(cb.value);
-            });
-            const tensao = tensoes.join(' / ') || 'Não especificado';
+            const voltagem = document.getElementById('equip-voltagem').value.trim();
             
             const nomeEquip = equipPre || (fabricante + ' ' + modelo).trim();
             
@@ -1341,18 +1296,17 @@
                 fabricante: fabricante,
                 modelo: modelo,
                 numeroSerie: numeroSerie,
-                tensao: tensao,
+                voltagem: voltagem,
                 data: new Date().toISOString()
             });
             
             salvarClientes();
             
-            // Limpar campos
             document.getElementById('equip-pre-carregado').value = '';
             document.getElementById('equip-fabricante').value = '';
             document.getElementById('equip-modelo').value = '';
             document.getElementById('equip-numero-serie').value = '';
-            document.querySelectorAll('.tensao-checkbox').forEach(cb => cb.checked = false);
+            document.getElementById('equip-voltagem').value = '';
             
             atualizarListaEquipamentosCliente();
             carregarListaClientes();
@@ -1368,104 +1322,6 @@
                 carregarListaClientes();
                 mostrarNotificacao('Equipamento removido!', 'sucesso');
             }
-        }
-        
-        // ==================== NOVA ABA: EQUIPAMENTOS POR CLIENTE ====================
-        function carregarSelectEquipamentosCliente() {
-            const select = document.getElementById('filtro-cliente-equipamentos');
-            if (!select) return;
-            
-            select.innerHTML = '<option value="">Selecione um cliente</option>';
-            clientes.forEach(cliente => {
-                const qtd = cliente.equipamentos ? cliente.equipamentos.length : 0;
-                select.innerHTML += `<option value="${cliente.id}">${cliente.nome} (${qtd} equip.)</option>`;
-            });
-        }
-        
-        window.carregarEquipamentosPorCliente = function() {
-            const clienteId = parseInt(document.getElementById('filtro-cliente-equipamentos').value);
-            const container = document.getElementById('lista-equipamentos-por-cliente');
-            
-            if (!clienteId) {
-                container.innerHTML = `
-                    <div class="item-lista" style="text-align: center; padding: 40px;">
-                        <i class="fas fa-microscope" style="font-size: 3rem; color: #efb505;"></i>
-                        <h3 style="margin: 15px 0;">Selecione um cliente para ver os equipamentos</h3>
-                    </div>
-                `;
-                return;
-            }
-            
-            const cliente = clientes.find(c => c.id === clienteId);
-            if (!cliente || !cliente.equipamentos || cliente.equipamentos.length === 0) {
-                container.innerHTML = `
-                    <div class="item-lista" style="text-align: center; padding: 40px;">
-                        <i class="fas fa-info-circle" style="font-size: 3rem; color: #efb505;"></i>
-                        <h3 style="margin: 15px 0;">${cliente.nome} não possui equipamentos cadastrados</h3>
-                        <button class="btn btn-primario" onclick="irParaClienteEquipamentos(${clienteId})">Cadastrar Equipamentos</button>
-                    </div>
-                `;
-                return;
-            }
-            
-            let html = `<h3 style="margin-bottom: 15px;"><i class="fas fa-microscope"></i> Equipamentos de ${cliente.nome}</h3>`;
-            html += `<div style="display: grid; gap: 12px;">`;
-            
-            cliente.equipamentos.forEach((equip, index) => {
-                html += `
-                    <div class="equipamento-item" style="background: #f8fafd; padding: 16px; border-radius: 16px; border-left: 4px solid #efb505; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
-                        <div>
-                            <strong style="font-size: 1.1rem;">${equip.nome}</strong><br>
-                            <small><i class="fas fa-industry"></i> Fabricante: ${equip.fabricante || '-'} | 
-                            <i class="fas fa-tag"></i> Modelo: ${equip.modelo || '-'} | 
-                            <i class="fas fa-barcode"></i> Série: ${equip.numeroSerie || '-'} | 
-                            <i class="fas fa-bolt"></i> Tensão: ${equip.tensao || '-'}</small>
-                        </div>
-                        <button class="btn-acao ver" onclick="abrirOSComEquipamento(${clienteId}, '${equip.nome.replace(/'/g, "\\'")}')">
-                            <i class="fas fa-clipboard-list"></i> Abrir OS
-                        </button>
-                    </div>
-                `;
-            });
-            
-            html += `</div>`;
-            container.innerHTML = html;
-        }
-        
-        window.irParaClienteEquipamentos = function(clienteId) {
-            clienteSelecionadoId = clienteId;
-            document.querySelector('[data-tela="clientes"]').click();
-            mostrarSecaoEquipamentos(clienteId);
-        }
-        
-        window.abrirOSComEquipamento = function(clienteId, equipamento) {
-            // Ir para aba Nova OS
-            document.querySelector('[data-tela="novaos"]').click();
-            
-            // Selecionar o cliente
-            const selectCliente = document.getElementById('os-cliente');
-            selectCliente.value = clienteId;
-            
-            // Carregar equipamentos do cliente
-            carregarEquipamentosClienteSelect();
-            
-            // Preencher o equipamento
-            setTimeout(() => {
-                const selectEquip = document.getElementById('os-equipamento-select');
-                if (selectEquip.style.display !== 'none') {
-                    // Tentar encontrar o equipamento no select
-                    for (let i = 0; i < selectEquip.options.length; i++) {
-                        if (selectEquip.options[i].value === equipamento) {
-                            selectEquip.value = equipamento;
-                            document.getElementById('os-equipamento').value = equipamento;
-                            break;
-                        }
-                    }
-                } else {
-                    document.getElementById('os-equipamento').value = equipamento;
-                }
-                mostrarNotificacao(`OS para ${equipamento} - preencha o defeito`, 'info');
-            }, 100);
         }
         
         // ==================== LOGO ====================
@@ -1511,7 +1367,7 @@
                 
                 if (telaId === 'dashboard') atualizarDashboard();
                 if (telaId === 'clientes') carregarListaClientes();
-                if (telaId === 'equipamentos') { carregarSelectEquipamentosCliente(); carregarEquipamentosPorCliente(); }
+                if (telaId === 'equipamentos') mostrarEquipamentos();
                 if (telaId === 'historico') { carregarHistorico(); carregarHistoricoFaturas(); }
                 if (telaId === 'relatorios') listarTodasOS();
                 if (telaId === 'osclientes') carregarOSClientes();
@@ -1544,7 +1400,6 @@
             carregarClientesSelect();
             atualizarDashboard();
             carregarSelectOSFaturamento();
-            carregarSelectEquipamentosCliente();
             
             clienteSelecionadoId = novoCliente.id;
             mostrarSecaoEquipamentos(clienteSelecionadoId);
@@ -1593,15 +1448,9 @@
             
             let equipamentosHtml = '<p><strong>Nenhum equipamento cadastrado</strong></p>';
             if (cliente.equipamentos && cliente.equipamentos.length > 0) {
-                equipamentosHtml = '<table class="tabela-equipamentos" style="width:100%; margin-top:10px;"><thead><tr><th>Equipamento</th><th>Fabricante</th><th>Modelo</th><th>Nº Série</th><th>Tensão</th></tr></thead><tbody>';
+                equipamentosHtml = '<table class="tabela-equipamentos" style="width:100%; margin-top:10px;"><thead><tr><th>Equipamento</th><th>Fabricante</th><th>Modelo</th><th>Nº Série</th><th>Voltagem</th></tr></thead><tbody>';
                 cliente.equipamentos.forEach(eq => {
-                    equipamentosHtml += `<tr>
-                        <td>${eq.nome || '-'}</td>
-                        <td>${eq.fabricante || '-'}</td>
-                        <td>${eq.modelo || '-'}</td>
-                        <td>${eq.numeroSerie || '-'}</td>
-                        <td>${eq.tensao || '-'}</td>
-                    </tr>`;
+                    equipamentosHtml += `<tr><td>${eq.nome || '-'}</td><td>${eq.fabricante || '-'}</td><td>${eq.modelo || '-'}</td><td>${eq.numeroSerie || '-'}</td><td>${eq.voltagem || '-'}</td></tr>`;
                 });
                 equipamentosHtml += '</tbody></table>';
             }
@@ -1634,7 +1483,6 @@
             mostrarNotificacao('Edite os dados e clique em Salvar Cliente', 'info');
             carregarListaClientes();
             carregarClientesSelect();
-            carregarSelectEquipamentosCliente();
         }
         
         window.gerenciarEquipamentos = function(id) {
@@ -1654,7 +1502,6 @@
             carregarClientesSelect();
             atualizarDashboard();
             carregarSelectOSFaturamento();
-            carregarSelectEquipamentosCliente();
             if (clienteSelecionadoId === id) {
                 document.getElementById('secao-equipamentos-cliente').style.display = 'none';
                 clienteSelecionadoId = null;
@@ -1667,43 +1514,38 @@
             if (!select) return;
             select.innerHTML = '<option value="">Selecione um cliente</option>';
             clientes.forEach(c => select.innerHTML += `<option value="${c.id}">${c.nome}</option>`);
+            
+            const selectEquip = document.getElementById('os-equipamento-select');
+            if (selectEquip) {
+                selectEquip.innerHTML = '<option value="">Selecione um equipamento cadastrado</option>';
+            }
         }
         
-        // ==================== EQUIPAMENTOS DO CLIENTE NA OS (MELHORADO) ====================
-        function carregarEquipamentosClienteSelect() {
-            const clienteId = parseInt(document.getElementById('os-cliente').value);
+        function carregarEquipamentosClienteSelect(clienteId) {
+            const cliente = clientes.find(c => c.id === clienteId);
             const selectEquip = document.getElementById('os-equipamento-select');
             const inputEquip = document.getElementById('os-equipamento');
             
-            if (clienteId) {
-                const cliente = clientes.find(c => c.id === clienteId);
-                if (cliente && cliente.equipamentos && cliente.equipamentos.length > 0) {
-                    selectEquip.style.display = 'block';
-                    inputEquip.style.display = 'none';
-                    selectEquip.innerHTML = '<option value="">Selecione um equipamento cadastrado</option>';
-                    cliente.equipamentos.forEach(eq => {
-                        const nomeEquip = eq.nome || `${eq.fabricante} ${eq.modelo}`.trim();
-                        selectEquip.innerHTML += `<option value="${nomeEquip}">${nomeEquip} ${eq.numeroSerie ? `(Série: ${eq.numeroSerie})` : ''} - ${eq.tensao || 'Tensão não especificada'}</option>`;
-                    });
-                    selectEquip.innerHTML += '<option value="outro">✏️ Outro equipamento (digitar)</option>';
-                    
-                    selectEquip.onchange = function() {
-                        if (selectEquip.value === 'outro') {
-                            inputEquip.style.display = 'block';
-                            inputEquip.value = '';
-                            inputEquip.placeholder = 'Digite o nome do equipamento';
-                            inputEquip.focus();
-                        } else {
-                            inputEquip.style.display = 'none';
-                            inputEquip.value = selectEquip.value;
-                        }
-                    };
-                } else {
-                    selectEquip.style.display = 'none';
-                    inputEquip.style.display = 'block';
-                    inputEquip.value = '';
-                    inputEquip.placeholder = 'Digite o equipamento (nenhum cadastrado)';
-                }
+            if (cliente && cliente.equipamentos && cliente.equipamentos.length > 0) {
+                selectEquip.style.display = 'block';
+                inputEquip.style.display = 'none';
+                selectEquip.innerHTML = '<option value="">Selecione um equipamento cadastrado</option>';
+                cliente.equipamentos.forEach(eq => {
+                    const nomeEquip = eq.nome || `${eq.fabricante} ${eq.modelo}`.trim();
+                    selectEquip.innerHTML += `<option value="${nomeEquip}">${nomeEquip} ${eq.numeroSerie ? `(Série: ${eq.numeroSerie})` : ''}</option>`;
+                });
+                selectEquip.innerHTML += '<option value="outro">Outro equipamento (digitar)</option>';
+                
+                selectEquip.onchange = function() {
+                    if (selectEquip.value === 'outro') {
+                        inputEquip.style.display = 'block';
+                        inputEquip.value = '';
+                        inputEquip.focus();
+                    } else {
+                        inputEquip.style.display = 'none';
+                        inputEquip.value = selectEquip.value;
+                    }
+                };
             } else {
                 selectEquip.style.display = 'none';
                 inputEquip.style.display = 'block';
@@ -1711,11 +1553,28 @@
             }
         }
         
-        window.selecionarEquipamentoOS = function() {
-            const selectEquip = document.getElementById('os-equipamento-select');
-            if (selectEquip.value && selectEquip.value !== 'outro') {
-                document.getElementById('os-equipamento').value = selectEquip.value;
+        // ==================== EQUIPAMENTOS ====================
+        function mostrarEquipamentos() {
+            const container = document.getElementById('lista-equipamentos-pre');
+            if (!container) return;
+            container.innerHTML = '';
+            equipamentosLista.forEach(eq => {
+                container.innerHTML += `<div class="equip-item-pre" onclick="selecionarEquipamentoRapido('${eq}')"><i class="fas fa-microscope"></i> ${eq}</div>`;
+            });
+        }
+        
+        function selecionarEquipamentoRapido(equipamento) {
+            document.getElementById('os-equipamento').value = equipamento;
+            document.querySelector('[data-tela="novaos"]').click();
+        }
+        
+        window.usarEquipamentoManual = function() {
+            const eq = document.getElementById('equip-manual').value.trim();
+            if (eq) { 
+                document.getElementById('os-equipamento').value = eq; 
+                document.querySelector('[data-tela="novaos"]').click(); 
             }
+            else mostrarNotificacao('Digite um equipamento!', 'erro');
         }
         
         // ==================== OS LOCAL ====================
@@ -1758,6 +1617,13 @@
             document.getElementById('os-solucoes').value = '';
         }
         
+        document.getElementById('os-cliente')?.addEventListener('change', function() {
+            const clienteId = this.value;
+            if (clienteId) {
+                carregarEquipamentosClienteSelect(parseInt(clienteId));
+            }
+        });
+        
         function carregarHistorico() {
             const container = document.getElementById('lista-historico');
             if (!container) return;
@@ -1771,7 +1637,6 @@
                         <div class="item-lista-info">
                             <h4>${cliente?.nome || 'N/A'} - ${os.equipamento}</h4>
                             <p><i class="fas fa-calendar"></i> ${new Date(os.data).toLocaleDateString()}</p>
-                            ${os.defeitos ? `<p><i class="fas fa-exclamation-triangle"></i> Defeito: ${os.defeitos.substring(0, 100)}${os.defeitos.length > 100 ? '...' : ''}</p>` : ''}
                         </div>
                         <div class="item-lista-acoes">
                             <button class="btn-acao ver" onclick="verOSDetalhes(${os.id})"><i class="fas fa-eye"></i> Ver</button>
@@ -1826,7 +1691,7 @@
             });
         }
         
-        // ==================== FATURAMENTO (MANTIDO ORIGINAL) ====================
+        // ==================== FATURAMENTO ====================
         function carregarSelectOSFaturamento() {
             const select = document.getElementById('faturamento-os-select');
             if (!select) return;
@@ -2406,12 +2271,12 @@
             carregarLogoSaved();
             carregarClientesSelect();
             carregarListaClientes();
+            mostrarEquipamentos();
             carregarHistorico();
             carregarOSClientes();
             atualizarDashboard();
             carregarSelectOSFaturamento();
             carregarHistoricoFaturas();
-            carregarSelectEquipamentosCliente();
             
             ['valor-hora', 'horas-trabalhadas', 'pix-chave', 'obs-pagamento', 'num-documento'].forEach(id => {
                 const el = document.getElementById(id);
