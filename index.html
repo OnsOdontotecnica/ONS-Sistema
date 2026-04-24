@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>ONS Odontotecnica - Sistema de Manutenção</title>
+    <title>ONS Odontotecnica - Sistema de Manutenção + Orçamentos</title>
     <meta name="theme-color" content="#093d5c">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ONS Odonto">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="description" content="Sistema Técnico de Manutenção de Equipamentos Odontológicos">
+    <meta name="description" content="Sistema Técnico de Manutenção de Equipamentos Odontológicos + Orçamentos">
     
-    <!-- PWA Manifest - CAMINHO CORRETO -->
-       <!-- PWA Manifest -->
+    <!-- PWA Manifest -->
     <link rel="manifest" href="./manifest.json">            
     
     <!-- Apple Touch Icon -->
@@ -826,6 +825,92 @@
         .offline-indicator.show {
             transform: translateY(0);
         }
+
+        /* ORÇAMENTO ESTILOS */
+        .service-type-row {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            background: #f8fafd;
+            padding: 16px 20px;
+            border-radius: 40px;
+            margin-bottom: 16px;
+        }
+
+        .service-type-row label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            text-transform: none;
+            cursor: pointer;
+        }
+
+        .btn-gold {
+            background: #efb505;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #093d5c;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .btn-gold:hover {
+            background: #d9a104;
+            transform: scale(0.98);
+        }
+
+        .add-peca-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+            background: #f9fbfd;
+            padding: 16px;
+            border-radius: 28px;
+            margin-bottom: 12px;
+        }
+
+        .small-input {
+            flex: 1 1 150px;
+        }
+
+        .total-box {
+            background: #f0f4f8;
+            border-radius: 28px;
+            padding: 20px;
+            text-align: right;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #093d5c;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #c00;
+            font-size: 1.2rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .garantia-group {
+            background: #fef9e6;
+            border-radius: 20px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .preview-area {
+            margin-top: 32px;
+        }
     </style>
 </head>
 <body>
@@ -844,7 +929,7 @@
                     </div>
                     <div class="title-section">
                         <h1><i class="fas fa-tools"></i> SISTEMA TÉCNICO DE MANUTENÇÃO</h1>
-                        <p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS</p>
+                        <p>MANUTENÇÃO DE EQUIPAMENTOS ODONTOLÓGICOS + ORÇAMENTOS</p>
                     </div>
                 </div>
                 <div class="header-actions">
@@ -865,6 +950,7 @@
             <button class="menu-btn" data-tela="clientes"><i class="fas fa-users"></i> Clientes</button>
             <button class="menu-btn" data-tela="equipamentos"><i class="fas fa-microscope"></i> Equipamentos</button>
             <button class="menu-btn" data-tela="novaos"><i class="fas fa-plus-circle"></i> Nova OS</button>
+            <button class="menu-btn" data-tela="orcamento"><i class="fas fa-file-invoice"></i> Orçamento</button>
             <button class="menu-btn" data-tela="faturamento"><i class="fas fa-file-invoice-dollar"></i> Faturamento</button>
             <button class="menu-btn" data-tela="historico"><i class="fas fa-history"></i> Histórico</button>
             <button class="menu-btn" data-tela="relatorios"><i class="fas fa-chart-bar"></i> Relatórios</button>
@@ -1001,6 +1087,88 @@
             <div class="botoes">
                 <button class="btn btn-primario" onclick="salvarOS()"><i class="fas fa-save"></i> Salvar OS</button>
                 <button class="btn btn-outline" onclick="limparOS()"><i class="fas fa-trash-alt"></i> Limpar</button>
+            </div>
+        </div>
+
+        <!-- ORÇAMENTO -->
+        <div id="orcamento" class="section">
+            <div class="card-header" style="margin-bottom: 20px;">
+                <h2 class="titulo-secao"><i class="fas fa-file-invoice"></i> Sistema de Orçamentos</h2>
+            </div>
+
+            <!-- DADOS CLIENTE -->
+            <div class="subsecao">
+                <h3>📋 Dados do Cliente</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                    <div class="form-group"><label>Nome completo *</label><input type="text" id="orcClienteNome" placeholder="Ex: Dra. Ana Paula"></div>
+                    <div class="form-group"><label>Telefone (WhatsApp) *</label><input type="text" id="orcClienteTelefone" placeholder="(35) 9 9999-9999" maxlength="19"></div>
+                </div>
+            </div>
+
+            <!-- TIPO DE SERVIÇO -->
+            <div class="subsecao">
+                <h3>⚙️ Tipo de Serviço</h3>
+                <div class="service-type-row">
+                    <label><input type="radio" name="orcTipoServico" value="manutencao" checked> 🔧 Manutenção</label>
+                    <label><input type="radio" name="orcTipoServico" value="instalacao"> 🛠️ Instalação</label>
+                </div>
+            </div>
+
+            <!-- CAMPOS DINÂMICOS: MANUTENÇÃO + INSTALAÇÃO -->
+            <div id="orcCamposDinamicos"></div>
+
+            <!-- DETALHES DA PROPOSTA -->
+            <div class="subsecao">
+                <h3>📝 Detalhes da Proposta / Atividades</h3>
+                <div class="form-group">
+                    <textarea id="orcDetalhesProposta" rows="4" placeholder="Ex: Serão realizados testes de vedação, calibração e entrega de laudo técnico. Prazo de execução: 3 dias úteis..."></textarea>
+                </div>
+            </div>
+
+            <!-- PEÇAS -->
+            <div class="subsecao">
+                <h3>🔩 Peças / Componentes</h3>
+                <div id="orcPecasContainer">
+                    <div class="add-peca-row">
+                        <input type="text" id="orcNomePeca" class="small-input" placeholder="Nome da peça" style="flex:2;">
+                        <input type="text" id="orcValorPeca" class="small-input" placeholder="Valor unitário (R$)" style="flex:1;">
+                        <input type="number" id="orcQtdPeca" class="small-input" placeholder="Quantidade" value="1" min="1" style="flex:1;">
+                        <button type="button" class="btn-dourado" id="orcBtnAdicionarPeca" style="padding: 10px 20px;">+ Adicionar</button>
+                    </div>
+                    <table class="tabela-pecas">
+                        <thead>
+                            <tr><th>Nome</th><th>Qtd</th><th>Valor Unit.</th><th>Subtotal</th><th></th>
+                        </thead>
+                        <tbody id="orcCorpoTabelaPecas"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- MÃO DE OBRA + CAMPO EXTRA -->
+            <div class="subsecao">
+                <h3>👨‍🔧 Mão de Obra</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                    <div class="form-group"><label>Valor da mão de obra (R$)</label><input type="text" id="orcMaoDeObra" placeholder="Ex: 250,00" value="0,00"></div>
+                    <div class="form-group"><label>Informações adicionais / Observação extra</label><input type="text" id="orcCampoExtraManual" placeholder="Ex: Inclui deslocamento, garantia estendida, etc."></div>
+                </div>
+            </div>
+
+            <!-- TOTAIS -->
+            <div class="total-box">
+                <div style="font-size: 1rem; font-weight: normal;">Total Peças: <span id="orcTotalPecasSpan">R$ 0,00</span></div>
+                <div style="font-size: 1.8rem;">Total Geral: <span id="orcTotalGeralSpan">R$ 0,00</span></div>
+            </div>
+            
+            <div class="botoes" style="justify-content: flex-end; margin-top: 20px;">
+                <button class="btn btn-primario" id="orcBtnGerarOrcamento">📄 GERAR ORÇAMENTO</button>
+                <button class="btn btn-dourado" id="orcBtnImprimirPDF">🖨️ Imprimir / Salvar PDF</button>
+                <button class="btn btn-outline" id="orcBtnWhatsApp">📲 Enviar WhatsApp</button>
+            </div>
+
+            <!-- PREVIEW -->
+            <div class="preview-area" id="orcPreviewOrcamento" style="display: none; background: #f5f5f5; padding: 20px; border-radius: 20px; margin-top: 20px;">
+                <h3 style="color: #093d5c; margin-bottom: 15px;">👁️ Preview do Orçamento</h3>
+                <div id="orcPreviewConteudo" style="background: #fff; border-radius: 24px; padding: 20px;"></div>
             </div>
         </div>
 
@@ -1213,7 +1381,12 @@
         let pecasUtilizadas = [];
         let osSelecionadaFatura = null;
         let clienteSelecionadoId = null;
-        
+
+        // Dados do orçamento
+        let orcListaPecas = [];
+        let orcCurrentServiceType = "manutencao";
+        let orcUltimoOrcamentoHtml = '';
+
         // ==================== FUNÇÕES AUXILIARES ====================
         function mostrarNotificacao(msg, tipo = 'sucesso') {
             const n = document.getElementById('notificacao');
@@ -1241,6 +1414,17 @@
             }
             atualizarDocumento();
         }
+
+        function formatMoney(value) {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+        }
+
+        function parseMoneyToFloat(str) {
+            if (!str) return 0;
+            let cleaned = str.replace(/\./g, '').replace(',', '.').replace(/[^\d.-]/g, '');
+            let num = parseFloat(cleaned);
+            return isNaN(num) ? 0 : num;
+        }
         
         // ==================== DADOS LOCAIS ====================
         function carregarDadosLocais() {
@@ -1257,6 +1441,198 @@
         function salvarManutencoes() { localStorage.setItem('ons_manutencoes', JSON.stringify(manutencoes)); }
         function salvarFaturas() { localStorage.setItem('ons_faturas', JSON.stringify(faturas)); }
         
+        // ==================== ORÇAMENTO FUNCTIONS ====================
+        function orcMascaraTelefone(valor) {
+            valor = valor.replace(/\D/g, '');
+            if (valor.length <= 10) valor = valor.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+            else valor = valor.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+            return valor;
+        }
+
+        function orcAtualizarTotais() {
+            let totalPecas = orcListaPecas.reduce((acc, p) => acc + (p.valor * p.quantidade), 0);
+            let maoDeObraVal = parseMoneyToFloat(document.getElementById('orcMaoDeObra').value);
+            document.getElementById('orcTotalPecasSpan').innerText = formatMoney(totalPecas);
+            let geral = totalPecas + maoDeObraVal;
+            document.getElementById('orcTotalGeralSpan').innerText = formatMoney(geral);
+            return { totalPecas, maoDeObraVal, geral };
+        }
+
+        function orcRenderTabelaPecas() {
+            const corpo = document.getElementById('orcCorpoTabelaPecas');
+            corpo.innerHTML = '';
+            orcListaPecas.forEach((peca, idx) => {
+                let subtotal = peca.valor * peca.quantidade;
+                let row = corpo.insertRow();
+                row.insertCell(0).innerText = peca.nome;
+                row.insertCell(1).innerText = peca.quantidade;
+                row.insertCell(2).innerText = formatMoney(peca.valor);
+                row.insertCell(3).innerText = formatMoney(subtotal);
+                let btnCell = row.insertCell(4);
+                let removerBtn = document.createElement('button');
+                removerBtn.innerText = '✖';
+                removerBtn.className = 'remove-btn';
+                removerBtn.onclick = () => { orcListaPecas.splice(idx, 1); orcRenderTabelaPecas(); orcAtualizarTotais(); };
+                btnCell.appendChild(removerBtn);
+            });
+            orcAtualizarTotais();
+        }
+
+        function orcRenderizarCamposDinamicos() {
+            const tipo = orcCurrentServiceType;
+            const container = document.getElementById('orcCamposDinamicos');
+            if (tipo === 'manutencao') {
+                container.innerHTML = `
+                    <div class="subsecao">
+                        <h3>🔧 Dados da Manutenção</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                            <div class="form-group"><label>Nome do Equipamento</label><input type="text" id="orcManutEquipamento" placeholder="Ex: Autoclave"></div>
+                            <div class="form-group"><label>Modelo</label><input type="text" id="orcManutModelo" placeholder="Modelo"></div>
+                            <div class="form-group"><label>Número de Série</label><input type="text" id="orcManutSerie" placeholder="Série"></div>
+                            <div class="form-group"><label>Defeito relatado</label><textarea id="orcManutDefeito" rows="3" placeholder="Descreva o defeito..."></textarea></div>
+                            <div class="form-group"><label>Solução / Correção aplicada</label><textarea id="orcManutSolucao" rows="3" placeholder="Serviços realizados..."></textarea></div>
+                        </div>
+                        <div class="garantia-group">
+                            <label style="font-weight:bold;">✅ Garantia do Serviço</label>
+                            <div class="radio-group" style="margin-top:8px;">
+                                <label><input type="radio" name="orcGarantiaServico" value="3 meses"> 3 Meses</label>
+                                <label><input type="radio" name="orcGarantiaServico" value="6 meses"> 6 Meses</label>
+                                <label><input type="radio" name="orcGarantiaServico" value="1 ano"> 1 Ano</label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <div class="subsecao">
+                        <h3>🛠️ Dados da Instalação</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                            <div class="form-group"><label>Tipo de Instalação</label>
+                                <select id="orcInstalTipo">
+                                    <option value="Equipamento Novo">Equipamento Novo</option>
+                                    <option value="Segunda Mão">Segunda Mão</option>
+                                    <option value="Remontagem Pós-Reparo">Remontagem Pós-Reparo</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label>Nome do Equipamento</label><input type="text" id="orcInstalEquipamento" placeholder="Ex: Compressor Odontológico"></div>
+                            <div class="form-group"><label>Modelo</label><input type="text" id="orcInstalModelo"></div>
+                            <div class="form-group"><label>Número de Série</label><input type="text" id="orcInstalSerie"></div>
+                            <div class="form-group"><label>Fabricante</label><input type="text" id="orcInstalFabricante" placeholder="Marca"></div>
+                            <div class="form-group"><label>Voltagem</label>
+                                <select id="orcInstalVoltagem"><option>127V</option><option>220V</option></select>
+                            </div>
+                            <div class="form-group"><label>Número da Nota Fiscal</label><input type="text" id="orcInstalNF" placeholder="NF-e"></div>
+                        </div>
+                        <div class="garantia-group">
+                            <label style="font-weight:bold;">✅ Garantia do Serviço</label>
+                            <div class="radio-group" style="margin-top:8px;">
+                                <label><input type="radio" name="orcGarantiaServico" value="3 meses"> 3 Meses</label>
+                                <label><input type="radio" name="orcGarantiaServico" value="6 meses"> 6 Meses</label>
+                                <label><input type="radio" name="orcGarantiaServico" value="1 ano"> 1 Ano</label>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function orcGetGarantiaSelecionada() {
+            const radios = document.querySelectorAll('input[name="orcGarantiaServico"]');
+            for (let r of radios) {
+                if (r.checked) return r.value;
+            }
+            return "Não especificada";
+        }
+
+        function orcGerarHtmlOrcamento() {
+            const nomeCliente = document.getElementById('orcClienteNome').value.trim();
+            const telefone = document.getElementById('orcClienteTelefone').value.trim();
+            if (!nomeCliente || !telefone) {
+                mostrarNotificacao('Preencha Nome do cliente e Telefone para gerar orçamento.', 'erro');
+                return null;
+            }
+
+            const tipo = orcCurrentServiceType;
+            let infoEquipamentoHtml = '';
+            let garantiaHtml = `<div><strong>Garantia do serviço:</strong> ${orcGetGarantiaSelecionada()}</div>`;
+
+            if (tipo === 'manutencao') {
+                const equip = document.getElementById('orcManutEquipamento')?.value || '';
+                const modelo = document.getElementById('orcManutModelo')?.value || '';
+                const serie = document.getElementById('orcManutSerie')?.value || '';
+                const defeito = document.getElementById('orcManutDefeito')?.value || '';
+                const solucao = document.getElementById('orcManutSolucao')?.value || '';
+                infoEquipamentoHtml = `
+                    <div style="margin-bottom:12px;"><strong>Equipamento:</strong> ${equip || '—'}</div>
+                    <div><strong>Modelo:</strong> ${modelo || '—'} | <strong>Nº Série:</strong> ${serie || '—'}</div>
+                    <div style="margin-top:12px;"><strong>Defeito:</strong><br>${defeito.replace(/\n/g,'<br>') || '—'}</div>
+                    <div><strong>Solução / Correção:</strong><br>${solucao.replace(/\n/g,'<br>') || '—'}</div>
+                `;
+            } else {
+                const tipoInst = document.getElementById('orcInstalTipo')?.value || '';
+                const equip = document.getElementById('orcInstalEquipamento')?.value || '';
+                const modelo = document.getElementById('orcInstalModelo')?.value || '';
+                const serie = document.getElementById('orcInstalSerie')?.value || '';
+                const fabricante = document.getElementById('orcInstalFabricante')?.value || '';
+                const voltagem = document.getElementById('orcInstalVoltagem')?.value || '';
+                const nf = document.getElementById('orcInstalNF')?.value || '';
+                infoEquipamentoHtml = `
+                    <div><strong>Tipo de Instalação:</strong> ${tipoInst}</div>
+                    <div><strong>Equipamento:</strong> ${equip} | <strong>Modelo:</strong> ${modelo}</div>
+                    <div><strong>Nº Série:</strong> ${serie} | <strong>Fabricante:</strong> ${fabricante}</div>
+                    <div><strong>Voltagem:</strong> ${voltagem} | <strong>NF:</strong> ${nf}</div>
+                `;
+            }
+
+            let pecasHtml = '';
+            if (orcListaPecas.length === 0) {
+                pecasHtml = '<tr><td colspan="4" style="padding: 12px; text-align:center;">Nenhuma peça adicionada</td></tr>';
+            } else {
+                orcListaPecas.forEach(p => {
+                    pecasHtml += `<tr><td>${p.nome}</td><td>${p.quantidade}</td><td>${formatMoney(p.valor)}</td><td>${formatMoney(p.valor * p.quantidade)}</td></tr>`;
+                });
+            }
+            const totalPecasCalc = orcListaPecas.reduce((s,p)=> s + (p.valor * p.quantidade),0);
+            const maoDeObraVal = parseMoneyToFloat(document.getElementById('orcMaoDeObra').value);
+            const totalGeral = totalPecasCalc + maoDeObraVal;
+            const campoExtraValor = document.getElementById('orcCampoExtraManual').value.trim();
+            const detalhesExtras = document.getElementById('orcDetalhesProposta').value.trim();
+
+            const html = `
+                <div style="font-family:'Segoe UI',sans-serif; max-width:100%;">
+                    <div style="text-align:center; border-bottom:3px solid #efb505; padding-bottom:16px;">
+                        <h2 style="color:#093d5c;">ONS OdontoTécnica</h2>
+                        <p>Manutenção de Equipamentos Odontológicos<br>
+                        CNPJ: 66.326.736/0001-62 | Tel: (35) 9 2000-4813<br>
+                        São Sebastião do Paraíso - MG</p>
+                    </div>
+                    <div style="margin-top:20px;">
+                        <p><strong>Cliente:</strong> ${nomeCliente}<br>
+                        <strong>Telefone:</strong> ${telefone}<br>
+                        <strong>Tipo de serviço:</strong> ${tipo === 'manutencao' ? 'MANUTENÇÃO' : 'INSTALAÇÃO'}</p>
+                    </div>
+                    <div style="background:#f0f4f8; padding:14px; border-radius:20px; margin:15px 0;">
+                        ${infoEquipamentoHtml}
+                        <hr style="margin:10px 0;">
+                        ${garantiaHtml}
+                    </div>
+                    ${detalhesExtras ? `<div style="background:#fef7e0; padding:14px; border-radius:20px; margin:15px 0;"><strong>📌 Detalhes da proposta / Atividades:</strong><br>${detalhesExtras.replace(/\n/g,'<br>')}</div>` : ''}
+                    <div><h3 style="color:#0f5a82;">🔩 Peças utilizadas</h3>
+                    <table style="width:100%; border-collapse:collapse; margin:12px 0;">
+                        <thead><tr style="background:#e2e8f0;"><th>Peça</th><th>Qtd</th><th>Valor Unit.</th><th>Subtotal</th></tr></thead>
+                        <tbody>${pecasHtml}</tbody>
+                    </table>
+                    </div>
+                    <div><strong>Mão de obra:</strong> ${formatMoney(maoDeObraVal)}</div>
+                    ${campoExtraValor ? `<div><strong>Observação extra:</strong> ${campoExtraValor}</div>` : ''}
+                    <hr>
+                    <div style="font-size:1.5rem; font-weight:800; text-align:right; color:#093d5c;">TOTAL GERAL: ${formatMoney(totalGeral)}</div>
+                    <div style="font-size:0.7rem; text-align:center; margin-top:28px; border-top:1px dashed #ccc; padding-top:16px;">ONS Orçamento - Documento gerado eletronicamente</div>
+                </div>
+            `;
+            return { html, totalGeral, nomeCliente, telefone };
+        }
+
         // ==================== GERENCIAMENTO DE EQUIPAMENTOS DO CLIENTE ====================
         function mostrarSecaoEquipamentos(clienteId) {
             const secao = document.getElementById('secao-equipamentos-cliente');
@@ -2217,6 +2593,84 @@
             }
         }
         
+        // ==================== ORÇAMENTO EVENT LISTENERS ====================
+        document.getElementById('orcClienteTelefone')?.addEventListener('input', function(e) {
+            e.target.value = orcMascaraTelefone(e.target.value);
+        });
+        
+        document.getElementById('orcBtnAdicionarPeca')?.addEventListener('click', () => {
+            let nome = document.getElementById('orcNomePeca').value.trim();
+            let valorStr = document.getElementById('orcValorPeca').value.trim();
+            let quantidade = parseInt(document.getElementById('orcQtdPeca').value);
+            if (!nome) { mostrarNotificacao('Informe o nome da peça', 'erro'); return; }
+            let valorNum = parseMoneyToFloat(valorStr);
+            if (isNaN(valorNum) || valorNum <= 0) { mostrarNotificacao('Valor da peça inválido. Use formato 99,90', 'erro'); return; }
+            if (isNaN(quantidade) || quantidade < 1) quantidade = 1;
+            orcListaPecas.push({ nome, valor: valorNum, quantidade });
+            orcRenderTabelaPecas();
+            document.getElementById('orcNomePeca').value = '';
+            document.getElementById('orcValorPeca').value = '';
+            document.getElementById('orcQtdPeca').value = '1';
+        });
+        
+        document.getElementById('orcMaoDeObra')?.addEventListener('input', () => orcAtualizarTotais());
+        document.getElementById('orcMaoDeObra')?.addEventListener('blur', function() {
+            let v = parseMoneyToFloat(this.value);
+            this.value = formatMoney(v).replace('R$', '').trim();
+            orcAtualizarTotais();
+        });
+        
+        document.getElementById('orcBtnGerarOrcamento')?.addEventListener('click', () => {
+            const resultado = orcGerarHtmlOrcamento();
+            if (!resultado) return;
+            orcUltimoOrcamentoHtml = resultado.html;
+            document.getElementById('orcPreviewConteudo').innerHTML = orcUltimoOrcamentoHtml;
+            document.getElementById('orcPreviewOrcamento').style.display = 'block';
+            document.getElementById('orcPreviewOrcamento').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        
+        document.getElementById('orcBtnImprimirPDF')?.addEventListener('click', () => {
+            let conteudoParaImprimir = orcUltimoOrcamentoHtml;
+            if (!conteudoParaImprimir) {
+                const resultado = orcGerarHtmlOrcamento();
+                if (!resultado) return;
+                conteudoParaImprimir = resultado.html;
+                document.getElementById('orcPreviewConteudo').innerHTML = conteudoParaImprimir;
+                document.getElementById('orcPreviewOrcamento').style.display = 'block';
+            }
+            const win = window.open('', '_blank');
+            win.document.write(`
+                <html><head><title>Orçamento ONS</title>
+                <style>body { font-family:'Segoe UI',sans-serif; padding:30px; }</style>
+                </head><body>${conteudoParaImprimir}</body></html>
+            `);
+            win.document.close();
+            win.print();
+        });
+        
+        document.getElementById('orcBtnWhatsApp')?.addEventListener('click', () => {
+            let telefoneCliente = document.getElementById('orcClienteTelefone').value.trim().replace(/\D/g, '');
+            if (!telefoneCliente) {
+                mostrarNotificacao('Informe o telefone do cliente no campo acima para enviar via WhatsApp.', 'erro');
+                return;
+            }
+            let resultado = orcGerarHtmlOrcamento();
+            if (!resultado) return;
+            const totalFormat = formatMoney(resultado.totalGeral);
+            const mensagem = `Olá ${resultado.nomeCliente}, seu orçamento ONS OdontoTécnica está pronto! Total: ${totalFormat}. Acesse o PDF para mais detalhes do serviço. Qualquer dúvida, estamos à disposição.`;
+            const url = `https://wa.me/55${telefoneCliente}?text=${encodeURIComponent(mensagem)}`;
+            window.open(url, '_blank');
+            mostrarNotificacao(`Mensagem encaminhada para ${document.getElementById('orcClienteTelefone').value}. Recomendamos anexar o PDF (gerado via Imprimir/Salvar PDF).`, 'info');
+        });
+        
+        const orcRadios = document.querySelectorAll('input[name="orcTipoServico"]');
+        orcRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                orcCurrentServiceType = e.target.value;
+                orcRenderizarCamposDinamicos();
+            });
+        });
+        
         // ==================== OFFLINE DETECTION ====================
         function updateOfflineStatus() {
             const indicator = document.getElementById('offlineIndicator');
@@ -2296,13 +2750,11 @@
         });
         
         // ==================== SERVICE WORKER REGISTRATION ====================
-              // ==================== SERVICE WORKER ====================
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js')
                     .then(registration => {
                         console.log('✅ Service Worker registrado com sucesso!', registration.scope);
-                        // Verificar se o SW está ativo
                         if (registration.active) {
                             console.log('Service Worker ativo!');
                         }
@@ -2311,7 +2763,7 @@
                         console.log('❌ Falha ao registrar Service Worker:', error);
                     });
             });
-        }  
+        }
         
         // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', () => {
@@ -2326,6 +2778,11 @@
             carregarSelectOSFaturamento();
             carregarHistoricoFaturas();
             updateOfflineStatus();
+            
+            // Orçamento init
+            orcRenderizarCamposDinamicos();
+            orcRenderTabelaPecas();
+            orcAtualizarTotais();
             
             ['valor-hora', 'horas-trabalhadas', 'pix-chave', 'obs-pagamento', 'num-documento'].forEach(id => {
                 const el = document.getElementById(id);
