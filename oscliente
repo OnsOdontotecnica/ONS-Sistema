@@ -175,13 +175,40 @@
     </div>
 
     <!-- ORÇAMENTO -->
+       <!-- ORÇAMENTO -->
     <div id="orcamento" class="section">
         <h2 class="titulo-secao"><i class="fas fa-file-invoice"></i> SISTEMA DE ORÇAMENTOS</h2>
+        
+        <!-- SELEÇÃO DE CLIENTE -->
+        <div class="subsecao" style="margin-bottom: 12px;">
+            <h3>👤 SELECIONAR CLIENTE</h3>
+            <select id="orcClienteSelect" onchange="carregarDadosClienteOrcamento()">
+                <option value="">--- Selecione um cliente existente ---</option>
+            </select>
+            <div style="text-align: center; margin: 8px 0;">ou</div>
+            <button class="btn btn-outline" onclick="toggleNovoClienteOrcamento()" style="width: 100%;">
+                <i class="fas fa-user-plus"></i> CADASTRAR NOVO CLIENTE
+            </button>
+            
+            <!-- Campos para novo cliente (inicialmente ocultos) -->
+            <div id="novoClienteOrcamento" style="display: none; margin-top: 12px;">
+                <input type="text" id="orcNovoClienteNome" placeholder="Nome completo *">
+                <input type="text" id="orcNovoClienteTelefone" placeholder="Telefone *">
+                <input type="text" id="orcNovoClienteEmail" placeholder="E-mail (opcional)">
+                <input type="text" id="orcNovoClienteEndereco" placeholder="Endereço (opcional)">
+            </div>
+        </div>
+
+        <!-- DADOS DO CLIENTE (preenchido automaticamente ou manual) -->
         <div class="subsecao" style="margin-bottom: 12px;">
             <h3>📋 DADOS DO CLIENTE</h3>
-            <input type="text" id="orcClienteNome" placeholder="Nome completo">
-            <input type="text" id="orcClienteTelefone" placeholder="Telefone (WhatsApp)">
+            <input type="text" id="orcClienteNome" placeholder="Nome completo *" readonly style="background:#f0e6d2;">
+            <input type="text" id="orcClienteTelefone" placeholder="Telefone (WhatsApp) *" readonly style="background:#f0e6d2;">
+            <button class="btn btn-outline" onclick="habilitarEdicaoClienteOrcamento()" style="font-size:0.6rem;">
+                <i class="fas fa-edit"></i> Editar dados
+            </button>
         </div>
+
         <div class="subsecao" style="margin-bottom: 12px;">
             <h3>⚙️ TIPO DE SERVIÇO</h3>
             <div class="radio-group" style="display: flex; gap: 16px; flex-wrap: wrap;">
@@ -189,51 +216,39 @@
                 <label><input type="radio" name="orcTipoServico" value="instalacao"> 🛠️ Instalação</label>
             </div>
         </div>
+
         <div class="subsecao" style="margin-bottom: 12px;">
             <h3>📝 DETALHES DO SERVIÇO</h3>
             <textarea id="orcDetalhesProposta" rows="3" placeholder="Descrição detalhada do serviço..."></textarea>
         </div>
+
         <div class="subsecao" style="margin-bottom: 12px;">
             <h3>💰 VALORES</h3>
             <input type="text" id="orcMaoDeObra" placeholder="Mão de obra (R$)" value="0,00">
             <input type="text" id="orcPecasValor" placeholder="Valor das peças (R$)" value="0,00">
+            <input type="text" id="orcDesconto" placeholder="Desconto (R$)" value="0,00">
         </div>
+
         <div class="total-box" style="background: #d4c9aa; padding: 12px; text-align: right; font-weight: bold; margin: 16px 0; border-radius: 10px;">
+            <div>SUBTOTAL: <span id="orcSubtotalSpan">R$ 0,00</span></div>
+            <div>DESCONTO: <span id="orcDescontoSpan">R$ 0,00</span></div>
             <div>TOTAL GERAL: <span id="orcTotalGeralSpan">R$ 0,00</span></div>
         </div>
+
         <div class="botoes" style="display: flex; flex-wrap: wrap; gap: 8px;">
-            <button class="btn btn-primario" onclick="gerarOrcamentoCompleto()">📄 GERAR</button>
-            <button class="btn btn-dourado" onclick="imprimirOrcamento()">🖨️ IMPRIMIR</button>
+            <button class="btn btn-primario" onclick="gerarOrcamentoCompleto()">📄 GERAR ORÇAMENTO</button>
+            <button class="btn btn-dourado" onclick="salvarOrcamentoHistorico()">💾 SALVAR ORÇAMENTO</button>
+            <button class="btn btn-outline" onclick="imprimirOrcamento()">🖨️ IMPRIMIR</button>
             <button class="btn btn-outline" onclick="enviarOrcamentoWhatsApp()">📲 WHATSAPP</button>
         </div>
+
         <div id="previewOrcamento" class="preview-area" style="display: none; background: #e8dcc0; padding: 16px; margin-top: 16px; border: 2px dashed var(--azul-80); border-radius: 12px;"></div>
-    </div>
-
-    <!-- FATURAMENTO -->
-    <div id="faturamento" class="section">
-        <h2 class="titulo-secao"><i class="fas fa-file-invoice-dollar"></i> FATURAMENTO</h2>
-        <div class="form-group"><label>SELECIONE A OS</label><select id="faturamento-os-select"><option value="">Selecione uma OS</option></select></div>
-        <div id="dados-faturamento" style="display: none;">
-            <div class="form-group"><label>NÚMERO DO DOCUMENTO</label><input type="text" id="num-documento"></div>
-            <div class="form-group"><label>VALOR TOTAL (R$)</label><input type="text" id="fatura-valor" placeholder="0,00"></div>
-            <div class="radio-group" style="display: flex; gap: 16px; flex-wrap: wrap; margin: 12px 0;">
-                <label><input type="radio" name="pagamento-tipo" value="vista" checked> À Vista</label>
-                <label><input type="radio" name="pagamento-tipo" value="cartao"> Cartão</label>
-                <label><input type="radio" name="pagamento-tipo" value="pix"> PIX</label>
-                <label><input type="radio" name="pagamento-tipo" value="prazo"> Prazo</label>
-            </div>
-            <div class="botoes" style="display: flex; flex-wrap: wrap; gap: 8px;">
-                <button class="btn btn-primario" onclick="salvarFatura()"><i class="fas fa-save"></i> SALVAR</button>
-                <button class="btn btn-dourado" onclick="imprimirDocumento()"><i class="fas fa-print"></i> IMPRIMIR</button>
-                <button class="btn btn-outline" onclick="enviarFaturaWhatsApp()"><i class="fab fa-whatsapp"></i> WHATSAPP</button>
-            </div>
+        
+        <!-- HISTÓRICO DE ORÇAMENTOS -->
+        <div class="subsecao" style="margin-top: 20px;">
+            <h3>📜 HISTÓRICO DE ORÇAMENTOS</h3>
+            <div class="lista-container" id="lista-orcamentos" style="max-height: 200px;"></div>
         </div>
-    </div>
-
-    <!-- HISTÓRICO -->
-    <div id="historico" class="section">
-        <h2 class="titulo-secao"><i class="fas fa-history"></i> HISTÓRICO DE OS</h2>
-        <div class="lista-container" id="lista-historico"></div>
     </div>
 
     <!-- RELATÓRIOS -->
