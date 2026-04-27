@@ -2533,10 +2533,10 @@
     window.carregarOSClientes = async function() {
     mostrarNotificacao('Carregando OS do app...', 'info');
     try {
-       const { data, error } = await supabaseClient
-    .from('os_clientes')  // ← CORRETO: tabela com dados
-    .select('*')  // ← Pegar todas as colunas
-    .order('created_at', { ascending: false });                    
+   const { data, error } = await supabaseClient
+    .from('os_clientes')  // ← Tabela correta que você já usava
+    .select('*')  // ← Pode usar * ou listar as colunas específicas
+    .order('created_at', { ascending: false });                   
                 if (error) throw error;
                 osClientes = data || [];
                 document.getElementById('total-os-clientes').textContent = osClientes.length;
