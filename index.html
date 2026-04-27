@@ -2533,7 +2533,10 @@
         window.carregarOSClientes = async function() {
             mostrarNotificacao('Carregando OS do app...', 'info');
             try {
-                const { data, error } = await supabaseClient.from('chamados').select('*').order('created_at', { ascending: false });
+               const { data, error } = await supabaseClient
+    .from('chamados')
+    .select('id, clinica, telefone_cliente, equipamento, prioridade, detalhe, status, incluirlaudo, created_at, data_agendamento, servicos_extras, updated_at, data_conclusao')
+    .order('created_at', { ascending: false });                     
                 if (error) throw error;
                 osClientes = data || [];
                 document.getElementById('total-os-clientes').textContent = osClientes.length;
@@ -2557,12 +2560,16 @@
         }
         
         window.enviarWhatsAppOS = function(id) {
-            const os = osClientes.find(o => o.id === id);
-            const telefone = os?.telefone_cliente?.replace(/\D/g, '');
-            if (telefone) window.open(`https://wa.me/55${telefone}?text=OS%20${os.id}%20-%20${os.equipamento}`, '_blank');
-            else mostrarNotificacao('Telefone não encontrado', 'erro');
-        }
-        
+    const os = osClientes.find(o => o.id === id);
+    const telefone = os?.telefone_cliente?.replace(/\D/g, '');
+    if (telefone) {
+        const mensagem = `*ONS Odontotecnica*\n\nOlá ${os?.clinica},\n\nSua OS ${os?.id} - ${os?.equipamento}\nStatus: ${os?.status}\n\nPara mais informações: (35) 9 2000-4813`;
+        window.open(`https://wa.me/55${telefone}?text=${encodeURIComponent(mensagem)}`, '_blank');
+    } else {
+        mostrarNotificacao('Telefone não encontrado', 'erro');
+    }
+    } 
+
         window.enviarMsgParaTodos = function() {
             const msg = prompt('Mensagem para todos:', 'ONS Odontotecnica - Estamos à disposição!');
             if (msg) osClientes.forEach(os => { if (os.telefone_cliente) window.open(`https://wa.me/55${os.telefone_cliente.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`, '_blank'); });
