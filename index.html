@@ -2530,13 +2530,13 @@
         }
         
         // ==================== OS CLIENTES (SUPABASE) ====================
-        window.carregarOSClientes = async function() {
-            mostrarNotificacao('Carregando OS do app...', 'info');
-            try {
-               const { data, error } = await supabaseClient
-    .from('chamados')
-    .select('id, clinica, telefone_cliente, equipamento, prioridade, detalhe, status, incluirlaudo, created_at, data_agendamento, servicos_extras, updated_at, data_conclusao')
-    .order('created_at', { ascending: false });                     
+    window.carregarOSClientes = async function() {
+    mostrarNotificacao('Carregando OS do app...', 'info');
+    try {
+       const { data, error } = await supabaseClient
+    .from('os_clientes')  // ← CORRETO: tabela com dados
+    .select('*')  // ← Pegar todas as colunas
+    .order('created_at', { ascending: false });                    
                 if (error) throw error;
                 osClientes = data || [];
                 document.getElementById('total-os-clientes').textContent = osClientes.length;
