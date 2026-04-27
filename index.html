@@ -2530,11 +2530,11 @@
         }
         
         // ==================== OS CLIENTES (SUPABASE) ====================
-    window.carregarOSClientes = async function() {
+window.carregarOSClientes = async function() {
     mostrarNotificacao('Carregando OS do app...', 'info');
     try {
-   const { data, error } = await supabaseClient
-    .from('os_clientes')  // ← Tabela correta que você já usava
+       const { data, error } = await supabaseClient
+    .from('chamados')  // ← MUDE PARA 'chamados'
     .select('*')  // ← Pode usar * ou listar as colunas específicas
     .order('created_at', { ascending: false });                   
                 if (error) throw error;
@@ -2551,13 +2551,7 @@
                 });
                 mostrarNotificacao(`${osClientes.length} OS carregadas`, 'sucesso');
             } catch(err) { mostrarNotificacao('Erro: ' + err.message, 'erro'); }
-        }
-        
-        window.visualizarOSCliente = function(id) {
-            const os = osClientes.find(o => o.id === id);
-            document.getElementById('modal-body').innerHTML = `<p><strong>Clínica:</strong> ${os?.clinica}</p><p><strong>Telefone:</strong> ${os?.telefone_cliente}</p><p><strong>Equipamento:</strong> ${os?.equipamento}</p><p><strong>Prioridade:</strong> ${os?.prioridade}</p><p><strong>Detalhe:</strong> ${os?.detalhe || 'N/A'}</p><p><strong>Status:</strong> ${os?.status}</p>`;
-            document.getElementById('modalOS').classList.add('active');
-        }
+        }                                         
         
         window.enviarWhatsAppOS = function(id) {
     const os = osClientes.find(o => o.id === id);
