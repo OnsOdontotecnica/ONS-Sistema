@@ -2795,7 +2795,6 @@
             document.getElementById('modalAuditoria').addEventListener('click', e => { if (e.target === document.getElementById('modalAuditoria')) fecharModalAuditoria(); });
         });
     </script>
-        
 <script>
 // ===== INSTALAÇÃO PWA =====
 let deferredPrompt;
@@ -2817,18 +2816,31 @@ document.addEventListener('DOMContentLoaded', () => {
         deferredPrompt.prompt();
         await deferredPrompt.userChoice;
         deferredPrompt = null;
+        
+        const banner = document.getElementById('installBanner');
+        if (banner) banner.style.display = 'none';
       }
     });
   }
+  
+  // Fecha banner manualmente
+  const closeBtn = document.getElementById('btnFecharBanner');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', () => {
+      const banner = document.getElementById('installBanner');
+      if (banner) banner.style.display = 'none';
+    });
+  }
 });
-</script>
-<script>
+
 // ===== SERVICE WORKER =====
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/service-worker.js")
-      .then(reg => console.log("Service Worker OK:", reg.scope))
-      .catch(err => console.error("Erro SW:", err));
+    navigator.serviceWorker.register("sw.js")
+      .then(reg => {
+        console.log("✅ Service Worker registrado:", reg.scope);
+      })
+      .catch(err => console.error("❌ Erro SW:", err));
   });
 }
 </script>
