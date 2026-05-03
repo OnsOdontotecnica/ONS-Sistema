@@ -1,8 +1,8 @@
-const CACHE_NAME = 'ons-app-v3';
+const CACHE_NAME = 'ons-v1';
 const urlsToCache = [
-  '.',
-  './index.html',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
+  '/',
+  '/index.html',
+  '/manifest.json'
 ];
 
 self.addEventListener('install', event => {
@@ -18,4 +18,8 @@ self.addEventListener('fetch', event => {
     caches.match(event.request)
       .then(response => response || fetch(event.request))
   );
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(clients.claim());
 });
