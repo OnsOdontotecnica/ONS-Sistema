@@ -1,18 +1,45 @@
 {
-  "name": "ONS Odontotecnica",
+  "name": "ONS OdontoTécnica",
   "short_name": "ONS Odonto",
-  "description": "Sistema Técnico de Manutenção",
-  "start_url": "/index.html",
+  "description": "Sistema de gestão técnica para manutenção de equipamentos odontológicos",
+  "start_url": "/ONS-IO-V2/index.html",
+  "scope": "/ONS-IO-V2/",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#093d5c",
-  "theme_color": "#093d5c",
+  "orientation": "any",
+  "background_color": "#0a246a",
+  "theme_color": "#0a246a",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "prefer_related_applications": false,
   "icons": [
+    { "src": "/ONS-IO-V2/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/ONS-IO-V2/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "/ONS-IO-V2/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/ONS-IO-V2/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
     {
-      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23093d5c'/%3E%3Ctext x='50' y='67' font-size='50' text-anchor='middle' fill='%23efb505' font-family='Arial'%3EONS%3C/text%3E%3C/svg%3E",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "/ONS-IO-V2/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "ONS OdontoTécnica Dashboard"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nova OS",
+      "short_name": "Nova OS",
+      "description": "Abrir nova ordem de serviço",
+      "url": "./index.html#novaos",
+      "icons": [{ "src": "/ONS-IO-V2/icon-192x192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Clientes",
+      "short_name": "Clientes",
+      "description": "Gerenciar clientes cadastrados",
+      "url": "./index.html#clientes",
+      "icons": [{ "src": "/ONS-IO-V2/icon-192x192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ]
 }
